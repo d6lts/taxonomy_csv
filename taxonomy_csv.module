@@ -11,6 +11,9 @@ define('TAXONOMY_CSV_EXCEL_MAC', 2);
  */
 function taxonomy_csv_help($section) {
   switch ($section) {
+    case 'admin/modules#description':
+      return t('Allows you to import taxonomy from a CSV file.');
+    
     case 'admin/content/taxonomy/csv':
       return t('<p>Here you can upload a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file in order to import taxonomy terms into a vocabulary. If the destination vocabulary is hierarchy-enabled, additional columns in the CSV file are interpreted as child terms of the term indicated by the column before it.');
   }
@@ -23,10 +26,9 @@ function taxonomy_csv_menu($may_cache) {
   $items = array();
   
   if ($may_cache) {
-    $items[] = array('path' => 'admin/content/taxonomy/csv',
+    $items[] = array('path' => 'admin/taxonomy/csv',
       'title' => t('CSV import'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('taxonomy_csv_import'),
+      'callback' => 'taxonomy_csv_import',
       'weight' => 12,
       'type' => MENU_LOCAL_TASK);
   }
@@ -60,7 +62,7 @@ function taxonomy_csv_import() {
     '#title' => t('Vocabulary'),
     '#options' => array(),
     '#required' => TRUE,
-    '#description' => t('The vocabulary you want to import the file into. You might want to !add-new-vocab for your imported terms.', array('!add-new-vocab' => l(t('add a new vocabulary'), 'admin/content/taxonomy/add/vocabulary', array(), drupal_get_destination()))),
+    '#description' => t('The vocabulary you want to import the file into. You might want to !add-new-vocab for your imported terms.', array('!add-new-vocab' => l(t('add a new vocabulary'), 'admin/taxonomy/add/vocabulary', array(), drupal_get_destination()))),
   );
   
   $vocabularies = taxonomy_get_vocabularies();
@@ -70,7 +72,7 @@ function taxonomy_csv_import() {
   
   $form['submit'] = array('#type' => 'submit', '#value' => t('Import'));
   
-  return $form;
+  return drupal_get_form('taxonomy_csv_import', $form);
 }
 
 /**
