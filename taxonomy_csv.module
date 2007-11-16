@@ -102,28 +102,6 @@ function _taxonomy_csv_parse_size($value) {
 }
 
 /**
- * Parses PHP configuration size values into bytes.
- *
- * Edited from an example at http://php.net/manual/en/function.ini-get.php
- */
-function _taxonomy_csv_parse_size($value) {
-  $value = trim($value);
-  $number = (int)substr($value, 0, -1);
-
-  $suffix = strtoupper(substr($value, -1));
-  switch ($suffix) {
-    case 'G':
-      $number *= 1024;      
-    case 'M':
-      $number *= 1024;
-    case 'K':
-      $number *= 1024;
-  }
-  
-  return $number;
-}
-
-/**
  * Handles CSV import form validation.
  */
 function taxonomy_csv_import_validate($form_id, $form_values) {
