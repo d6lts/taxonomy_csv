@@ -14,8 +14,11 @@ function taxonomy_csv_help($section) {
     case 'admin/modules#description':
       return t('Allows you to import taxonomy from a CSV file.');
     
-    case 'admin/content/taxonomy/csv':
-      return t('<p>Here you can upload a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file in order to import taxonomy terms into a vocabulary. If the destination vocabulary is hierarchy-enabled, additional columns in the CSV file are interpreted as child terms of the term indicated by the column before it.');
+    case 'admin/taxonomy/csv':
+      return t('<p>Use this form to import taxonomy terms into a vocabulary from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file. Pick a CSV file, make sure to select the correct format, and choose the vocabulary you want to import into.</p>') . theme('more_help_link', url('admin/help/taxonomy_csv'));
+      
+    case 'admin/help#taxonomy_csv':
+      return t('<p>This module allows you to <a href="!import-url">import taxonomy terms</a> into a vocabulary from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file.</p><p>The term name will be imported from the first column. As of now, it is not possible to import additional fields.</p><p>If you are unsure how to create a CSV file, you might want to use <acronym title="Microsoft Office ">Excel</a> or another spreadsheet application to export your data into a CSV file.</p><p>If the destination vocabulary is hierarchy–enabled, columns following the first column in the CSV file will be imported as child terms of the term indicated by the column before it. Otherwise, additional columns will be ignored.</p>', array('!import-url' => url('admin/taxonomy/csv')));
   }
 }
 
