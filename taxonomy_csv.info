@@ -1,4 +1,4 @@
 ; $Id$
 name = "Taxonomy CSV import"
-description = "Allows you to import taxonomy from a CSV file."
+description = "Allows you to import taxonomy terms from a CSV file."
 dependencies = taxonomy
