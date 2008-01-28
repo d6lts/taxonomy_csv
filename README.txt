@@ -3,12 +3,13 @@
 INSTALLATION
 ------------
 
-See the Drupal documentation at http://drupal.org/handbook regarding
-installation of modules. It is not necessary to run update.php when updating
-this module.
+ 1) Copy the taxonomy_csv directory into the appropriate modules directory in
+    your Drupal installation (recommended: modules).
+
+ 2) Go to administer > modules and enable the taxonomy_csv module.
 
 USAGE
 -----
 
-On your Drupal site, go to administer > categories and
-click on the CSV import tab. Follow the instructions on the page.
+Go to administer > categories and click on the CSV import tab. Follow the
+instructions on that page.
