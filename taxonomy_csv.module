@@ -167,8 +167,15 @@ function taxonomy_csv_import_submit($form_id, $form_values) {
   ini_set('auto_detect_line_endings', '1');
   
   $handle = fopen($file->filepath, 'r');
+  $first = TRUE;
   while ($line = fgetcsv($handle, 4096, $delimiter)) {
     if (empty($line) || (count($line) == 1 && $line[0] == NULL)) continue;
+    
+    // Skip UTF-8 byte order mark.
+    if ($first) {
+      if (strncmp($line[0], "\xEF\xBB\xBF", 3) === 0) $line[0] = substr($line[0], 3);
+      $first = FALSE;
+    }
     
     taxonomy_csv_import_line($line, $options);
 
