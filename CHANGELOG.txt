@@ -12,6 +12,12 @@ Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
 
 
+Taxonomy csv 6.x-2.1 2009-02-28
+-------------------------------
+By Daniel Berthereau: Fixed package release. 
+By Daniel Berthereau: Fixed define. 
+
+
 Taxonomy csv 6.x-2.0 2009-02-27
 -------------------------------
 By Daniel Berthereau: Rewrited module. Cleaned release.
