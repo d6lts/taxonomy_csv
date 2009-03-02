@@ -11,7 +11,7 @@
  */
 
 /**
- * @file taxonomy_csv.module
+ * @file
  * Quick import of taxonomies or lists of terms with a csv file.
  *
  * Automatically imports a list of terms, children, related, synonyms,
