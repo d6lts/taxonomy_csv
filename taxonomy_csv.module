@@ -1962,7 +1962,7 @@ function taxonomy_csv_import_term($term, $import_existing_items = TAXONOMY_CSV_E
 
     }
 
-    $result = taxonomy_csv_save_term(&$term);
+    $result = taxonomy_csv_save_term($term);
 
     $messages[] = ($result == SAVED_NEW) ? 691 : 692;
 

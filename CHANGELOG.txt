@@ -11,6 +11,9 @@
 Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
 
+Taxonomy csv 6.x-3.1, 2009-04-08
+-------------------------------
+#427076 by Daniel Berthereau: Fixed Microsoft Windows pass-by-reference error.
 
 Taxonomy csv 6.x-3.0, 2009-04-03
 -------------------------------
