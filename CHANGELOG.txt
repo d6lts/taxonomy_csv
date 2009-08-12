@@ -11,19 +11,30 @@
 Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
 
+Taxonomy csv 7.x-4.1, 2009-08-12
+Taxonomy csv 6.x-4.1, 2009-08-12
+--------------------------------
+#540916 by Daniel Berthereau: Added warning to disable Pathauto before import.
+#450900 by Daniel Berthereau: Fixed duplicate parent term query.
+By Daniel Berthereau: Fixed batch cache and statistics.
+
+Taxonomy csv 7.x-4.0, 2009-08-10
+--------------------------------
+By Daniel Berthereau: Converted Taxonomy csv 6.x module to 7.x.
+
 Taxonomy csv 6.x-4.0, 2009-08-09
--------------------------------
+--------------------------------
 By Daniel Berthereau: Added multistep import for big files (avoid memory error).
 By Daniel Berthereau: Added term enclosure option.
 By Daniel Berthereau: Reviewed user interface code for lisibility (js & css).
 By Daniel Berthereau: Reviewed batch code in order to decrease memory usage.
 
 Taxonomy csv 6.x-3.1, 2009-04-08
--------------------------------
+--------------------------------
 #427076 by Daniel Berthereau: Fixed Microsoft Windows pass-by-reference error.
 
 Taxonomy csv 6.x-3.0, 2009-04-03
--------------------------------
+--------------------------------
 By Daniel Berthereau: Redesigned UI with dynamic options and examples (AHAH).
 By Daniel Berthereau: Added import by a text area.
 By Daniel Berthereau: Added hook_perm "administer taxonomy by csv".
@@ -37,18 +48,18 @@ By Daniel Berthereau: Extracted advanced help to alone file.
 By Daniel Berthereau: Simplified stats import code.
 
 Taxonomy csv 6.x-2.4, 2009-03-10
--------------------------------
+--------------------------------
 By Daniel Berthereau: Released 6.x.2.4.
 
 Taxonomy csv 6.x-2.3, 2009-03-09
--------------------------------
+--------------------------------
 By Daniel Berthereau: Added subrelations import.
 By Daniel Berthereau: Added option to make relations into all vocabularies.
 By Daniel Berthereau: Fixed related terms import: remove related when replace.
 By Daniel Berthereau: Fixed vocabulary level check for flat vocabulary.
 
 Taxonomy csv 6.x-2.2, 2009-03-06
--------------------------------
+--------------------------------
 By Daniel Berthereau: Restructured module to display warning informations.
 By Daniel Berthereau: Added options to display import result.
 By Daniel Berthereau: Added options to choose log level.
@@ -60,10 +71,10 @@ By Daniel Berthereau: Fixed translate in install hook.
 By Daniel Berthereau: Fixed related terms import: keep old even if Ignore.
 
 Taxonomy csv 6.x-2.1, 2009-02-28
--------------------------------
+--------------------------------
 By Daniel Berthereau: Fixed package release.
 By Daniel Berthereau: Fixed define.
 
 Taxonomy csv 6.x-2.0, 2009-02-27
--------------------------------
+--------------------------------
 By Daniel Berthereau: Rewrited module. Cleaned release.
