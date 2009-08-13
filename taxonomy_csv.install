@@ -33,9 +33,11 @@ function taxonomy_csv_uninstall() {
       'relations_all_vocabularies',
       'autodivide_import',
       'autodivide_lines',
-      'result_display_level',
-      'result_display_type',
-      // Previous releases variables.
+      'result_stats',
+      'result_terms',
+      'result_level',
+      'result_type',
+      // Previous releases removed variables.
       // < 6.x.4.0.
       'import_create_subrelations',
       'import_all_vocabularies',
@@ -43,6 +45,10 @@ function taxonomy_csv_uninstall() {
       // < 6.x.4.1.
       // < 7.x.4.1.
       'source_disable_convert_to_utf8',
+      // < 6.x.4.2.
+      // < 7.x.4.2.
+      'result_display_level',
+      'result_display_type',
     ) as $option) {
     variable_del("taxonomy_csv_$option");
   }

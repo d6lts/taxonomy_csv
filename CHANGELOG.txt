@@ -11,6 +11,12 @@
 Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
 
+Taxonomy csv 7.x-4.2, 2009-08-13
+Taxonomy csv 6.x-4.2, 2009-08-13
+----------------------------------
+By Daniel Berthereau: Fixed error display when batch error (only useful infos).
+By Daniel Berthereau: Added option to reduce log level and memory usage.
+
 Taxonomy csv 7.x-4.1, 2009-08-12
 Taxonomy csv 6.x-4.1, 2009-08-12
 --------------------------------

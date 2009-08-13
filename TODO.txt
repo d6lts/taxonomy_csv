@@ -46,6 +46,7 @@ User interface
  o         use Drupal themes
  o         add a menu link to taxonomy csv in list terms
  o         use drupal_set_message 'warning' and not only 'status' and 'error'.
+ o         batch process without Javascript
 
 Functions
  o         import of structured alphabetic terms list (thesaurus)
@@ -71,7 +72,7 @@ Functions
  o         convert and export vocabulary to xml (especially to compare with xml)
  x 640 --- multistep import: autodivide big taxonomies to avoid memory error
  o         import by term identifiant (tid)
- o         import from url (#######)
+ o         import from url (#529480)
 
 Code / security
  o         remove query and use only Drupal core ones and php filters (useful?)
@@ -108,7 +109,7 @@ Code / security
  o         create API
  o         fix: make multistep import compatible with one term by line import
  o         allow cancel multistep when import in an existing vocabulary
- o         fix: allow only users with taxonomy rights.
+ o         fix: allow only users with taxonomy rights
 
 Documentation
  o         make it simpler
