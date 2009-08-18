@@ -109,7 +109,9 @@ Code / security
  o         create API
  o         fix: make multistep import compatible with one term by line import
  o         allow cancel multistep when import in an existing vocabulary
- o         fix: allow only users with taxonomy rights
+ -         fix: allow only users with taxonomy rights (useless: roles)
+ o         fix: display main form when error occurs in multistep process
+ o         direct read of lines without prepare batch for file import
 
 Documentation
  o         make it simpler

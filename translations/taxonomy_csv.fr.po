@@ -301,7 +301,7 @@ msgid "Log level"
 msgstr " Niveau de détail"
 
 #: taxonomy_csv.module:585
-msgid "Neither warnings and notices"
+msgid "Neither warnings nor notices"
 msgstr "Ni alertes, ni informations"
 
 #: taxonomy_csv.module:586

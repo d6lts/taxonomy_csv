@@ -548,8 +548,8 @@ function taxonomy_csv_form_main($form_state) {
     '#title'         => t('Number of lines to import by step'),
     '#default_value' => $list_previous_values['autodivide_lines'],
     '#description'   => '',
-    '#size'          => 5,
-    '#maxlength'     => 5,
+    '#size'          => 9,
+    '#maxlength'     => 9,
     ''
   );
 
@@ -567,7 +567,6 @@ function taxonomy_csv_form_main($form_state) {
 
   $form['advanced_options']['result_display']['result_choices'] = array(
     '#type'          => 'checkboxes',
-    '#tree'          => FALSE,
     '#options'       => array(
       'result_stats'    => t('Basic stats on imported terms'),
       'result_terms'    => t('List of imported terms'),
@@ -582,7 +581,7 @@ function taxonomy_csv_form_main($form_state) {
     '#type'          => 'radios',
     '#title'         => t('Log level'),
     '#options'       => array(
-      'none'     => t('Neither warnings and notices'),
+      'none'     => t('Neither warnings nor notices'),
       'warnings' => t('Warnings and errors'),
       'notices'  => t('Warnings, errors and notices'),
 //      'full'     => t('Warnings, errors and notices for each term'),
@@ -959,59 +958,66 @@ function taxonomy_csv_form_main_validate($form, &$form_state) {
     return;
   }
 
-  switch ($form_state['values']['source_choice']) {
-    case 'local_file':
-      $form_state['values']['file'] = file_save_upload('local_file');
+  $values = &$form_state['values'];
 
-      if (!$form_state['values']['file']) {
+  switch ($values['source_choice']) {
+    case 'local_file':
+      $values['file'] = file_save_upload('local_file');
+
+      if (!$values['file']) {
         form_set_error('local_file', t("You choose to import a taxonomy by a file, but you don't set its name or its size is greater than the server's limit of !max_size.", array('!max_size' => format_size(parse_size(ini_get('upload_max_filesize'))))));
       }
-      else if (!$form_state['values']['file']->filesize) {
+      else if (!$values['file']->filesize) {
         form_set_error('local_file', t('Size of your file is null.'));
       }
       else {
         //  No error, so clean textarea in order to decrease usage of memory.
-        $form_state['values']['textarea'] = '';
+        $values['textarea'] = '';
       }
       break;
 
     case 'textarea':
-      if (empty($form_state['values']['textarea'])) {
+      if (empty($values['textarea'])) {
         form_set_error('textarea', t('You choose to import a taxonomy by a text area, but the text area is empty.'));
       }
       break;
   }
 
-  if (($form_state['values']['source_delimiter'] == 'custom_delimiter') && (empty($form_state['values']['source_delimiter_custom']))) {
+  if (($values['source_delimiter'] == 'custom_delimiter')
+      && (empty($values['source_delimiter_custom']))) {
     form_set_error('source_delimiter_custom', t('You choose to use a custom delimiter, but your delimiter is empty.'));
   }
 
-  if (($form_state['values']['source_enclosure'] == 'custom_enclosure') && (empty($form_state['values']['source_enclosure_custom']))) {
+  if (($values['source_enclosure'] == 'custom_enclosure')
+      && (empty($values['source_enclosure_custom']))) {
     form_set_error('source_enclosure_custom', t('You choose to use a custom enclosure, but your enclosure is empty.'));
   }
 
-  if (($form_state['values']['source_choice']) == 'local_file') {
-    if (($form_state['values']['source_delimiter'] == 'custom_delimiter') && (drupal_strlen($form_state['values']['source_delimiter_custom']) > 1)) {
+  if (($values['source_choice']) == 'local_file') {
+    if (($values['source_delimiter'] == 'custom_delimiter')
+        && (drupal_strlen($values['source_delimiter_custom']) > 1)) {
       form_set_error('source_delimiter_custom', t('Delimiter should have only one character when import is made by file.'));
     }
-    if (($form_state['values']['source_enclosure'] == 'custom_enclosure') && (drupal_strlen($form_state['values']['source_enclosure_custom']) > 1)) {
+    if (($values['source_enclosure'] == 'custom_enclosure')
+        && (drupal_strlen($values['source_enclosure_custom']) > 1)) {
       form_set_error('source_enclosure_custom', t('Enclosure should have only one character when import is made by file.'));
     }
   }
 
-  if (($form_state['values']['destination_target'] != 'autocreate') && ($form_state['values']['destination_vocabulary_id'] == 'choose_vocabulary')) {
+  if (($values['destination_target'] != 'autocreate')
+      && ($values['destination_vocabulary_id'] == 'choose_vocabulary')) {
     form_set_error('destination_vocabulary_id', t("You choose to use an existing vocabulary, but you haven't chose it."));
   }
 
-  if (!$form_state['values']['import_existing_items']) {
+  if (!$values['import_existing_items']) {
     form_set_error('import_existing_items', t('Please tell what will become existing terms.'));
   }
 
-  if ($form_state['values']['autodivide_import']) {
-    if (!is_numeric($form_state['values']['autodivide_lines'])) {
+  if ($values['autodivide_import']) {
+    if (!is_numeric($values['autodivide_lines'])) {
       form_set_error('autodivide_lines', t("You need to set a number of lines for the autodivide option."));
     }
-    else if (($form_state['values']['autodivide_lines'] < 1) || ($form_state['values']['autodivide_lines'] > 99999)) {
+    else if ($values['autodivide_lines'] < 1) {
       form_set_error('autodivide_lines', t("Number of lines to import with the autodivide option can't be null."));
     }
   }
@@ -1465,6 +1471,9 @@ function taxonomy_csv_batch_import_finished($success, $results, $operations) {
   $options = $results[0];
   unset($results[0]);
 
+  // Clear internal cache.
+  _taxonomy_csv_find_previous_imported_term('', 'clear');
+
   // Check and update hierarchy.
   $options['new_hierarchy'] = taxonomy_csv_check_vocabulary_hierarchy($options['destination_vocabulary_id']);
 
@@ -1670,7 +1679,8 @@ function _taxonomy_csv_stats_imported_terms($imported_terms, $result_level_displ
 
     foreach ($list_imported_text as $imported => $imported_text) {
       $processed_message_text = "$imported_text : ". count($stats_imported_terms[$imported]) .'<br />';
-      if ((count($stats_imported_terms[$imported]) > 0) && ($result_level_display == 'full')) {
+      if ((count($stats_imported_terms[$imported]) > 0)
+          && ($result_level_display == 'full')) {
         $processed_message_text .= '"'. implode('", "', $stats_imported_terms[$imported]) .'".';
       }
       drupal_set_message($processed_message_text, (($imported == TAXONOMY_CSV_ERROR) && (count($stats_imported_terms[$imported]) > 0)) ? 'error' : 'status');
@@ -1936,7 +1946,7 @@ function taxonomy_csv_import_line($line, $options, $line_number = 1, &$context) 
   }
 
   // Reload internal static cache if it has been removed in case of long batch.
-  if (isset($context['results'][0]['imported_terms'])) {
+  if (isset($context['results'][0]['imported_terms']) && (_taxonomy_csv_find_previous_imported_term('', 'count') == 0)) {
     _taxonomy_csv_find_previous_imported_term($context['results'][0]['imported_terms'], 'set_cache');
   }
 
@@ -1957,7 +1967,8 @@ function taxonomy_csv_import_line($line, $options, $line_number = 1, &$context) 
       $options['source_convert_to_utf8'],
       $line_messages);
 
-    if ((_taxonomy_csv_worst_message_level($line_messages, 'msg') > TAXONOMY_CSV_WATCHDOG_WARNING) && ($line_messages[0] != 591)) { // Check empty line too.
+    if ((_taxonomy_csv_worst_message_level($line_messages, 'msg') > TAXONOMY_CSV_WATCHDOG_WARNING)
+        && ($line_messages[0] != 591)) { // Check empty line too.
       // Checking items of line.
       $line = _taxonomy_csv_check_items(
         $line,
@@ -1967,7 +1978,9 @@ function taxonomy_csv_import_line($line, $options, $line_number = 1, &$context) 
         $items_messages);
       $line_messages = array_merge($line_messages, $items_messages);
 
-      if ((_taxonomy_csv_worst_message_level($items_messages, 'msg') > TAXONOMY_CSV_WATCHDOG_WARNING) && ($items_messages[0] != 592) && ($items_messages[0] != 593)) { // Check comment and command line too.
+      if ((_taxonomy_csv_worst_message_level($items_messages, 'msg') > TAXONOMY_CSV_WATCHDOG_WARNING)
+          && ($items_messages[0] != 592)
+          && ($items_messages[0] != 593)) { // Check comment and command line too.
         // Process import items with full good line.
         $result = taxonomy_csv_import_line_items(
           $line,
@@ -2206,7 +2219,8 @@ function _taxonomy_csv_check_items($line, $source_content, $import_existing_item
           $messages[] = 532; // Notice first and some items are same.
         }
         // Example: "Term"
-        if ((count($checked_items) == 1) && ($import_existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE)) {
+        if ((count($checked_items) == 1)
+            && ($import_existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE)) {
           $messages[] = 580; // Notice remove items.
         }
       }
@@ -2217,7 +2231,8 @@ function _taxonomy_csv_check_items($line, $source_content, $import_existing_item
         $messages[] = 480; // Warning no first column
       }
       else {
-        if ((count($line) == 1) && ($import_existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE)) {
+        if ((count($line) == 1)
+            && ($import_existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE)) {
           $messages[] = 580; // Notice remove items.
           $checked_items = array($line[0], '');
         }
@@ -2498,7 +2513,7 @@ function taxonomy_csv_import_term($term, $import_existing_items = TAXONOMY_CSV_E
 }
 
 /**
- * Find an existing term in cache or in vocabularies by its tid or by its name.
+ * Find an existing term in cache by its tid else in vocabularies by its name.
  *
  * @param $term
  *   The term array to find.
@@ -2513,12 +2528,12 @@ function taxonomy_csv_import_term($term, $import_existing_items = TAXONOMY_CSV_E
  */
 function _taxonomy_csv_find_existing_term($term, $all_vocabularies = FALSE, $parent_tid = NULL) {
   // Find existing term in cache. A term in cache gets always its tid. All terms with tid are cached.
-  if (isset($term['tid']) && ($term['tid'] != 0)) {
+  if ($term['tid']) {
     // Return FALSE in case of error: a tid is given, but has not been cached.
     return _taxonomy_csv_find_previous_imported_term($term);
   }
-  // If not cached, search existing term in vocabularies.
-  else if (isset($term['name']) && (drupal_strlen($term['name']) > 0)) {
+  // If no tid, search in vocabularies. If name doesn't exist, return array().
+  else if ($term['name']) {
     return taxonomy_csv_find_term($term['name'], ($all_vocabularies) ? 0 : $term['vid'], $parent_tid);
   }
   // ERROR: no tid neither name.
@@ -2530,17 +2545,18 @@ function _taxonomy_csv_find_existing_term($term, $all_vocabularies = FALSE, $par
  *
  * @param $term
  *   The term array to get or save. Need only the term['tid'] to get it.
- *   If $process_type is 'set_cache', array of terms with 'st'.
+ *   If $process_type is 'set_cache', array of terms arrays with 'st' (status).
  * @param $process_type
  *   Optional. Process type:
  *   'get'        : find a cached imported term (default),
+ *   SAVED_NEW    : update the static cache with the given term as created,
+ *   SAVED_UPDATED: update the static cache with the given term as updated.
+ *   'count'      : count cached terms,
  *   'set_cache'  : set cache,
  *   'dump'       : return all the cache,
  *   'clear'      : return all the cache and clear it,
- *   SAVED_NEW    : update the static cache with the given term as created,
- *   SAVED_UPDATED: update the static cache with the given term as updated.
  * @return
- *   Found term array as describe in taxonomy_csv_import_term or false.
+ *   Found term array as describe in taxonomy_csv_import_term or false if error.
  */
 function _taxonomy_csv_find_previous_imported_term($term, $process_type = 'get') {
   // Options all_vocabularies and parent_tid aren't used as currently, import process is always the same.
@@ -2553,24 +2569,12 @@ function _taxonomy_csv_find_previous_imported_term($term, $process_type = 'get')
     // So currently, update returned result when get. Useless update cache when get (and lost status).
     ///TODO: if modified relateds, update cached relateds too (and only them). Or use handles.
     case 'get':
-      $result = (isset($imported_cache[$term['tid']])) ? $imported_cache[$term['tid']] : FALSE;
-      if ($result) {
+      if (isset($imported_cache[$term['tid']])) {
+        $result = $imported_cache[$term['tid']];
         $result['relations'] = _taxonomy_csv_get_related_tids($result['tid']);
-        unset($result['st']); // Status is used only internaly.
+        //unset($result['st']); // Status is used only internaly.
+        return $result;
       }
-      break;
-
-    case 'set_cache':
-      $result = $imported_cache = $term;
-      break;
-
-    case 'dump':
-      $result = $imported_cache;
-      break;
-
-    case 'clear':
-      $result = $imported_cache;
-      $imported_cache = array();
       break;
 
     case SAVED_NEW:
@@ -2578,16 +2582,13 @@ function _taxonomy_csv_find_previous_imported_term($term, $process_type = 'get')
         if (!isset($imported_cache[$term['tid']])) {
           $imported_cache[$term['tid']] = $term;
           $imported_cache[$term['tid']]['st'] = SAVED_NEW;
-          $result = $term;
+          return $term;
         }
         else  { // Already cached and user wants again to create it.
           $imported_cache[$term['tid']] = $term;
           $imported_cache[$term['tid']]['st'] = TAXONOMY_CSV_ERROR;
-          $result = FALSE;
+          return FALSE;
         }
-      }
-      else {
-        $result = FALSE;
       }
       break;
 
@@ -2596,7 +2597,7 @@ function _taxonomy_csv_find_previous_imported_term($term, $process_type = 'get')
         if (!isset($imported_cache[$term['tid']])) {
           $imported_cache[$term['tid']] = $term;
           $imported_cache[$term['tid']]['st'] = SAVED_UPDATED;
-          $result = $term;
+          return $term;
         }
         else {
           switch ($imported_cache[$term['tid']]['st']) {
@@ -2605,32 +2606,39 @@ function _taxonomy_csv_find_previous_imported_term($term, $process_type = 'get')
               // Unchange status but update term.
               $imported_cache[$term['tid']] = $term;
               $imported_cache[$term['tid']]['st'] = TAXONOMY_CSV_NEW_UPDATED;
-              $result = $term;
+              return $term;
               break;
 
             case SAVED_UPDATED:
               // Unchange status whether previous status was, but update term.
               $imported_cache[$term['tid']] = $term;
               $imported_cache[$term['tid']]['st'] = SAVED_UPDATED;
-              $result = $term;
+              return $term;
               break;
 
             default:
               $imported_cache[$term['tid']] = $term;
               $imported_cache[$term['tid']]['st'] = TAXONOMY_CSV_ERROR;
-              $result = FALSE;
+              return FALSE;
           }
         }
       }
-      else {
-        $result = FALSE;
-      }
       break;
 
-    default:
-      $result = FALSE; // ERROR.
+    case 'count':
+      return count($imported_cache);
+
+    case 'set_cache':
+      $imported_cache = $term;
+      return;
+
+    case 'dump':
+      return $imported_cache;
+
+    case 'clear':
+      return $imported_cache = array();
   }
-  return $result;
+  return FALSE;
 }
 
 /**

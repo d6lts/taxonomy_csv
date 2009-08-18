@@ -4,3 +4,5 @@ description = "Allow quick import of complete taxonomies, hierarchical structure
 core = 6.x
 dependencies[] = taxonomy
 package = 'Taxonomy'
+files[] = taxonomy_csv.module
+files[] = taxonomy_csv.install
