@@ -70,14 +70,14 @@ if (Drupal.jsEnabled) {
 
       // Import options (general, description and specific).
       // Hide all items defined with the css class filtered.
-      var methods_a = new Array('#edit-import-existing-items-update-wrapper', '#edit-import-existing-items-update-merge-wrapper', '#edit-import-existing-items-update-replace-wrapper', '#edit-import-existing-items-ignore-wrapper', '#edit-import-existing-items-ignore-create-wrapper', '#edit-import-existing-items-ignore-all-wrapper', '#description_alone_terms', '#description_terms', '#description_structure', '#description_relations', '#description_descriptions', '#description_weights', '#description_synonyms', '#description_manager_export', '#specific_relations');
+      var methods_a = new Array('#edit-import-existing-items-update-wrapper', '#edit-import-existing-items-update-merge-wrapper', '#edit-import-existing-items-update-replace-wrapper', '#edit-import-existing-items-ignore-wrapper', '#edit-import-existing-items-ignore-create-wrapper', '#edit-import-existing-items-ignore-all-wrapper', '#description_alone_terms', '#description_terms', '#description_structure', '#description_parents', '#description_children', '#description_relations', '#description_descriptions', '#description_weights', '#description_synonyms', '#description_manager_export', '#specific_relations');
       for(var m in methods_a) {
         $(methods_a[m]).addClass('filtered');
       }
       // Existing terms.
       // Add/remove class to show/hide it.
       $('#source_content').change(function(){
-        var methods_b = new Array('alone_terms', 'terms', 'structure', 'relations', 'descriptions', 'weights', 'synonyms', 'manager_export');
+        var methods_b = new Array('alone_terms', 'terms', 'structure', 'parents', 'children', 'relations', 'descriptions', 'weights', 'synonyms', 'manager_export');
         // Remove all added classes in order to return to base.
         for(var m in methods_a) {
           for(var n in methods_b) {

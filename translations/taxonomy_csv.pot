@@ -3,16 +3,16 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  taxonomy_csv.api.inc: n/a
-#  taxonomy_csv.module,v 2.6.4.4 2009/08/18 07:03:26 danielkm
-#  taxonomy_csv.info,v 2.3.4.3 2009/08/18 07:03:26 danielkm
+#  taxonomy_csv.api.inc,v 1.1.2.1 2009/09/12 16:06:17 danielkm
+#  taxonomy_csv.module,v 2.6.4.5 2009/09/12 16:06:17 danielkm
+#  taxonomy_csv.info,v 2.3.4.4 2009/09/12 16:06:17 danielkm
 #  taxonomy_csv.install,v 2.3.4.4 2009/08/18 07:03:26 danielkm
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2009-09-12 15:45+0200\n"
+"POT-Creation-Date: 2009-09-13 00:32+0200\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -21,523 +21,531 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: taxonomy_csv.api.inc:135
+#: taxonomy_csv.api.inc:134
 msgid "Import by text needs access to temp directory. Import failed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:173
+#: taxonomy_csv.api.inc:172
 msgid "Importing terms from CSV file \"%filename\"..."
 msgstr ""
 
-#: taxonomy_csv.api.inc:174
+#: taxonomy_csv.api.inc:173
 msgid "Importing terms from text..."
 msgstr ""
 
-#: taxonomy_csv.api.inc:175
+#: taxonomy_csv.api.inc:174
 msgid "Starting uploading of datas..."
 msgstr ""
 
-#: taxonomy_csv.api.inc:177
+#: taxonomy_csv.api.inc:176
 msgid "An error occurred during the import."
 msgstr ""
 
-#: taxonomy_csv.api.inc:227
+#: taxonomy_csv.api.inc:226
 msgid "You choose to import a taxonomy by a file, but you don't set its name or its size is greater than the server's limit of !max_size."
 msgstr ""
 
-#: taxonomy_csv.api.inc:230;2250
+#: taxonomy_csv.api.inc:229;2327
 msgid "Size of your file is null."
 msgstr ""
 
-#: taxonomy_csv.api.inc:240
+#: taxonomy_csv.api.inc:239
 msgid "You choose to import a taxonomy by a text, but the text is empty."
 msgstr ""
 
-#: taxonomy_csv.api.inc:245
+#: taxonomy_csv.api.inc:244
 msgid "Source choice is \"filepath\" or \"text\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:250
+#: taxonomy_csv.api.inc:249
 msgid "Delimiter should be a one character string."
 msgstr ""
 
-#: taxonomy_csv.api.inc:257
+#: taxonomy_csv.api.inc:256
 msgid "Enclosure lenght cannot be greater than one character."
 msgstr ""
 
-#: taxonomy_csv.api.inc:263
+#: taxonomy_csv.api.inc:262
 msgid "Destination target should be \"autocreate\", \"duplicate\" or \"existing\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:268
+#: taxonomy_csv.api.inc:267
 msgid "You choose to use an existing vocabulary, but you haven't choose it."
 msgstr ""
 
-#: taxonomy_csv.api.inc:277
+#: taxonomy_csv.api.inc:276
 msgid "Source content \"%source_content\" is not managed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:281
+#: taxonomy_csv.api.inc:280
 msgid "Import option \"%import_existing_items\" cannot be used with source content \"%source_content\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:289
+#: taxonomy_csv.api.inc:288
 msgid "Please set what will become existing terms."
 msgstr ""
 
-#: taxonomy_csv.api.inc:292
+#: taxonomy_csv.api.inc:291
 msgid "Import option \"%import_existing_items\" is not managed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:297
+#: taxonomy_csv.api.inc:296
 msgid "You need to set hierarchy level if hierarchy check of vocabulary is disabled."
 msgstr ""
 
-#: taxonomy_csv.api.inc:302 taxonomy_csv.module:200
+#: taxonomy_csv.api.inc:301 taxonomy_csv.module:200
 msgid "<strong>Warning</strong>: Pathauto module is activated.<br />This module slows down taxonomy import process and only few terms can be imported. It's advised to disabled it manually in !modules_section. Settings aren't lost when you disable it - and not uninstall it -.<br />After import process, you can reactivate Pathauto and eventually bulk generate aliases for newly imported terms."
 msgstr ""
 
-#: taxonomy_csv.api.inc:302 taxonomy_csv.module:200
+#: taxonomy_csv.api.inc:301 taxonomy_csv.module:200
 msgid "modules section"
 msgstr ""
 
-#: taxonomy_csv.api.inc:445
+#: taxonomy_csv.api.inc:444
 msgid "Line %line_number of %total_lines processed: %line"
 msgstr ""
 
-#: taxonomy_csv.api.inc:487
+#: taxonomy_csv.api.inc:485
 msgid "Hierarchy level has been manually set."
 msgstr ""
 
-#: taxonomy_csv.api.inc:492
+#: taxonomy_csv.api.inc:490
 msgid "Importation failed"
 msgstr ""
 
-#: taxonomy_csv.api.inc:493
+#: taxonomy_csv.api.inc:491
 msgid "This issue is related to import process or to size import and probably not to content."
 msgstr ""
 
-#: taxonomy_csv.api.inc:495
+#: taxonomy_csv.api.inc:493
 msgid "Import process was successful, but the evaluation of hierarchy level has failed, because it is highly memory consumming. You need to change its value with default Drupal functions or set it in Tweaks section of Taxonomy csv."
 msgstr ""
 
-#: taxonomy_csv.api.inc:495
+#: taxonomy_csv.api.inc:493
 msgid "This problem can be caused too by a high log level. You can reduce it in advanced options."
 msgstr ""
 
-#: taxonomy_csv.api.inc:498
+#: taxonomy_csv.api.inc:496
 msgid "Import process was successful until the line %line_count of a total of %total_lines. You can first check your file on this line and check file uploading."
 msgstr ""
 
-#: taxonomy_csv.api.inc:503
+#: taxonomy_csv.api.inc:501
 msgid "You can reduce log level or disable internal cache to avoid this error."
 msgstr ""
 
-#: taxonomy_csv.api.inc:504
+#: taxonomy_csv.api.inc:502
 msgid "You can reinstall module from a fresh release or submit an issue on <a href=\"!link\">Taxonomy CSV import module</a>."
 msgstr ""
 
-#: taxonomy_csv.api.inc:514
+#: taxonomy_csv.api.inc:512
 msgid "Errors have been reported during import process. Process failed at line %line_number with error: %message"
 msgstr ""
 
-#: taxonomy_csv.api.inc:520
+#: taxonomy_csv.api.inc:518
 msgid "Warnings have been reported during import process (bad formatted lines). First line skipped is line %line_number with message: %message"
 msgstr ""
 
-#: taxonomy_csv.api.inc:526
+#: taxonomy_csv.api.inc:524
 msgid "Notices have been reported during import process (bad formatted or empty lines). Lines processed. First notice on line %line_number with notice: %message"
 msgstr ""
 
-#: taxonomy_csv.api.inc:533
+#: taxonomy_csv.api.inc:531
 msgid "No error, warnings or notices have been reported during import process."
 msgstr ""
 
-#: taxonomy_csv.api.inc:538
+#: taxonomy_csv.api.inc:536
 msgid "Line checks have been disabled. Some warnings and notices may have not been reported."
 msgstr ""
 
-#: taxonomy_csv.api.inc:542
+#: taxonomy_csv.api.inc:540
 msgid "No more information about process because internal cache is disabled."
 msgstr ""
 
-#: taxonomy_csv.api.inc:556
+#: taxonomy_csv.api.inc:554
 msgid "No term was imported."
 msgstr ""
 
-#: taxonomy_csv.api.inc:563
+#: taxonomy_csv.api.inc:561
 msgid "Available informations about lines import."
 msgstr ""
 
-#: taxonomy_csv.api.inc:567
+#: taxonomy_csv.api.inc:565
 msgid "No information reported about lines import."
 msgstr ""
 
-#: taxonomy_csv.api.inc:585
+#: taxonomy_csv.api.inc:582
 msgid "Auto created vocabulary by taxonomy_csv module"
 msgstr ""
 
-#: taxonomy_csv.api.inc:613
+#: taxonomy_csv.api.inc:610
 msgid "Copy of [!vocabulary_name]"
 msgstr ""
 
-#: taxonomy_csv.api.inc:685
+#: taxonomy_csv.api.inc:682
 msgid "Auto created vocabulary"
 msgstr ""
 
-#: taxonomy_csv.api.inc:1873
+#: taxonomy_csv.api.inc:1936
 msgid "File \"%file\" uploaded."
 msgstr ""
 
-#: taxonomy_csv.api.inc:1873
+#: taxonomy_csv.api.inc:1936
 msgid "Import terms from text."
 msgstr ""
 
-#: taxonomy_csv.api.inc:1877
+#: taxonomy_csv.api.inc:1940
 msgid "Source content: \"%source_content\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:1883
+#: taxonomy_csv.api.inc:1946
 msgid "Existing terms choice: \"%import_items\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:1906
+#: taxonomy_csv.api.inc:1969
 msgid "Terms in first column and ignore additional columns"
 msgstr ""
 
-#: taxonomy_csv.api.inc:1907
+#: taxonomy_csv.api.inc:1970
 msgid "Terms (flat vocabulary)"
 msgstr ""
 
-#: taxonomy_csv.api.inc:1908
+#: taxonomy_csv.api.inc:1971
 msgid "Hierarchical structure or one term by line structure"
 msgstr ""
 
-#: taxonomy_csv.api.inc:1909
-msgid "Related terms"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1910
-msgid "Term descriptions"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1911
-msgid "Term weights"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1912
-msgid "Synonyms terms"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1913
-msgid "Taxonomy manager export"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1918
-msgid "Update existing term"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1919
-msgid "Update (merge) existing term and items if exist else create"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1920
-msgid "Update (replace) existing term and items if exist else create"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1921
-msgid "Duplicate existing term"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1922
-msgid "Ignore existing term and create a new term"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1923
-msgid "Ignore existing term and create a new term for each term on the line"
-msgstr ""
-
-#: taxonomy_csv.api.inc:1971
-msgid "no parent (flat)"
-msgstr ""
-
 #: taxonomy_csv.api.inc:1972
-msgid "single parent (tree)"
+msgid "First level parents of a term"
 msgstr ""
 
 #: taxonomy_csv.api.inc:1973
-msgid "multiple parents (polyhierarchy)"
+msgid "First level children of a term"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1974
+msgid "Related terms"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1975
+msgid "Term descriptions"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1976
+msgid "Term weights"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1977
+msgid "Synonyms terms"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1978
+msgid "Taxonomy manager export"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1983
+msgid "Update existing term"
 msgstr ""
 
 #: taxonomy_csv.api.inc:1984
-msgid "New vocabulary \"%vocabulary_name\" has been created."
+msgid "Update (merge) existing term and items if exist else create"
 msgstr ""
 
 #: taxonomy_csv.api.inc:1985
-msgid "Duplicate vocabulary \"%vocabulary_name\" has been created."
+msgid "Update (replace) existing term and items if exist else create"
 msgstr ""
 
 #: taxonomy_csv.api.inc:1986
+msgid "Duplicate existing term"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1987
+msgid "Ignore existing term and create a new term"
+msgstr ""
+
+#: taxonomy_csv.api.inc:1988
+msgid "Ignore existing term and create a new term for each term on the line"
+msgstr ""
+
+#: taxonomy_csv.api.inc:2048
+msgid "no parent (flat)"
+msgstr ""
+
+#: taxonomy_csv.api.inc:2049
+msgid "single parent (tree)"
+msgstr ""
+
+#: taxonomy_csv.api.inc:2050
+msgid "multiple parents (polyhierarchy)"
+msgstr ""
+
+#: taxonomy_csv.api.inc:2061
+msgid "New vocabulary \"%vocabulary_name\" has been created."
+msgstr ""
+
+#: taxonomy_csv.api.inc:2062
+msgid "Duplicate vocabulary \"%vocabulary_name\" has been created."
+msgstr ""
+
+#: taxonomy_csv.api.inc:2063
 msgid "Terms are imported into existing vocabulary \"%vocabulary_name\"."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2001
+#: taxonomy_csv.api.inc:2078
 msgid "Old vocabulary hierarchy level was %level (%level_text)."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2006
+#: taxonomy_csv.api.inc:2083
 msgid "Imported vocabulary hierarchy level is %level (%level_text)."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2012
+#: taxonomy_csv.api.inc:2089
 msgid "Properties can be edited at <a href=\"!vocabulary_edit_link\">Administer > Content management > Taxonomy > edit vocabulary</a>."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2015
+#: taxonomy_csv.api.inc:2092
 msgid "You can view terms at <a href=\"!vocabulary_list\">Administer > Content management > Taxonomy > list terms</a>."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2019
+#: taxonomy_csv.api.inc:2096
 msgid "It is recommended to use <a href=\"!link\" title=\"Taxonomy manager module\">Administer > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal \"List terms\" menu."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2022
+#: taxonomy_csv.api.inc:2099
 msgid "Warning: with default Drupal \"List terms\" function, a memory error can occurs with big taxonomies, so use another manager as <a href=\"!link\" title=\"Taxonomy manager module\">Taxonomy manager</a>."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2043
+#: taxonomy_csv.api.inc:2120
 msgid "Total updated existing terms"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2044
+#: taxonomy_csv.api.inc:2121
 msgid "Total created terms"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2045
+#: taxonomy_csv.api.inc:2122
 msgid "Total created and updated terms"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2046
+#: taxonomy_csv.api.inc:2123
 msgid "Total processed import errors"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2135
+#: taxonomy_csv.api.inc:2212
 msgid "Line #!line_number:"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2211
+#: taxonomy_csv.api.inc:2288
 msgid "Lines:"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2245
+#: taxonomy_csv.api.inc:2322
 msgid "Module error"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2247
+#: taxonomy_csv.api.inc:2324
 msgid "ERROR"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2248
+#: taxonomy_csv.api.inc:2325
 msgid "Error in options."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2249
+#: taxonomy_csv.api.inc:2326
 msgid "You choose to import a taxonomy by a file, but you don't set its name or its size is greater than the server's limit. Import stopped."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2251
+#: taxonomy_csv.api.inc:2328
 msgid "Your file can't be converted to utf-8. Please install iconv, GNU recode or mbstring for PHP or convert your file to utf-8 and disable 'Enable utf-8 conversion' option. Import stopped."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2252
+#: taxonomy_csv.api.inc:2329
 msgid "Despite your option, your file is not recognize as an UTF-8 encoded one. Convert it before submit it. Import stopped."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2253
+#: taxonomy_csv.api.inc:2330
 msgid "A parent tid is given, but it hasn't been imported in a previous line. Import stopped."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2254
+#: taxonomy_csv.api.inc:2331
 msgid "No line to import. Please first check your file and file uploading, else reinstall module from a fresh release or submit an issue."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2255
+#: taxonomy_csv.api.inc:2332
 msgid "No term to import. Please first check your file and file uploading, else reinstall module from a fresh release or submit an issue."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2256
+#: taxonomy_csv.api.inc:2333
 msgid "Problem when caching imported term. Please first check your file and file uploading, else reinstall module from a fresh release or submit an issue."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2257
+#: taxonomy_csv.api.inc:2334
 msgid "Module is not installed correctly. Please reinstall module from a fresh release or submit an issue."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2259
+#: taxonomy_csv.api.inc:2336
 msgid "WARNING"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2260
+#: taxonomy_csv.api.inc:2337
 msgid "Impossible to get parent of first item, because previous line has less parent(s). You may add one or more parents to current line or change lines order. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2261
+#: taxonomy_csv.api.inc:2338
 msgid "Weight in second column is not an allowed number. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2262
+#: taxonomy_csv.api.inc:2339
 msgid "One or more items are not numbers. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2263
+#: taxonomy_csv.api.inc:2340
 msgid "A term can't be a parent of itself. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2264
+#: taxonomy_csv.api.inc:2341
 msgid "A root term has a parent. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2265
+#: taxonomy_csv.api.inc:2342
 msgid "No first column term to import. Empty first column is allowed only with structure or multiple terms import. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2266
+#: taxonomy_csv.api.inc:2343
 msgid "No item in second or third column. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2267
+#: taxonomy_csv.api.inc:2344
 msgid "Some items aren't present. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2268
+#: taxonomy_csv.api.inc:2345
 msgid "No line to import. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2269
+#: taxonomy_csv.api.inc:2346
 msgid "No item to import. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2270
+#: taxonomy_csv.api.inc:2347
 msgid "Nothing to import. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2271
+#: taxonomy_csv.api.inc:2348
 msgid "Empty line. This line won't be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2272
+#: taxonomy_csv.api.inc:2349
 msgid "Warnings have been reported on this line."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2274
+#: taxonomy_csv.api.inc:2351
 msgid "Notice"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2275
+#: taxonomy_csv.api.inc:2352
 msgid "Too many items. Second and next columns will be ignored, as import choice is to ignore them."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2276
+#: taxonomy_csv.api.inc:2353
 msgid "Line contains empty items after first item to import. They will be ignored."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2277
+#: taxonomy_csv.api.inc:2354
 msgid "Line contains duplicate items. Currently, duplicates will be ignored."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2278;2281
+#: taxonomy_csv.api.inc:2355;2358
 msgid "Line contains items matching first column term. A term can't be related to itself and a synonym may be different to it. Duplicates will be ignored."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2279
+#: taxonomy_csv.api.inc:2356
 msgid "Line contains empty items. They will be ignored."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2280
+#: taxonomy_csv.api.inc:2357
 msgid "Line contains duplicate items. Duplicates will be ignored."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2282
+#: taxonomy_csv.api.inc:2359
 msgid "Too many items. Third and next columns will be ignored, as a term gets only one description and one weight."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2283
+#: taxonomy_csv.api.inc:2360
 msgid "No first column, but line can be processed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2284
+#: taxonomy_csv.api.inc:2361
 msgid "No parent, so it is a root term."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2285
+#: taxonomy_csv.api.inc:2362
 msgid "Term has been already imported in a previous line."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2286
+#: taxonomy_csv.api.inc:2363
 msgid "Be careful. This line has only one term and import choice is to replace existing items. So they will be removed."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2288
+#: taxonomy_csv.api.inc:2365
 msgid "Info"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2289
+#: taxonomy_csv.api.inc:2366
 msgid "No error in options."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2290
+#: taxonomy_csv.api.inc:2367
 msgid "Saved new term."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2291
+#: taxonomy_csv.api.inc:2368
 msgid "Updated term."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2292
+#: taxonomy_csv.api.inc:2369
 msgid "Removed existing term."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2293
+#: taxonomy_csv.api.inc:2370
 msgid "Previous line term."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2294
+#: taxonomy_csv.api.inc:2371
 msgid "No term to process."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2295
+#: taxonomy_csv.api.inc:2372
 msgid "Empty line."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2296
+#: taxonomy_csv.api.inc:2373
 msgid "Command line."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2297
+#: taxonomy_csv.api.inc:2374
 msgid "Comment line."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2298
+#: taxonomy_csv.api.inc:2375
 msgid "Items of the line have been successfully imported."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2300
+#: taxonomy_csv.api.inc:2377
 msgid "Debug"
 msgstr ""
 
-#: taxonomy_csv.api.inc:2301
+#: taxonomy_csv.api.inc:2378
 msgid "Unreferenced debug code. Please reinstall module from a fresh release or submit an issue."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2302
+#: taxonomy_csv.api.inc:2379
 msgid "Unreferenced code."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2304
+#: taxonomy_csv.api.inc:2381
 msgid "No message."
 msgstr ""
 
-#: taxonomy_csv.api.inc:2305
+#: taxonomy_csv.api.inc:2382
 msgid "No error."
 msgstr ""
 
@@ -726,218 +734,242 @@ msgid "The first term is imported as a root level parent, the second as child of
 msgstr ""
 
 #: taxonomy_csv.module:387
-msgid "This option indicates whether and how existing terms with the same name should be updated or ignored.<br />\n        The lower child is the last term of a line. Others are hierarchical parents.</p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: each child and parents are merged with old ones. So a term can have more than one parent. Warning: currently not totally tested.</li>\n          <li><em>\"Update and replace\"</em>: each parent replace eventual older ones.</li>\n          <li><em>\"Ignore and create\"</em>: child is always created and eventually its parents if they don't exist.</li>\n          <li><em>\"Ignore and create all\"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>\n        </ul>"
+msgid "This option indicates whether and how existing terms with the same name should be updated or ignored.<br />\n        The lower child is the last term of a line. Others are hierarchical parents.</p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: each child and parents are merged with old ones.</li>\n          <li><em>\"Update and replace\"</em>: each parent replaces eventual older ones.</li>\n          <li><em>\"Ignore and create\"</em>: child is always created and eventually its parents if they don't exist.</li>\n          <li><em>\"Ignore and create all\"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>\n        </ul>"
 msgstr ""
 
 #: taxonomy_csv.module:401
-msgid "Additional help (Related terms)"
+msgid "Additional help (First level parents of a term)"
 msgstr ""
 
 #: taxonomy_csv.module:402
-msgid "This option allows to make relations between the term in the first column and next terms of the line."
+msgid "The first item is imported as a term, the second and next as parents of first term. Unlike structure import, all parents are first level parents."
 msgstr ""
 
 #: taxonomy_csv.module:402
-msgid "This option indicates whether existing terms with the same name should be updated or ignored.\n        <p>For example, if existing related terms of term < <code>Drupal</code> > are < <code>Free</code> > and < <code>Open source</code> > and an imported line in the csv file is < <code>\"Drupal\",\"Knowledge management\",\"Free\"</code> >, then:\n        <ul>\n          <li><em>\"Update and merge\"</em> choice makes related terms of < <code>Drupal</code> > are now < <code>Free</code> >, < <code>Open source</code> > and < <code>Knowledge management</code> >;</li>\n          <li><em>\"Update and replace\"</em> choice makes related terms of < <code>Drupal</code> > are now < <code>Knowledge management</code> > and < <code>Free</code> >;</li>\n          <li><em>\"Ignore and create\"</em> choice makes two < <code>Drupal</code> > terms, one with existing related and other items and another one with the imported related terms < <code>Knowledge management</code> > and < <code>Free</code> >, which one has not been duplicated;</li>\n          <li><em>\"Ignore and create all\"</em> choice makes two < <code>Drupal</code> > as previously, but create too related term < <code>Free</code> > even if it exist.</li>\n        </ul></p>"
+msgid "This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: each child and parents are merged with old ones. No duplicate are created.</li>\n          <li><em>\"Update and replace\"</em>: each parent replaces eventual older ones.</li>\n          <li><em>\"Ignore and create\"</em>: child is always created and eventually its parents if they don't exist.</li>\n          <li><em>\"Ignore and create all\"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>\n        </ul>"
+msgstr ""
+
+#: taxonomy_csv.module:415
+msgid "Additional help (First level children of a term)"
 msgstr ""
 
 #: taxonomy_csv.module:416
-msgid "Additional help (Descriptions)"
+msgid "The first item is imported as a term, the second and next as children of first term. Unlike structure import, all children are first level children."
 msgstr ""
 
-#: taxonomy_csv.module:417
-msgid "This option allows to import a description of a term. The term is in the first column and the matching description is in the second column."
+#: taxonomy_csv.module:416
+msgid "This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: each child and parents are merged with old ones.</li>\n          <li><em>\"Update and replace\"</em>: each parent replaces eventual older ones.</li>\n          <li><em>\"Ignore and create\"</em>: child is always created and eventually its parents if they don't exist.</li>\n          <li><em>\"Ignore and create all\"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>\n        </ul>"
 msgstr ""
 
-#: taxonomy_csv.module:417
-msgid "\n        <p>This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: update term or create it if not exists and merge eventual description with new one.</li>\n          <li><em>\"Update and replace\"</em>: update term or create it if not exists and replace eventual description with new one.</li>\n          <li><em>\"Ignore and create\"</em>: term is always created.</li>\n        </ul>"
+#: taxonomy_csv.module:429
+msgid "Additional help (Related terms)"
 msgstr ""
 
 #: taxonomy_csv.module:430
+msgid "This option allows to make relations between the term in the first column and next terms of the line."
+msgstr ""
+
+#: taxonomy_csv.module:430
+msgid "This option indicates whether existing terms with the same name should be updated or ignored.\n        <p>For example, if existing related terms of term < <code>Drupal</code> > are < <code>Free</code> > and < <code>Open source</code> > and an imported line in the csv file is < <code>\"Drupal\",\"Knowledge management\",\"Free\"</code> >, then:\n        <ul>\n          <li><em>\"Update and merge\"</em> choice makes related terms of < <code>Drupal</code> > are now < <code>Free</code> >, < <code>Open source</code> > and < <code>Knowledge management</code> >;</li>\n          <li><em>\"Update and replace\"</em> choice makes related terms of < <code>Drupal</code> > are now < <code>Knowledge management</code> > and < <code>Free</code> >;</li>\n          <li><em>\"Ignore and create\"</em> choice makes two < <code>Drupal</code> > terms, one with existing related and other items and another one with the imported related terms < <code>Knowledge management</code> > and < <code>Free</code> >, which one has not been duplicated;</li>\n          <li><em>\"Ignore and create all\"</em> choice makes two < <code>Drupal</code> > as previously, but create too related term < <code>Free</code> > even if it exist.</li>\n        </ul></p>"
+msgstr ""
+
+#: taxonomy_csv.module:444
+msgid "Additional help (Descriptions)"
+msgstr ""
+
+#: taxonomy_csv.module:445
+msgid "This option allows to import a description of a term. The term is in the first column and the matching description is in the second column."
+msgstr ""
+
+#: taxonomy_csv.module:445
+msgid "\n        <p>This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: update term or create it if not exists and merge eventual description with new one.</li>\n          <li><em>\"Update and replace\"</em>: update term or create it if not exists and replace eventual description with new one.</li>\n          <li><em>\"Ignore and create\"</em>: term is always created.</li>\n        </ul>"
+msgstr ""
+
+#: taxonomy_csv.module:458
 msgid "Additional help (Weights)"
 msgstr ""
 
-#: taxonomy_csv.module:431
+#: taxonomy_csv.module:459
 msgid "This option allows to import a weight of a term. The term is in the first column and the matching weight is in the second column."
 msgstr ""
 
-#: taxonomy_csv.module:431
+#: taxonomy_csv.module:459
 msgid "This option indicates whether and how existing terms with the same name should be updated or ignored."
 msgstr ""
 
-#: taxonomy_csv.module:437
+#: taxonomy_csv.module:465
 msgid "Additional help (Synonyms)"
 msgstr ""
 
-#: taxonomy_csv.module:438
+#: taxonomy_csv.module:466
 msgid "This option allows to import synonyms of terms. Each line contains a term in the first column and next items are matching synonyms."
 msgstr ""
 
-#: taxonomy_csv.module:438
+#: taxonomy_csv.module:466
 msgid "\n        <p>This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: update term or create it if not exists and merge eventual synonyms with new ones. Always remove duplicate synonyms.</li>\n          <li><em>\"Update and replace\"</em>: update term or create it if not exists and replace eventual synonyms with new ones.</li>\n          <li><em>\"Ignore and create\"</em>: term is always created.</li>\n        </ul>"
 msgstr ""
 
-#: taxonomy_csv.module:451
+#: taxonomy_csv.module:479
 msgid "Additional help (Taxonomy manager export)"
 msgstr ""
 
-#: taxonomy_csv.module:452
+#: taxonomy_csv.module:480
 msgid "This option allows to import a vocabulary exported with Taxonomy manager. Each line contains vocabulary id, term id, term name, term description and parents. In this format, order of all lines is important: it's impossible to attach a parent to an item if this parent hasn't been imported in a previous line. When a vocabulary is imported in an existing one, only third option (ignore existing terms) can be used."
 msgstr ""
 
-#: taxonomy_csv.module:452
+#: taxonomy_csv.module:480
 msgid "\n        <p>This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>\n        <ul>\n          <li><em>\"Update and merge\"</em>: update term or create it if not exists and merge eventual parents with new ones.</li>\n          <li><em>\"Update and replace\"</em>: update term or create it if not exists and replace eventual synonyms with new ones.</li>\n          <li><em>\"Ignore and create\"</em>: term is always created.</li>\n        </ul>"
 msgstr ""
 
-#: taxonomy_csv.module:466
+#: taxonomy_csv.module:494
 msgid "As you see this notice, javascript is not activated on your browser. Only options matching your source content and vocabulary destination needs to be set. Others won't be used. If you want specific examples and options, activate javascript or see <a href=\"!more_help_link\"> advanced help</a>."
 msgstr ""
 
-#: taxonomy_csv.module:479
+#: taxonomy_csv.module:507
 msgid "Specific settings of related terms"
 msgstr ""
 
-#: taxonomy_csv.module:482
+#: taxonomy_csv.module:510
 msgid "Set only these options if you import related terms"
 msgstr ""
 
-#: taxonomy_csv.module:487
+#: taxonomy_csv.module:515
 msgid "Import subrelations"
 msgstr ""
 
-#: taxonomy_csv.module:489
+#: taxonomy_csv.module:517
 msgid "This checkbox allows to import subrelations of related terms and not only relations of first column term with others.\n    <p>For example, with the line < <code>\"Paris\",\"London\",\"Bern\",\"Roma\"</code> >, default import is to make a link between < <code>Paris</code> > and each of three terms. There is no link between < <code>London</code> > and < <code>Bern</code> > neither < <code>Roma</code> >. Checking this option creates not only relations with first term, but all subrelations too: < <code>London</code> > and < <code>Bern</code> >, < <code>London</code> > and < <code>Roma</code> > and finally < <code>Bern</code> > and < <code>Roma</code> >.</p>"
 msgstr ""
 
-#: taxonomy_csv.module:495
+#: taxonomy_csv.module:523
 msgid "Make relations with existing terms of all vocabularies"
 msgstr ""
 
-#: taxonomy_csv.module:497
+#: taxonomy_csv.module:525
 msgid "This checkbox allows to create relations with existing terms in other vocabularies if they don't exist in selected vocabulary."
 msgstr ""
 
-#: taxonomy_csv.module:503
+#: taxonomy_csv.module:531
 msgid "5. Advanced options"
 msgstr ""
 
-#: taxonomy_csv.module:511
+#: taxonomy_csv.module:539
 msgid "Tweaks for big or specific vocabularies"
 msgstr ""
 
-#: taxonomy_csv.module:523
+#: taxonomy_csv.module:551
 msgid "Disable internal cache"
 msgstr ""
 
-#: taxonomy_csv.module:525
-msgid "This checkbox allows to import complex vocabularies, with multiple parents and some duplicates. It's useless with simple lists of terms or tree structures, but it allows to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.<br />\n    It's recommended to disable cache if the imported vocabulary is too big, because it avoids memory congestion on server."
+#: taxonomy_csv.module:553
+msgid "To disable internal cache allows to import vocabularies of any size. Internal cache is used to import complex vocabularies, with multiple parents and some duplicates. It allows too to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.<br />\n    It's recommended to disable cache if the imported vocabulary is too big, because it avoids memory congestion on server."
 msgstr ""
 
-#: taxonomy_csv.module:531
+#: taxonomy_csv.module:559
 msgid "Manually set vocabulary hierarchy"
 msgstr ""
 
-#: taxonomy_csv.module:545
+#: taxonomy_csv.module:573
 msgid "As to calculate vocabulary hierarchy is memory intensive, this option allows to set hierarchy manually without verify it."
 msgstr ""
 
-#: taxonomy_csv.module:550
+#: taxonomy_csv.module:578
 msgid "Disable line checks"
 msgstr ""
 
-#: taxonomy_csv.module:552
+#: taxonomy_csv.module:580
 msgid "If you are sure that vocabulary to import is well formated (utf8, order of items...), you can disable checks."
 msgstr ""
 
-#: taxonomy_csv.module:557
+#: taxonomy_csv.module:585
 msgid "Disable file conversion to UTF-8"
 msgstr ""
 
-#: taxonomy_csv.module:558
+#: taxonomy_csv.module:586
 msgid "This checkbox allows to disable convert to UTF-8, what can resolve problems with some rare server configurations. Be sure your file is UTF-8 encoded when disabling this option. This option is not used with a textarea import."
 msgstr ""
 
-#: taxonomy_csv.module:566
+#: taxonomy_csv.module:594
 msgid "This checkbox is currently disabled, because iconv, GNU recode or mbstring for PHP are not installed on your server."
 msgstr ""
 
-#: taxonomy_csv.module:571
+#: taxonomy_csv.module:599
 msgid "Results informations to display"
 msgstr ""
 
-#: taxonomy_csv.module:583
+#: taxonomy_csv.module:611
 msgid "Except first warning, no information can be displayed when internal cache is disabled."
 msgstr ""
 
-#: taxonomy_csv.module:591
+#: taxonomy_csv.module:619
 msgid "Basic stats on imported terms"
 msgstr ""
 
-#: taxonomy_csv.module:592
+#: taxonomy_csv.module:620
 msgid "List of imported terms"
 msgstr ""
 
-#: taxonomy_csv.module:603
+#: taxonomy_csv.module:631
 msgid "Log level"
 msgstr ""
 
-#: taxonomy_csv.module:605
+#: taxonomy_csv.module:633
 msgid "Only first warning"
 msgstr ""
 
-#: taxonomy_csv.module:606
+#: taxonomy_csv.module:634
 msgid "Warnings"
 msgstr ""
 
-#: taxonomy_csv.module:607
+#: taxonomy_csv.module:635
 msgid "Warnings and notices"
 msgstr ""
 
-#: taxonomy_csv.module:608
+#: taxonomy_csv.module:636
 msgid "Warnings, notices and informations"
 msgstr ""
 
-#: taxonomy_csv.module:616
+#: taxonomy_csv.module:644
 msgid "Group warnings"
 msgstr ""
 
-#: taxonomy_csv.module:618
+#: taxonomy_csv.module:646
 msgid "By message (compact view)"
 msgstr ""
 
-#: taxonomy_csv.module:619
+#: taxonomy_csv.module:647
 msgid "By line (list view)"
 msgstr ""
 
-#: taxonomy_csv.module:629
+#: taxonomy_csv.module:657
 msgid "Warning: display warnings, notices and informations, especially by line, can help you to detect issues when submitted list of terms is not clean, but it may be memory intensive."
 msgstr ""
 
-#: taxonomy_csv.module:635
+#: taxonomy_csv.module:663
 msgid "Import"
 msgstr ""
 
-#: taxonomy_csv.module:640
+#: taxonomy_csv.module:668
 msgid "Default values"
 msgstr ""
 
-#: taxonomy_csv.module:697
+#: taxonomy_csv.module:725
 msgid "You choose to use a custom delimiter, but your delimiter is empty."
 msgstr ""
 
-#: taxonomy_csv.module:702
+#: taxonomy_csv.module:730
 msgid "You choose to use a custom enclosure, but your enclosure is empty."
 msgstr ""
 
-#: taxonomy_csv.module:708
+#: taxonomy_csv.module:736
 msgid "Delimiter should have only one character when import is made by file."
 msgstr ""
 
-#: taxonomy_csv.module:712
+#: taxonomy_csv.module:740
 msgid "Enclosure should have only one character when import is made by file."
 msgstr ""
 
-#: taxonomy_csv.module:794
+#: taxonomy_csv.module:822
 msgid "Taxonomy_csv Api cannot be loaded. Please reinstall module."
 msgstr ""
 

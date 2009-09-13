@@ -93,6 +93,26 @@ Ce droit d'accès est souvent associé avec ceux-ci :
       </ul>
       Les lignes complètes, avec un seul terme ou partielles peuvent être mélangées, mais l'ordre est pris en compte deux lignes par deux, sauf lorsque toutes les lignes sont complètes. Dans cet exemple, si les cinquième et sixième lignes sont interverties, < <code>Séoul</code> > deviendrait un enfant de < <code>Japon</code> >.
     </dd>
+    <dt>Parents de premier niveau d'un terme</dt>
+    <dd>
+      Le premier élément est importé en tant que terme et les suivants en tant que parents de premier niveau du terme. Par exemple, des lignes peuvent être :<br />
+      <ul>
+        <li><code>Fille, Mère, Père</code></li>
+        <li><code>Fils, Mère, Père 2</code></li>
+        <li><code>Mère, Grand-Mère, Grand-Père</code></li>
+        <li><code>Père, Grand-Mère 1, Grand-Père 2</code></li>
+      </ul>
+    </dd>
+    <dt>Enfants de premier niveau d'un terme</dt>
+    <dd>
+      Le premier élément est importé en tant que terme et les suivants en tant qu'enfants de premier niveau du terme. Par exemple, des lignes peuvent être :<br />
+      <ul>
+        <li><code>Mère, Fille, Fils</code></li>
+        <li><code>Père, Fille, Fils 2</code></li>
+        <li><code>Grand-Mère, Mère</code></li>
+        <li><code>Grand-Père, Mère</code></li>
+      </ul>
+    </dd>
     <dt>Termes liés (termes connexes)</dt>
     <dd>
       Attention : sous Drupal 7, les termes liés ont été supprimés et remplacés par les champs (fields). Cette option est donc disponible seulement avec Drupal 6.<br />
@@ -184,7 +204,7 @@ Ce droit d'accès est souvent associé avec ceux-ci :
       Ensuite, vous pouvez utiliser l'importation par fichier. Vous pouvez également réduire le niveau de détail du journal. Enfin, vous pouvez utiliser les paramètres avancés suivants :
       <dl>
         <dt>Désactiver le cache interne</dt>
-        <dd>Cette option désactive le cache interne, qui permet l'importation de vocabulaires complexes, avec de multiples parents et certains doublons. Il est inutile pour les listes simples de termes ou les structures en arbre, mais il permet d'afficher des informations sur l'importation. Lorsqu'il est désactivé, aucune information sur le résultat n'est affichée, sauf l'éventuelle première erreur.</dd>
+        <dd>Désactiver le cache interne permet d'importer des vocabulaires de n'importe quelle taille. Le cache interne sert à importer des vocabulaires complexes, avec de multiples parents et certains doublons. Il permet également d'afficher des informations sur l'importation. Lorsqu'il est désactivé, aucune information sur le résultat n'est affichée, sauf l'éventuelle première erreur.</dd>
         <dt>Indiquer manuellement le niveau hiérarchique du vocabulaire</dt>
         <dd>Déterminer le niveau hiérarchique d'un vocabulaire nécessite beaucoup de mémoire. Cette option permet donc de le définir manuellement sans vérification.</dd>
         <dt>Désactiver la vérification des lignes</dt>

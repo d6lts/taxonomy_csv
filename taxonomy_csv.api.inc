@@ -53,6 +53,8 @@
 define('TAXONOMY_CSV_SOURCE_ALONE_TERMS',       'alone_terms');
 define('TAXONOMY_CSV_SOURCE_TERMS',             'terms');
 define('TAXONOMY_CSV_SOURCE_STRUCTURE',         'structure');
+define('TAXONOMY_CSV_SOURCE_PARENTS',           'parents');
+define('TAXONOMY_CSV_SOURCE_CHILDREN',          'children');
 define('TAXONOMY_CSV_SOURCE_RELATIONS',         'relations');
 define('TAXONOMY_CSV_SOURCE_DESCRIPTIONS',      'descriptions');
 define('TAXONOMY_CSV_SOURCE_WEIGHTS',           'weights');
@@ -107,7 +109,7 @@ define('TAXONOMY_CSV_NEW_UPDATED',              4);
  *     hierarchy_level: if hierarchy_check is false, set hierarchy level (0, 1 or 2)
  *     line_checks    : boolean. tweak to check (default) or not format of lines
  *     utf8_check     : boolean. tweak to check (default) or not utf8 format
- *     result_stats   : boolean. Display (default) or not stats.
+ *     result_stats   : boolean. Display (default) or not stats
  *     result_terms   : boolean. Display (default) or not list of imported terms
  *     result_level   : Log level: 'none', 'warnings' (default), 'notices' or 'infos'
  *     result_type    : Display of log: 'by_message' (default) or 'by_line'
@@ -206,7 +208,7 @@ function _taxonomy_csv_vocabulary_import_check_options(&$options) {
       'utf8_check'         => TRUE,
       'result_stats'       => 'result_stats',
       'result_terms'       => 'result_terms',
-      'result_level'       => 'warnings',
+      'result_level'       => 'notices',
       'result_type'        => 'by_message',
     ) as $key => $value) {
     if (!isset($options[$key])) {
@@ -998,6 +1000,8 @@ function _taxonomy_csv_line_check($line, $source_content, $import_existing_items
       }
       break;
 
+    case TAXONOMY_CSV_SOURCE_PARENTS:
+    case TAXONOMY_CSV_SOURCE_CHILDREN:
     case TAXONOMY_CSV_SOURCE_RELATIONS:
     case TAXONOMY_CSV_SOURCE_SYNONYMS:
       if (empty($line[0])) {
@@ -1193,11 +1197,6 @@ function _taxonomy_csv_line_process($line, $options, $previous_line = array()) {
             'parent' => array($parent_tid),
           );
 
-          // Currently, keep previous import system for structure, so no merge.
-          if ($options['import_existing_items'] == TAXONOMY_CSV_EXISTING_UPDATE_MERGE) {
-            $options['import_existing_items'] = TAXONOMY_CSV_EXISTING_UPDATE_REPLACE;
-          }
-
           // Parent terms (so all terms but the last on this line) are always updated because they are successive parents of a child.
           $current_term_import_option = (($options['import_existing_items'] == TAXONOMY_CSV_EXISTING_IGNORE_CREATE) && ($c < count($line) - 1)) ? TAXONOMY_CSV_EXISTING_IGNORE_PREVIOUS : $options['import_existing_items'];
 
@@ -1212,6 +1211,89 @@ function _taxonomy_csv_line_process($line, $options, $previous_line = array()) {
           }
 
           $parent_tid = $current_result['tid'];
+        }
+        break;
+
+      case TAXONOMY_CSV_SOURCE_PARENTS:
+        // First, import parents.
+        if (count($line) > 1) {
+          $list_parents = array(
+            'name' => array_slice($line, 1),
+            'tid'  => array(),
+          );
+          foreach ($list_parents['name'] as $value) {
+            $term = array(
+              'name' => $value,
+              'vid'  => $options['destination_vocabulary_id'],
+            );
+
+            // Import term then store and check result.
+            $current_result = taxonomy_csv_term_import($term, $options['import_existing_items'], FALSE, NULL);
+            $result['name'][] = $current_result['name'];
+            $result['tid'][]  = $current_result['tid'];
+            $result['msg'][]  = $current_result['msg'];
+
+            if (_taxonomy_csv_messages_get_worst_level($current_result['msg'], 'msg') <= TAXONOMY_CSV_WATCHDOG_WARNING) {
+              break 2;
+            }
+
+            $list_parents['tid'][] = $current_result['tid'];
+          }
+        }
+
+        // Second, import main term.
+        $term = array(
+          'name'   => $line[0],
+          'vid'    => $options['destination_vocabulary_id'],
+          'parent' => $list_parents['tid'],
+        );
+
+        // Import term then store result. No check because last term.
+        $current_result = taxonomy_csv_term_import($term, $options['import_existing_items'], FALSE, NULL);
+        $result['name'][] = $current_result['name'];
+        $result['tid'][]  = $current_result['tid'];
+        $result['msg'][]  = $current_result['msg'];
+        break;
+
+      case TAXONOMY_CSV_SOURCE_CHILDREN:
+        // First, import main term.
+        $term = array(
+          'name' => $line[0],
+          'vid'  => $options['destination_vocabulary_id'],
+        );
+
+        // Import term then store and check result.
+        $current_result = taxonomy_csv_term_import($term, $options['import_existing_items'], FALSE, NULL);
+        $result['name'][] = $current_result['name'];
+        $result['tid'][]  = $current_result['tid'];
+        $result['msg'][]  = $current_result['msg'];
+
+        if (_taxonomy_csv_messages_get_worst_level($current_result['msg'], 'msg') <= TAXONOMY_CSV_WATCHDOG_WARNING) {
+          break;
+        }
+
+        // Remember tid of main term.
+        $main_tid = $current_result['tid'];
+
+        // Second, import children.
+        if (count($line) > 1) {
+          foreach (array_slice($line, 1) as $value) {
+            $term = array(
+              'name'   => $value,
+              'vid'    => $options['destination_vocabulary_id'],
+              'parent' => array($main_tid),
+            );
+
+            // Import term then store and check result.
+            $current_result = taxonomy_csv_term_import($term, $options['import_existing_items'], FALSE, NULL);
+            $result['name'][] = $current_result['name'];
+            $result['tid'][]  = $current_result['tid'];
+            $result['msg'][]  = $current_result['msg'];
+
+            if (_taxonomy_csv_messages_get_worst_level($current_result['msg'], 'msg') <= TAXONOMY_CSV_WATCHDOG_WARNING) {
+              break;
+            }
+          }
         }
         break;
 
@@ -1600,15 +1682,9 @@ function &_taxonomy_csv_term_get_previous_imported($term, $process_type = 'get')
  */
 function taxonomy_csv_term_get($tid) {
   if ($term = db_fetch_array(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid))) {
-    if ($parent = taxonomy_csv_term_get_parents_tids($term['tid'])) {
-      $term['parent']    = $parent;
-    }
-    if ($relations = taxonomy_csv_term_get_related_tids($term['tid'])) {
-      $term['relations'] = $relations;
-    }
-    if ($synonyms = taxonomy_get_synonyms($term['tid'])) {
-      $term['synonyms']  = $synonyms;
-    }
+    $term['parent']    = taxonomy_csv_term_get_parents_tids($term['tid']);
+    $term['relations'] = taxonomy_csv_term_get_related_tids($term['tid']);
+    $term['synonyms']  = taxonomy_get_synonyms($term['tid']);
   };
   return $term;
 }
@@ -1654,15 +1730,9 @@ function taxonomy_csv_term_find($name, $vid = 0, $parent_tid = 0) {
     $term   = db_fetch_array($result);
 
     if ($term) {
-      if ($parent = taxonomy_csv_term_get_parents_tids($term['tid'])) {
-        $term['parent']    = $parent;
-      }
-      if ($relations = taxonomy_csv_term_get_related_tids($term['tid'])) {
-        $term['relations'] = $relations;
-      }
-      if ($synonyms = taxonomy_get_synonyms($term['tid'])) {
-        $term['synonyms']  = $synonyms;
-      }
+      $term['parent']    = taxonomy_csv_term_get_parents_tids($term['tid']);
+      $term['relations'] = taxonomy_csv_term_get_related_tids($term['tid']);
+      $term['synonyms']  = taxonomy_get_synonyms($term['tid']);
     }
   }
   else {
@@ -1899,6 +1969,8 @@ function _taxonomy_csv_lists($list) {
         TAXONOMY_CSV_SOURCE_ALONE_TERMS    => t('Terms in first column and ignore additional columns'),
         TAXONOMY_CSV_SOURCE_TERMS          => t('Terms (flat vocabulary)'),
         TAXONOMY_CSV_SOURCE_STRUCTURE      => t('Hierarchical structure or one term by line structure'),
+        TAXONOMY_CSV_SOURCE_PARENTS        => t('First level parents of a term'),
+        TAXONOMY_CSV_SOURCE_CHILDREN       => t('First level children of a term'),
         TAXONOMY_CSV_SOURCE_RELATIONS      => t('Related terms'),
         TAXONOMY_CSV_SOURCE_DESCRIPTIONS   => t('Term descriptions'),
         TAXONOMY_CSV_SOURCE_WEIGHTS        => t('Term weights'),
@@ -1908,12 +1980,12 @@ function _taxonomy_csv_lists($list) {
 
     case 'list_import_options':
       return array(
-        TAXONOMY_CSV_EXISTING_UPDATE         => t('Update existing term'),
-        TAXONOMY_CSV_EXISTING_UPDATE_MERGE   => t('Update (merge) existing term and items if exist else create'),
-        TAXONOMY_CSV_EXISTING_UPDATE_REPLACE => t('Update (replace) existing term and items if exist else create'),
-        TAXONOMY_CSV_EXISTING_IGNORE         => t('Duplicate existing term'),
-        TAXONOMY_CSV_EXISTING_IGNORE_CREATE  => t('Ignore existing term and create a new term'),
-        TAXONOMY_CSV_EXISTING_IGNORE_ALL     => t('Ignore existing term and create a new term for each term on the line'),
+        TAXONOMY_CSV_EXISTING_UPDATE           => t('Update existing term'),
+        TAXONOMY_CSV_EXISTING_UPDATE_MERGE     => t('Update (merge) existing term and items if exist else create'),
+        TAXONOMY_CSV_EXISTING_UPDATE_REPLACE   => t('Update (replace) existing term and items if exist else create'),
+        TAXONOMY_CSV_EXISTING_IGNORE           => t('Duplicate existing term'),
+        TAXONOMY_CSV_EXISTING_IGNORE_CREATE    => t('Ignore existing term and create a new term'),
+        TAXONOMY_CSV_EXISTING_IGNORE_ALL       => t('Ignore existing term and create a new term for each term on the line'),
       );
 
     case 'list_source_content_allowed_import_options':
@@ -1927,6 +1999,18 @@ function _taxonomy_csv_lists($list) {
           TAXONOMY_CSV_EXISTING_IGNORE,
         ),
         TAXONOMY_CSV_SOURCE_STRUCTURE      => array(
+//          TAXONOMY_CSV_EXISTING_UPDATE_MERGE,
+          TAXONOMY_CSV_EXISTING_UPDATE_REPLACE,
+          TAXONOMY_CSV_EXISTING_IGNORE_CREATE,
+//           TAXONOMY_CSV_EXISTING_IGNORE_ALL,
+        ),
+        TAXONOMY_CSV_SOURCE_PARENTS        => array(
+          TAXONOMY_CSV_EXISTING_UPDATE_MERGE,
+          TAXONOMY_CSV_EXISTING_UPDATE_REPLACE,
+          TAXONOMY_CSV_EXISTING_IGNORE_CREATE,
+//           TAXONOMY_CSV_EXISTING_IGNORE_ALL,
+        ),
+        TAXONOMY_CSV_SOURCE_CHILDREN       => array(
           TAXONOMY_CSV_EXISTING_UPDATE_MERGE,
           TAXONOMY_CSV_EXISTING_UPDATE_REPLACE,
           TAXONOMY_CSV_EXISTING_IGNORE_CREATE,

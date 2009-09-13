@@ -12,6 +12,13 @@ Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
 
 
+Taxonomy csv 7.x-4.4, 2009-09-13
+Taxonomy csv 6.x-4.4, 2009-09-13
+--------------------------------
+#575236 by Daniel Berthereau: Added Children import.
+By Daniel Berthereau: Added Parents import.
+
+
 Taxonomy csv 7.x-4.3, 2009-09-12
 Taxonomy csv 6.x-4.3, 2009-09-12
 --------------------------------

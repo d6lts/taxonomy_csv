@@ -89,6 +89,26 @@ This permission is often associated with these ones:
       </ul>
       Full lines, partial and one term lines can be mixed, but order is important two by two lines, except when there are only full lines. In this example, if fifth and sixth lines are shift, < <code>Seoul</code> > will become a child of < <code>Japan</code> >.
     </dd>
+    <dt>First level parents of a term</dt>
+    <dd>
+      The first item is imported as a term, the second and next as first level parents of first term. For example, lines may be:<br />
+      <ul>
+        <li><code>Daughter, Mother, Father</code></li>
+        <li><code>Son, Mother, Father 2</code></li>
+        <li><code>Mother, Great-Mother, Great-Father</code></li>
+        <li><code>Father, Great-Mother 1, Great-Father 2</code></li>
+      </ul>
+    </dd>
+    <dt>First level children of a term</dt>
+    <dd>
+      The first item is imported as a term, the second and next as first level children of first term. For example, lines may be:<br />
+      <ul>
+        <li><code>Mother, Daughter, Son</code></li>
+        <li><code>Father, Daughter, Son 2</code></li>
+        <li><code>Great-Mother, Mother</code></li>
+        <li><code>Great-Father, Mother</code></li>
+      </ul>
+    </dd>
     <dt>Related terms</dt>
     <dd>
       Warning: in Drupal 7, related terms have been removed and replaced by fields. So this option is available only with Drupal 6.<br />
@@ -181,7 +201,7 @@ This permission is often associated with these ones:
       Second, you can use file import. Third, you can reduce log level. Fourth, you can use these tweaks.
       <dl>
         <dt>Disable internal cache</dt>
-        <dd>This option disables internal cache, which allows to import complex vocabularies, with multiple parents and some duplicates. It's useless with simple lists of terms or tree structures, but it allows to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.</dd>
+        <dd>To disable internal cache allows to import vocabularies of any size. Internal cache is used to import complex vocabularies, with multiple parents and some duplicates. It allows too to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.</dd>
         <dt>Manually set vocabulary hierarchy</dt>
         <dd>As to calculate vocabulary hierarchy is memory intensive, this option allows to set hierarchy manually without verify it.</dd>
         <dt>Disable line checks</dt>

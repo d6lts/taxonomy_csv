@@ -24,7 +24,8 @@
 
 /**
  * @file
- * Quick import of taxonomies, structure or lists of terms from a csv file or a text area.
+ * Quick import of taxonomies, structure or lists of terms from a csv local
+ * or distant file or a text area.
  *
  * Automatically imports a list of terms, structure, children, related, synonyms,
  * descriptions and/or weights into a vocabulary with a simple csv file.
@@ -146,7 +147,7 @@ function taxonomy_csv_form_main($form_state) {
     'disable_utf8_check'            => FALSE,
     'result_stats'                  => 'result_stats',
     'result_terms'                  => 'result_terms',
-    'result_level'                  => 'warnings',
+    'result_level'                  => 'notices',
     'result_type'                   => 'by_message',
   );
 
@@ -387,13 +388,41 @@ function taxonomy_csv_form_main($form_state) {
       '#description' => t('The first term is imported as a root level parent, the second as child of first term, the third as child of second term and so on. More information on one term by line structure import can be found in <a href="!more_help">advanced help</a>.', array('!more_help' => url('admin/help/taxonomy_csv'))) .'<br />'. t('This option indicates whether and how existing terms with the same name should be updated or ignored.<br />
         The lower child is the last term of a line. Others are hierarchical parents.</p>
         <ul>
-          <li><em>"Update and merge"</em>: each child and parents are merged with old ones. So a term can have more than one parent. Warning: currently not totally tested.</li>
-          <li><em>"Update and replace"</em>: each parent replace eventual older ones.</li>
+          <li><em>"Update and merge"</em>: each child and parents are merged with old ones.</li>
+          <li><em>"Update and replace"</em>: each parent replaces eventual older ones.</li>
           <li><em>"Ignore and create"</em>: child is always created and eventually its parents if they don\'t exist.</li>
           <li><em>"Ignore and create all"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>
         </ul>'
       ),
       '#prefix'      => '<div id="description_structure">',
+      '#suffix'      => '</div>',
+    );
+    $form['import_options']['description_parents'] = array(
+      '#type'        => 'item',
+      '#value'       => t('Additional help (First level parents of a term)'),
+      '#description' => t('The first item is imported as a term, the second and next as parents of first term. Unlike structure import, all parents are first level parents.') .'<br />'. t('This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>
+        <ul>
+          <li><em>"Update and merge"</em>: each child and parents are merged with old ones. No duplicate are created.</li>
+          <li><em>"Update and replace"</em>: each parent replaces eventual older ones.</li>
+          <li><em>"Ignore and create"</em>: child is always created and eventually its parents if they don\'t exist.</li>
+          <li><em>"Ignore and create all"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>
+        </ul>'
+      ),
+      '#prefix'      => '<div id="description_parents">',
+      '#suffix'      => '</div>',
+    );
+    $form['import_options']['description_children'] = array(
+      '#type'        => 'item',
+      '#value'       => t('Additional help (First level children of a term)'),
+      '#description' => t('The first item is imported as a term, the second and next as children of first term. Unlike structure import, all children are first level children.') .'<br />'. t('This option indicates whether and how existing terms with the same name should be updated or ignored.<br /></p>
+        <ul>
+          <li><em>"Update and merge"</em>: each child and parents are merged with old ones.</li>
+          <li><em>"Update and replace"</em>: each parent replaces eventual older ones.</li>
+          <li><em>"Ignore and create"</em>: child is always created and eventually its parents if they don\'t exist.</li>
+          <li><em>"Ignore and create all"</em>: Child and its parents are always created, even if they already exist. Duplicates may be created.</li>
+        </ul>'
+      ),
+      '#prefix'      => '<div id="description_children">',
       '#suffix'      => '</div>',
     );
     $form['import_options']['description_relations'] = array(
@@ -522,7 +551,7 @@ function taxonomy_csv_form_main($form_state) {
     '#type'          => 'checkbox',
     '#title'         => t('Disable internal cache'),
     '#default_value' => $list_previous_values['disable_internal_cache'],
-    '#description'   => t("This checkbox allows to import complex vocabularies, with multiple parents and some duplicates. It's useless with simple lists of terms or tree structures, but it allows to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.<br />
+    '#description'   => t("To disable internal cache allows to import vocabularies of any size. Internal cache is used to import complex vocabularies, with multiple parents and some duplicates. It allows too to display informations about import process. When disabled, no information about results can be displayed except eventual first error or warning.<br />
     It's recommended to disable cache if the imported vocabulary is too big, because it avoids memory congestion on server."),
   );
 
