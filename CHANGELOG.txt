@@ -10,6 +10,12 @@
 
 Taxonomy csv x.x-x.x, xxxx-xx-xx
 --------------------------------
+By Daniel Berthereau: Released 6.x.2.4.
+
+Taxonomy csv 7.x-4.6, 2009-09-22
+Taxonomy csv 6.x-4.6, 2009-09-22
+--------------------------------
+By Daniel Berthereau: Released 6.x.4.6.
 
 
 Taxonomy csv 7.x-4.5, 2009-09-22
