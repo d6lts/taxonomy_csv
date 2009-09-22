@@ -7,10 +7,3 @@ package = 'Taxonomy'
 files[] = taxonomy_csv.install
 files[] = taxonomy_csv.module
 files[] = taxonomy_csv.api.inc
-
-; Information added by drupal.org packaging script on 2009-08-18
-version = "6.x-4.2"
-core = "6.x"
-project = "taxonomy_csv"
-datestamp = "1250581593"
-
