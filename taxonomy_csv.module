@@ -1,6 +1,31 @@
 <?php
 // $Id$
-// Copyright (c) 2007-2008 Dennis Stevense, see LICENSE.txt for more information.
+
+/**
+ * taxonomy_csv module for Drupal
+ *
+ * Copyright (c) 2007-2008 Dennis Stevense, see LICENSE.txt for more information
+ * Copyright (c) 2009 Daniel Berthereau <daniel.drupal@berthereau.net>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/**
+ * @file
+ * Quick import of lists of terms from a csv file.
+ */
 
 define('TAXONOMY_CSV_COMMA', 0);
 define('TAXONOMY_CSV_SEMICOLON', 1);
@@ -8,6 +33,7 @@ define('TAXONOMY_CSV_SEMICOLON', 1);
 define('TAXONOMY_CSV_IGNORE', 0);
 define('TAXONOMY_CSV_FIELDS', 1);
 define('TAXONOMY_CSV_CHILDREN', 2);
+define('TAXONOMY_CSV_WEIGHTS', 3);
 
 /**
  * Implementation of hook_help().
@@ -16,7 +42,7 @@ function taxonomy_csv_help($section) {
   switch ($section) {
     case 'admin/content/taxonomy/csv':
       return t('<p>Use this form to import taxonomy terms into a vocabulary from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file.</p><p><strong>Warning:</strong> If you want to update an existing vocabulary, make sure you have a backup before you proceed so you can roll back, if necessary.') . theme('more_help_link', url('admin/help/taxonomy_csv'));
-      
+
     case 'admin/help#taxonomy_csv':
       return t('<p>This module allows you to <a href="!import-url">import taxonomy terms</a> into a vocabulary from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values" title="Wikipedia definition">CSV</a> file.</p><p>The term name will be imported from the first column. You can specify how additional columns should be imported:</p><dl><dt>Ignore</dt><dd>This has the same effect has having a single column.</dd><dt>Term description, term synonyms</dt><dd>The second column will be imported as the term description and any additional columns will be imported as term synonyms. Either or both may be empty.</dd><dt>Child term names</dt><dd>The second column will be imported as the name of a child term of the term defined by the first column. The third column will be imported as a child of the second column, and so on. For example, you might have a line <code>Animal,Mammal,Dog</code>. Note that this will only work for hierarchical vocabularies.</dd></dl><p>If you want to import child term names as well as descriptions and synonyms for each term, you will need to do this in two steps. First, upload a file containing the parent and child term names with the <em>Child term names</em> option. Second, upload a file containing descriptions and synonyms for each term with the <em>Term description, term synonyms</em> option, while making sure to enable the <em>Update if name matches</em> option.</p><p>If you are unsure how to create a CSV file, you might want to use <acronym title="Microsoft Office ">Excel</a> or another spreadsheet application to export your data into a CSV file.</p>', array('!import-url' => url('admin/content/taxonomy/csv')));
   }
@@ -27,7 +53,7 @@ function taxonomy_csv_help($section) {
  */
 function taxonomy_csv_menu($may_cache) {
   $items = array();
-  
+
   if ($may_cache) {
     $items[] = array('path' => 'admin/content/taxonomy/csv',
       'title' => t('CSV import'),
@@ -36,7 +62,7 @@ function taxonomy_csv_menu($may_cache) {
       'weight' => 12,
       'type' => MENU_LOCAL_TASK);
   }
-  
+
   return $items;
 }
 
@@ -45,9 +71,9 @@ function taxonomy_csv_menu($may_cache) {
  */
 function taxonomy_csv_import() {
   $form = array('#attributes' => array('enctype' => 'multipart/form-data'));
-  
+
   $form['source'] = array('#type' => 'fieldset', '#title' => t('Source'));
-  
+
   $form['source']['upload'] = array(
     '#type' => 'file',
     '#title' => t('CSV file'),
@@ -56,7 +82,7 @@ function taxonomy_csv_import() {
   if ($max_size = _taxonomy_csv_parse_size(ini_get('upload_max_filesize'))) {
     $form['source']['upload']['#description'] = t('Due to server restrictions, the maximum upload file size is !size. Files that exceed this size will be disregarded without notice.', array('!size' => format_size($max_size)));
   }
-  
+
   $form['source']['delimiter'] = array(
     '#type' => 'select',
     '#title' => t('CSV file delimiter'),
@@ -66,7 +92,7 @@ function taxonomy_csv_import() {
     ),
     '#description' => t('Choose the delimiter used in the CSV file you want to import.'),
   );
-  
+
   $form['source']['columns'] = array(
     '#type' => 'radios',
     '#title' => t('Additional columns'),
@@ -74,13 +100,14 @@ function taxonomy_csv_import() {
       TAXONOMY_CSV_IGNORE => t('Ignore'),
       TAXONOMY_CSV_FIELDS => t('Term description, term synonyms (may be empty)'),
       TAXONOMY_CSV_CHILDREN => t('Child term names (hierarchical vocabularies only)'),
+      TAXONOMY_CSV_WEIGHTS => t('Term weights'),
     ),
     '#default_value' => TAXONOMY_CSV_IGNORE,
     '#description' => t('The first column is always imported as the term name. This option determines how additional columns will be imported. If your CSV file only contains one column, this option will be ignored.'),
   );
-  
+
   $form['dest'] = array('#type' => 'fieldset', '#title' => t('Destination'));
-  
+
   $form['dest']['vid'] = array(
     '#type' => 'select',
     '#title' => t('Vocabulary'),
@@ -88,12 +115,12 @@ function taxonomy_csv_import() {
     '#required' => TRUE,
     '#description' => t('The vocabulary you want to import the file into. You might want to !add-new-vocab.', array('!add-new-vocab' => l(t('add a new vocabulary'), 'admin/content/taxonomy/add/vocabulary', array(), drupal_get_destination()))),
   );
-  
+
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vid => $vocabulary) {
     $form['dest']['vid']['#options'][$vid] = $vocabulary->name;
   }
-  
+
   $form['dest']['update'] = array(
     '#type' => 'radios',
     '#title' => t('Existing terms'),
@@ -104,9 +131,9 @@ function taxonomy_csv_import() {
     '#default_value' => TRUE,
     '#description' => t('Whether existing terms with the same name should be re–created or updated.'),
   );
-  
+
   $form['submit'] = array('#type' => 'submit', '#value' => t('Import'));
-  
+
   return $form;
 }
 
@@ -122,13 +149,13 @@ function _taxonomy_csv_parse_size($value) {
   $suffix = strtoupper(substr($value, -1));
   switch ($suffix) {
     case 'G':
-      $number *= 1024;      
+      $number *= 1024;
     case 'M':
       $number *= 1024;
     case 'K':
       $number *= 1024;
   }
-  
+
   return $number;
 }
 
@@ -146,42 +173,42 @@ function taxonomy_csv_import_validate($form_id, $form_values) {
  */
 function taxonomy_csv_import_submit($form_id, $form_values) {
   $options = $form_values;
-  
+
   $file = file_check_upload();
-  
+
   if ($options['delimiter'] == TAXONOMY_CSV_SEMICOLON) {
     $delimiter = ';';
   }
   else {
     $delimiter = ',';
   }
-  
+
   $options['vocabulary'] = taxonomy_get_vocabulary($options['vid']);
   if (!$options['vocabulary']->hierarchy && $options['columns'] == TAXONOMY_CSV_CHILDREN) {
     $options['columns'] = TAXONOMY_CSV_IGNORE;
   }
-  
+
   // Automatically detect line endings.
   ini_set('auto_detect_line_endings', '1');
-  
+
   $handle = fopen($file->filepath, 'r');
   $first = TRUE;
   while ($line = fgetcsv($handle, 4096, $delimiter)) {
     if (empty($line) || (count($line) == 1 && $line[0] == NULL)) continue;
-    
+
     // Skip UTF-8 byte order mark.
     if ($first) {
       if (strncmp($line[0], "\xEF\xBB\xBF", 3) === 0) $line[0] = substr($line[0], 3);
       $first = FALSE;
     }
-    
+
     taxonomy_csv_import_line($line, $options);
 
     // Keep alive by restarting execution time limit.
     set_time_limit(30);
   }
   fclose($handle);
-  
+
   drupal_set_message(t('The CSV file has been imported.'));
 }
 
@@ -193,16 +220,26 @@ function taxonomy_csv_import_line($line, $options) {
     $parent = 0;
     for ($c = 0; $c < count($line); $c++) {
       if (empty($line[$c])) break;
-      
+
       $term = array(
         'name' => $line[$c],
         'vid' => $options['vid'],
         'parent' => $parent,
       );
-      
+
       // Parent terms (so all terms but the last on this line) are always updated.
       $term = taxonomy_csv_import_term($term, $options['update'] || $c < count($line) - 1);
       $parent = $term['tid'];
+    }
+  }
+  else if ($options['columns'] == TAXONOMY_CSV_WEIGHTS) {
+    if (count($line) > 1 && !empty($line[1])) {
+      $term = array(
+        'name' => $line[0],
+        'vid' => $options['vid'],
+        'weight' => $line[1],
+      );
+      taxonomy_csv_import_term($term, $options['update']);
     }
   }
   else if (!empty($line[0])) {
@@ -210,7 +247,7 @@ function taxonomy_csv_import_line($line, $options) {
       'name' => $line[0],
       'vid' => $options['vid'],
     );
-    
+
     if ($options['columns'] == TAXONOMY_CSV_FIELDS) {
       if (count($line) > 1 && !empty($line[1])) {
         $term['description'] = $line[1];
@@ -219,7 +256,7 @@ function taxonomy_csv_import_line($line, $options) {
         $term['synonyms'] = implode("\n", array_filter(array_slice($line, 2)));
       }
     }
-    
+
     taxonomy_csv_import_term($term, $options['update']);
   }
 }
@@ -244,7 +281,7 @@ function taxonomy_csv_import_term($term, $update = TRUE) {
       if (array_key_exists($key, $term))
         $existing_term[$key] = $term[$key];
     }
-    
+
     $term = $existing_term;
   }
 
@@ -259,7 +296,7 @@ function taxonomy_csv_find_term($name, $vid, $parent = NULL) {
   static $cache = array();
 
   $name = drupal_strtolower(trim($name));
-  
+
   $key = $name .'_'. $vid;
   if (!is_null($parent)) {
     $key .= '_'. $parent;
@@ -276,10 +313,10 @@ function taxonomy_csv_find_term($name, $vid, $parent = NULL) {
       $args[] = $parent;
     }
     $sql .= "LIMIT 1 ";
-    
+
     $result = db_query($sql, $args);
     $term = db_fetch_array($result);
-    
+
     if ($term) {
       $cache[$key] = $term;
       if (is_null($parent)) {
@@ -287,6 +324,6 @@ function taxonomy_csv_find_term($name, $vid, $parent = NULL) {
       }
     }
   }
-  
+
   return $term;
 }
