@@ -642,16 +642,16 @@ msgstr "Taxinomie"
 msgid ""
 "Taxonomy CSV import/export has been installed. You can now import and "
 "export taxonomies, structures or lists of terms under <a "
-"href=\"!link_import\">Administer > Structure > Taxonomy > CSV "
+"href=\"!link_import\">Administer > Content management > Taxonomy > CSV "
 "import</a> and <a href=\"!link_export\">CSV export</a>. More "
 "information is available under <a href=\"!link_help\">Administer > "
 "Help > Taxonomy CSV import/export</a>."
 msgstr ""
 "Taxonomy CSV import/export a été installé. Vous pouvez maintenant "
 "importer et exporter des taxinomies, des structures or des listes de "
-"termes à <a href=\"!link_import\">Administrer > Structure > "
+"termes à <a href=\"!link_import\">Administrer > Gestion du contenu > "
 "Taxinomie > Importer par CSV</a> et <a href=\"!link_export\">Exporter "
-"par CSV</a>. Des informatiosn complémentaires sont disponibles à <a "
+"par CSV</a>. Des informations complémentaires sont disponibles à <a "
 "href=\"!link_help\">Administrer > Aide > Taxonomy CSV "
 "import/export</a>."
 
@@ -1843,22 +1843,22 @@ msgid "Hierarchy level is !level (!level_text)."
 msgstr "Le niveau hiérarchique est !level (!level_text)."
 
 #: import/taxonomy_csv.import.result.inc:217
-msgid "Properties can be edited at <a href=\"!vocabulary_edit_link\">Administer > Structure > Taxonomy > edit vocabulary</a>."
+msgid "Properties can be edited at <a href=\"!vocabulary_edit_link\">Administer > Content management > Taxonomy > edit vocabulary</a>."
 msgstr ""
-"Les propriétés peuvent être éditées à <a href=\"!vocabulary_edit_link\">Administrer > Structure > "
+"Les propriétés peuvent être éditées à <a href=\"!vocabulary_edit_link\">Administrer > Gestion du contenu > "
 "Taxinomie > Modifier le vocabulaire</a>."
 
 #: import/taxonomy_csv.import.result.inc:220
-msgid "You can view terms at <a href=\"!vocabulary_list\">Administer > Structure > Taxonomy > list terms</a>."
-msgstr "Vous pouvez afficher les termes à <a href=\"!vocabulary_list\">Administrer > Structure > Taxinomie > lister les termes</a>."
+msgid "You can view terms at <a href=\"!vocabulary_list\">Administer > Content management > Taxonomy > list terms</a>."
+msgstr "Vous pouvez afficher les termes à <a href=\"!vocabulary_list\">Administrer > Gestion du contenu > Taxinomie > lister les termes</a>."
 
 #: import/taxonomy_csv.import.result.inc:224
-msgid "It is recommended to use <a href=\"!link\" title=\"Taxonomy manager module\">Administer > Structure > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal \"List terms\" menu."
-msgstr "Il est recommandé d'utiliser <a href=\"!link\" title=\"module Taxonomy manager\">Administrer > Structure > Taxonomy manager > Vocabulaires</a> avec les gros vocabulaires, car une erreur mémoire peut survenir avec le menu par défaut de Drupal \"Lister les termes\"."
+msgid "It is recommended to use <a href=\"!link\" title=\"Taxonomy manager module\">Administer > Content management > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal \"List terms\" menu."
+msgstr "Il est recommandé d'utiliser <a href=\"!link\" title=\"module Taxonomy manager\">Administrer > Gestion du contenu > Taxonomy manager > Vocabulaires</a> avec les gros vocabulaires, car une erreur mémoire peut survenir avec le menu par défaut de Drupal \"Lister les termes\"."
 
 #: import/taxonomy_csv.import.result.inc:229
 msgid "Warning: with default Drupal \"List terms\" function, a memory error can occur with big taxonomies, so use another manager as <a href=\"!link\" title=\"Taxonomy manager\">Taxonomy manager</a>."
-msgstr "Attention : avec la fonction par défaut de Drupal \"Lister les termes\", une erreur mémoire peut survenir avec les gross vocabulaires. Il est donc conseillé d'utiliser un autre gestionnaire tel que <a href=\"!link\" title=\"Taxonomy manager\">Taxonomy manager</a>."
+msgstr "Attention : avec la fonction par défaut de Drupal \"Lister les termes\", une erreur mémoire peut survenir avec les gros vocabulaires. Il est donc conseillé d'utiliser un autre gestionnaire tel que <a href=\"!link\" title=\"Taxonomy manager\">Taxonomy manager</a>."
 
 #: import/taxonomy_csv.import.result.inc:253
 msgid "Total created or updated terms : !count."

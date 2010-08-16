@@ -266,22 +266,6 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array()) {
             break 2;
           }
         }
-
-        // 9. Set relations for related terms and check result. Unlike Drupal 6,
-        // relation field is linked only in one way. So, an update is needed.
-        foreach ($term->relations as $tid) {
-          $temp_term = (object) array(
-            'tid'       => $tid,
-            'relations' => array($term->tid),
-          );
-
-          $current_result = taxonomy_csv_term_import($temp_term, TAXONOMY_CSV_EXISTING_UPDATE_MERGE);
-          // Terms are already memorised.
-          $result['msg'] = array_merge($result['msg'], $current_result['msg']);
-          if (_taxonomy_csv_worst_message($current_result['msg']) < TAXONOMY_CSV_PROCESS_NOTICE) {
-            break 2;
-          }
-        }
         break;
 
       case TAXONOMY_CSV_FORMAT_FLAT:

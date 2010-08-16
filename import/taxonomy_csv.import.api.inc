@@ -98,25 +98,25 @@ function _taxonomy_csv_import_input_preload(&$options) {
   // Text import.
   elseif (isset($options['text']) && $options['text'] != '') {
     // Prepare import by text: save text as a temp file to simplify process.
-    $filename = file_unmanaged_save_data(
+    $filename = file_save_data(
       $options['text'],
-      'public://taxocsv.csv',
+      'taxocsv.csv',
       'FILE_EXISTS_RENAME');
     $options['file'] = (object) array(
       'filename' => basename($filename),
-      'filepath' => drupal_realpath($filename),
+      'filepath' => $filename,
       'filesize' => filesize($filename)
     );
   }
   // Url import.
   elseif (isset($options['url']) && $options['url'] != '') {
-    $filename = file_unmanaged_save_data(
+    $filename = file_save_data(
       file_get_contents($options['url']),
-      'public://taxocsv.csv',
+      'taxocsv.csv',
       'FILE_EXISTS_RENAME');
     $options['file'] = (object) array(
       'filename' => basename($filename),
-      'filepath' => drupal_realpath($filename),
+      'filepath' => $filename,
       'filesize' => filesize($filename),
     );
   }
@@ -124,10 +124,6 @@ function _taxonomy_csv_import_input_preload(&$options) {
   elseif (isset($options['path']) && $options['path'] != '') {
     // Load source local file.
     $options['file'] = file_save_upload($options['path']);
-    // fopen and fseek need a real path.
-    if ($options['file']) {
-      $options['file']->filepath = drupal_realpath($options['file']->uri);
-    }
   }
   else {
     $messages['source_choice'] = t('Source choice should be a text, an url or a file path and should not be empty.');
@@ -190,13 +186,13 @@ function _taxonomy_csv_import_clean_utf8(&$file, $check_utf8 = TRUE) {
     $content = substr($content, 3);
 
     // Update content in file.
-    $filename = file_unmanaged_save_data(
+    $filename = file_save_data(
       $content,
-      $file->uri,
+      $file->filepath,
       'FILE_EXISTS_REPLACE');
     $file = (object) array(
       'filename' => basename($filename),
-      'filepath' => drupal_realpath($filename),
+      'filepath' => $filename,
       'filesize' => filesize($filename),
     );
   }
@@ -386,7 +382,7 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
 
     // Check worst message of imported lines and update progress.
     if ($worst_message >= TAXONOMY_CSV_PROCESS_WARNING) {
-      // Count should be <= 0.99 to avoid batch stop before end (Drupal 7 bug).
+      // Count should be <= 0.99 to avoid to display "100%" before end.
       $context['finished'] = floor($line_number / $context['sandbox']['max'] * 100) / 100;
     }
     else {
@@ -513,26 +509,6 @@ function _taxonomy_csv_import_vocabulary_prepare(&$options) {
       $vocabulary = taxonomy_vocabulary_load($options['vocabulary_id']);
       break;
   }
-
-  // Prepare default synonyms field if needed.
-  $synonym_field = (in_array($options['import_format'], array(
-      TAXONOMY_CSV_FORMAT_DEFINITIONS,
-      TAXONOMY_CSV_FORMAT_SYNONYMS,
-      TAXONOMY_CSV_FORMAT_TAXONOMY_MANAGER,
-    ))) ?
-    array() :
-    FALSE;
-
-  // Prepare default relations field if needed.
-  $relation_field = (in_array($options['import_format'], array(
-      TAXONOMY_CSV_FORMAT_RELATIONS,
-      TAXONOMY_CSV_FORMAT_TAXONOMY_MANAGER,
-    ))) ?
-    array() :
-    FALSE;
-
-  // Create thesaurus synonyms and relations fields if needed.
-  $options['vocabulary'] = taxonomy_csv_thesaurus_create($vocabulary->name, $synonym_field, $relation_field);
 
   return $vocabulary->name;
 }

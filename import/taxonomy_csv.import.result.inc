@@ -140,13 +140,13 @@ function _taxonomy_csv_info_vocabulary($options) {
     // Check or update hierarchy of vocabularies.
     $vocabulary = taxonomy_vocabulary_load($vocabulary_id);
     if ($options['check_hierarchy']) {
-      $result = _taxonomy_csv_check_vocabulary_hierarchy($vocabulary, '');
+      $result = _taxonomy_csv_check_vocabulary_hierarchy((array) $vocabulary, array('tid' => 0));
     }
     // Set vocabulary hierarchy only if needed.
     else {
       if ($options['set_hierarchy'] != $vocabulary->hierarchy) {
         $vocabulary->hierarchy = $options['set_hierarchy'];
-        $result = taxonomy_vocabulary_save($vocabulary);
+        $result = taxonomy_save_vocabulary($vocabulary);
       }
       $result = $options['set_hierarchy'];
     }
@@ -215,19 +215,19 @@ function _taxonomy_csv_info_vocabulary_result($vocabulary, $vocabulary_target, $
   )) . '<br />';
 
   // Direct links to edit vocabulary and view terms.
-  $message .= t('Properties can be edited at <a href="!vocabulary_edit_link">Administer > Structure > Taxonomy > edit vocabulary</a>.', array(
-    '!vocabulary_edit_link' => url("admin/structure/taxonomy/$vocabulary->machine_name/edit"),
-  )) . '<br />';
-  $message .= t('You can view terms at <a href="!vocabulary_list">Administer > Structure > Taxonomy > list terms</a>.', array(
-    '!vocabulary_list' => url("admin/structure/taxonomy/$vocabulary->machine_name"),
-  )) . '<br />';
+  $message .= t('Properties can be edited at <a href="!vocabulary_edit_link">Administer > Content management > Taxonomy > edit vocabulary</a>.', array(
+    '!vocabulary_edit_link' => url("admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"),
+  )) .'<br />';
+  $message .= t('You can view terms at <a href="!vocabulary_list">Administer > Content management > Taxonomy > list terms</a>.', array(
+    '!vocabulary_list' => url("admin/content/taxonomy/$vocabulary->vid"),
+  )) .'<br />';
   if (module_exists('taxonomy_manager')) {
-    $message .= t('It is recommended to use <a href="!link" title="Taxonomy manager module">Administer > Structure > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal "List terms" menu.', array(
-      '!link' => url("admin/structure/taxonomy_manager/voc/$vocabulary->vid"),
+    $message .= t('It is recommended to use <a href="!link" title="Taxonomy manager module">Administer > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal "List terms" menu.', array(
+      '!link' => url("admin/content/taxonomy_manager/voc/$vocabulary->vid"),
     ));
   }
   else {
-    $message .= t('Warning: with default Drupal "List terms" function, a memory error can occur with big taxonomies, so use another manager as <a href="!link" title="Taxonomy manager">Taxonomy manager</a>.', array(
+    $message .= t('Warning: with default Drupal "List terms" function, a memory error can occur with big taxonomies, so use another manager as <a href="!link" title="Taxonomy manager module">Taxonomy manager</a>.', array(
       '!link' => url('http://drupal.org/project/taxonomy_manager'),
     ));
   }
@@ -255,7 +255,7 @@ function _taxonomy_csv_info_terms($options) {
 
     // Display list of terms.
     if ($options['result_terms']) {
-      $terms = taxonomy_term_load_multiple($tids);
+      $terms = taxonomy_csv_term_load_multiple($tids);
 
       $message .= '"';
       foreach ($terms as $term) {

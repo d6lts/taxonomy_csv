@@ -29,7 +29,7 @@
  *   - enclosure     : zero or one character csv enclosure (default: '"')
  *   - line_ending   : 'Unix' (default), 'Mac' or 'MS-DOS'
  *   - order         : order of terms: 'name' (default), 'tid' or 'weight'
- *   //  Specific to def_links:
+ *   // Specific to def_links:
  *   - def_links_terms_ids : 'name_if_needed' (default), 'name' or 'tid'
  *   - def_links_vocabularies_ids : 'none' (default), 'name' or 'vid'
  *   // Level of result process infos.
@@ -86,9 +86,9 @@ function _taxonomy_csv_export_output_presave(&$options) {
     $vocabulary_name = t('Taxonomy');
   }
   // Create file.
-  $filename = file_unmanaged_save_data(
+  $filename = file_save_data(
     '',
-    'public://' . "$vocabulary_name.csv",
+    "$vocabulary_name.csv",
     'FILE_EXISTS_RENAME');
   if (!$filename) {
     $messages['file'] = t('Check access rights to temp directory : export needs permission to write and to read in it. Export failed.');
@@ -96,7 +96,7 @@ function _taxonomy_csv_export_output_presave(&$options) {
   else {
     $options['file'] = (object) array(
       'filename' => basename($filename),
-      'filepath' => drupal_realpath($filename),
+      'filepath' => realpath($filename),
       'filesize' => filesize($filename),
     );
   }
@@ -189,26 +189,13 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     $context['sandbox']['max'] = $options['total_terms'];
 
     // Prepare terms to be exported.
-    if ($options['vocabulary_id']) {
-      $terms = taxonomy_term_load_multiple(
-        array(),
-        array('vid' => $options['vocabulary_id'])
-      );
-    }
-    // Load all terms from all vocabularies.
-    else {
-      $vocabularies = taxonomy_vocabulary_get_names();
-      $terms = array();
-      foreach ($vocabularies as $vocabulary) {
-        $terms = array_merge($terms, taxonomy_term_load_multiple(
-          array(),
-          array('vid' => $vocabulary->vid)
-        ));
-      }
-    }
-    // @todo Order terms.
-    $context['sandbox']['terms'] = &$terms;
-    unset($terms);
+    $context['sandbox']['terms'] = taxonomy_csv_term_load_multiple(
+      array(),
+      array(
+        'vid'   => $options['vocabulary_id'],
+        'order' => $options['order'],
+      )
+    );
 
     // Prepare list of duplicate terms if needed.
     $context['results'][0]['duplicate_terms'] = array();
@@ -280,7 +267,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
 
     // Check worst message of exported terms and update progress.
     if ($worst_message >= TAXONOMY_CSV_PROCESS_WARNING) {
-      // Count should be <= 0.99 to avoid batch stop before end (Drupal 7 bug).
+      // Count should be <= 0.99 to avoid to display "100%" before end.
       $context['finished'] = floor($term_number / $context['sandbox']['max'] * 100) / 100;
     }
     else {
@@ -356,7 +343,7 @@ function _taxonomy_csv_vocabulary_export_finished($success, $results, $operation
  * @param $options
  *   An associative array of export options:
  *   - export_format : see _taxonomy_csv_values('list_export_format')
- *   //  Specific to def_links:
+ *   // Specific to def_links:
  *   - def_links_terms_ids : 'name_if_needed' (default), 'name' or 'tid'
  *   - def_links_vocabularies_ids : 'none' (default), 'name' or 'vid'
  * @param $duplicate_terms
@@ -389,9 +376,10 @@ function taxonomy_csv_line_export($term, $options, $duplicate_terms = array()) {
         // except for duplicate terms. For them, tid is appended to name.
         $terms = array(
           'main'      => array($term),
+          // Synonyms are included in term object in Drupal 6.
           'parents'   => taxonomy_get_parents($term->tid),
           'children'  => taxonomy_get_children($term->tid),
-          'relations' => taxonomy_csv_term_get_relations($term->tid),
+          'relations' => taxonomy_get_related($term->tid),
         );
         foreach (array(
             'main',
@@ -416,9 +404,6 @@ function taxonomy_csv_line_export($term, $options, $duplicate_terms = array()) {
             }
           }
         }
-
-        // Prepare synonyms.
-        $synonyms = taxonomy_csv_term_get_synonyms($term->tid);
 
         // Prepare main term vocabulary identifiant.
         // Vocabulary identifiant depends on def_links_vocabularies_ids.
@@ -456,12 +441,12 @@ function taxonomy_csv_line_export($term, $options, $duplicate_terms = array()) {
             $vid,
             $term->description,
             $term->weight,
-            count($synonyms),
+            count($term->synonyms),
             count($ids['parents']),
             count($ids['children']),
             count($ids['relations']),
           ),
-          $synonyms,
+          $term->synonyms,
           $ids['parents'],
           $ids['children'],
           $ids['relations'],
@@ -507,7 +492,7 @@ function taxonomy_csv_line_export($term, $options, $duplicate_terms = array()) {
           array(
             $term->name,
           ),
-          taxonomy_csv_term_get_synonyms($term->tid)
+          $term->synonyms
         );
         break;
 
@@ -518,7 +503,7 @@ function taxonomy_csv_line_export($term, $options, $duplicate_terms = array()) {
             $term->weight,
             $term->description,
           ),
-          taxonomy_csv_term_get_synonyms($term->tid)
+          $term->synonyms
         );
         break;
 

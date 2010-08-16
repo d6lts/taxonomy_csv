@@ -77,8 +77,7 @@ function taxonomy_csv_form_import($form_state) {
 
   $list_vocabulary_target = array(
     'autocreate' => t('Autocreate a new vocabulary'),
-    // @todo Finish to duplicate a vocabulary.
-    // 'duplicate'  => t('Duplicate an existing vocabulary'),
+    'duplicate'  => t('Duplicate an existing vocabulary'),
     'existing'   => t('Import in an existing vocabulary'),
   );
 
@@ -99,7 +98,6 @@ function taxonomy_csv_form_import($form_state) {
   // See http://drupal.org/node/495548
   // See http://drupal.org/node/447852
   // See http://drupal.org/node/540916 (Pathauto).
-  // @todo To be rechecked when these modules will be released for Drupal 7.
   $issues_modules = array(
     'taxonomynode',
     'taxonomy_vtn',
@@ -118,25 +116,6 @@ function taxonomy_csv_form_import($form_state) {
     }
   }
 
-  // Advertise as it's a developpement release.
-  $form['beta'] = array(
-    '#type'        => 'fieldset',
-    '#title'       => t('WARNING'),
-    '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
-  );
-  $form['beta']['info'] = array(
-    '#type'        => 'item',
-    '#title'       => t('This module is under development.'),
-    '#description' =>  t('* This release works on Drupal 7.x-dev release of the 13 August 2010.') . '<br />'
-      . t('* In Drupal 7, <a href="!link_synonym">synonyms</a> and <a href="!link_related">related terms</a> have been removed and replaced by fields. Comments on this replacement and on the integration in Taxonomy CSV (use schemas or fields, functions, options...) are <a href="!link_comment">welcomed</a>.', array(
-        '!link_synonym' => url('http://drupal.org/node/224333#no-synonyms-taxonomy'),
-        '!link_related' => url('http://drupal.org/node/224333#related_terms'),
-        '!link_comment' => url('http://drupal.org/project/taxonomy_csv'),
-      )),
-    '#required'    => TRUE,
-  );
-
   // Advertise that javascript is not enabled.
   if (!isset($_COOKIE['has_js'])) {
     $form['javascript'] = array(
@@ -153,9 +132,10 @@ function taxonomy_csv_form_import($form_state) {
     );
   }
 
+  // Useless, but allows to keep closer Drupal 6 and Drupal 7 releases.
   $form['tab'] = array(
-    '#type'        => 'vertical_tabs',
-    '#default_tab' => 'format',
+  //  '#type'        => 'vertical_tabs',
+  //  '#default_tab' => 'format',
   );
 
   $form['tab']['format'] = array(
@@ -163,6 +143,7 @@ function taxonomy_csv_form_import($form_state) {
     '#title'       => t('1. What do you want to import?'),
     '#collapsible' => TRUE,
     '#collapsed'   => FALSE,
+    '#attributes'  => array('id' => 'format'),
   );
 
   $form['tab']['format']['import_format'] = array(
@@ -177,11 +158,8 @@ function taxonomy_csv_form_import($form_state) {
     foreach ($list_import_format as $key => $value) {
       $form['tab']['format'][$key] = array(
         '#type'   => 'item',
-        '#states' => array(
-          'visible' => array(
-            ':input[name=import_format]' => array('value' => $key),
-          ),
-        ),
+        '#prefix' => '<div id="description_'. $key .'">',
+        '#suffix' => '</div>',
       );
     }
 
@@ -232,6 +210,7 @@ function taxonomy_csv_form_import($form_state) {
     '#title'       => t('2. Where are items to import?'),
     '#collapsible' => TRUE,
     '#collapsed'   => FALSE,
+    '#attributes'  => array('id' => 'import'),
   );
 
   $form['tab']['import']['source_choice'] = array(
@@ -272,20 +251,13 @@ function taxonomy_csv_form_import($form_state) {
     '#description'   => t('Enter the url (http, ftp, file, path...)'),
   );
 
-  foreach (array('text', 'path', 'url') as $value) {
-    $form['tab']['import'][$value]['#states'] = array(
-      'visible' => array(
-        ':input[name=source_choice]' => array('value' => $value),
-      ),
-    );
-  }
-
   $form['tab']['csv_format'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('3. How is formatted your source?'),
     '#description' => t('Notice: either you import terms by a file or by a text area, the csv format is the same. Default delimiter is a comma ("<strong><code> , </code></strong>"). Default enclosure is none, but quotation mark ("<strong><code> " </code></strong>") is automatically managed.'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
+    '#attributes'  => array('id' => 'csv_format'),
   );
 
   $form['tab']['csv_format']['import_delimiter'] = array(
@@ -294,6 +266,7 @@ function taxonomy_csv_form_import($form_state) {
     '#options'       => $list_import_delimiter,
     '#default_value' => $list_previous_values['import_delimiter'],
     '#description'   => t("Choose the delimiter used in the CSV file you want to import. Tabulation can't be used with text area import."),
+    '#attributes'    => array('id' => 'delimiter'),
   );
 
   $form['tab']['csv_format']['import_delimiter_custom'] = array(
@@ -302,11 +275,6 @@ function taxonomy_csv_form_import($form_state) {
     '#default_value' => $list_previous_values['import_delimiter_custom'],
     '#size'          => 2,
     '#maxlength'     => 1,
-    '#states' => array(
-      'visible' => array(
-        ':input[name=import_delimiter]' => array('value' => 'custom_delimiter'),
-      ),
-    ),
   );
 
   $form['tab']['csv_format']['import_enclosure'] = array(
@@ -315,6 +283,7 @@ function taxonomy_csv_form_import($form_state) {
     '#options'       => $list_import_enclosure,
     '#default_value' => $list_previous_values['import_enclosure'],
     '#description'   => t('Choose the enclosure used in the CSV file you want to import.'),
+    '#attributes'    => array('id' => 'enclosure'),
   );
 
   $form['tab']['csv_format']['import_enclosure_custom'] = array(
@@ -323,11 +292,6 @@ function taxonomy_csv_form_import($form_state) {
     '#default_value' => $list_previous_values['import_enclosure_custom'],
     '#size'          => 2,
     '#maxlength'     => 1,
-    '#states' => array(
-      'visible' => array(
-        ':input[name=import_enclosure]' => array('value' => 'custom_enclosure'),
-      ),
-    ),
   );
 
   $form['tab']['csv_format']['check_line'] = array(
@@ -341,11 +305,6 @@ function taxonomy_csv_form_import($form_state) {
     '#type'          => 'checkbox',
     '#title'         => t('Check UTF-8 format'),
     '#description'   => t('File needs to be UTF-8 formatted. You can disable this check if you are sure that your file is encoded correctly. Desactivation is needed with some server configurations too. This option is not used with a textarea import.'),
-    '#states' => array(
-      'invisible' => array(
-        ':input[name=source_choice]' => array('value' => 'text'),
-      ),
-    ),
   );
   if (function_exists('mb_detect_encoding')) {
     $form['tab']['csv_format']['check_utf8']['#default_value'] = $list_previous_values['check_utf8'];
@@ -360,11 +319,12 @@ function taxonomy_csv_form_import($form_state) {
     '#type'        => 'fieldset',
     '#title'       => t('4. Which vocabulary do you want to import into?'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
     '#description' => t('Terms can be imported into a new vocabulary or in an existing one. You can choose to duplicate an existing vocabulary too in order to check import. You might want to !add-new-vocab.', array(
-        '!add-new-vocab' => l(t('add a new vocabulary'), 'admin/structure/taxonomy/add', array('query' => drupal_get_destination())),
+        '!add-new-vocab' => l(t('add a new vocabulary'), 'admin/content/taxonomy/add/vocabulary', array('query' => drupal_get_destination())),
       )) . '<br />'
       . t('With some import formats as "Fields and links", vocabulary destination is defined by source content and this option is not used.'),
+    '#attributes'  => array('id' => 'destination'),
   );
 
   $form['tab']['csv_format']['locale_custom'] = array(
@@ -376,7 +336,7 @@ function taxonomy_csv_form_import($form_state) {
     '#description'   => t("To set locale can resolve some import issues. Choose the locale you use, for example 'en_DK.utf8', and it will be automatically set before import and reset after. Let empty when no problem occurs: import will use your default locale."),
   );
 
-  $list_vocabularies = taxonomy_vocabulary_get_names();
+  $list_vocabularies = taxonomy_get_vocabularies();
 
   if (count($list_vocabularies) == 0) {
     $form['tab']['destination']['#description'] .= '<br /><br />'
@@ -408,11 +368,6 @@ function taxonomy_csv_form_import($form_state) {
       ),
       '#default_value' => $list_previous_values['vocabulary_id'],
       '#description'   => t('The vocabulary you want to import the file into.'),
-      '#states' => array(
-        'invisible' => array(
-          ':input[name=vocabulary_target]' => array('value' => 'autocreate'),
-        ),
-      ),
     );
     foreach ($list_vocabularies as $vocabulary) {
       $form['tab']['destination']['vocabulary_id']['#options'][$vocabulary->vid] = $vocabulary->name;
@@ -431,7 +386,6 @@ function taxonomy_csv_form_import($form_state) {
   );
   $form['tab']['destination']['set_hierarchy'] = array(
     '#type'          => 'radios',
-    // '#title is needed to avoid a #states bug.
     '#title'         => '',
     '#options'       => array(
       0 => t('no parent (flat)'),
@@ -439,21 +393,17 @@ function taxonomy_csv_form_import($form_state) {
       2 => t('multiple parents (polyhierarchy)'),
     ),
     '#default_value' => $list_previous_values['set_hierarchy'],
-    '#states' => array(
-      // @todo Change invisible with disabled when #states will work, and move
-      // it above, and directly include title.
-      'invisible' => array(
-        ':input[name=check_hierarchy]' => array('checked' => TRUE),
-      ),
-    ),
+    '#prefix'        => '<div id="set_hierarchy">',
+    '#suffix'        => '</div>',
   );
 
   $form['tab']['import_options'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('5. When a term exists, what to do with it?'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
     '#description' => t('What will existing or previous imported terms become when a term with same name will be imported?'),
+    '#attributes'  => array('id' => 'import_options'),
   );
 
   if (isset($_COOKIE['has_js'])) {
@@ -463,13 +413,9 @@ function taxonomy_csv_form_import($form_state) {
         '#type'          => 'radios',
         '#options'       => array_intersect_key($list_import_option, array_flip($list_import_format_allowed_import_option[$key])),
         '#default_value' => $list_previous_values['existing_items'],
-        // '#description is needed to avoid a #states bug.
         '#description'   => '',
-        '#states'        => array(
-          'visible' => array(
-            ':input[name=import_format]' => array('value' => $key),
-          ),
-        ),
+        '#prefix'      => '<div id="existing_items_'. $key .'">',
+        '#suffix'      => '</div>',
       );
       // Preselection if import format has only one option.
       if (count($form['tab']['import_options']["existing_items_$key"]['#options']) == 1) {
@@ -481,12 +427,9 @@ function taxonomy_csv_form_import($form_state) {
     foreach ($list_import_format as $key => $value) {
       $form['tab']['import_options'][$key] = array(
         '#type'   => 'item',
-        '#markup' => t('Help for import format:') . ' ' . $value,
-        '#states' => array(
-          'visible' => array(
-            ':input[name=import_format]' => array('value' => $key),
-          ),
-        ),
+        '#value'  => t('Help for import format:') . ' ' . $value,
+        '#prefix' => '<div id="help_'. $key .'">',
+        '#suffix' => '</div>',
       );
     }
 
@@ -600,11 +543,7 @@ function taxonomy_csv_form_import($form_state) {
     '#collapsible' => TRUE,
     '#collapsed'   => FALSE,
     '#description' => t('Set these options only if you import:') . ' ' . t('Related terms') . ' .',
-    '#states' => array(
-      'visible' => array(
-        ':input[name=import_format]' => array('value' => 'relations'),
-      ),
-    ),
+    '#attributes'  => array('id' => 'edit-relations'),
   );
   $form['tab']['import_options']['relations']['relations_create_subrelations'] = array(
     '#type'          => 'checkbox',
@@ -626,9 +565,10 @@ function taxonomy_csv_form_import($form_state) {
     '#type'        => 'fieldset',
     '#title'       => t('6. Informations on process'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
     '#description' => t('All these options influe on memory and time process. The more information you want, the more power you need.') . ' '
       . t("It's recommended to reduce displayed infos when imported vocabulary is big (from 1000 or 10000 lines depending on the server)."),
+    '#attributes'  => array('id' => 'advanced_options'),
   );
 
   $form['tab']['advanced_options']['result_choices'] = array(
@@ -664,11 +604,8 @@ function taxonomy_csv_form_import($form_state) {
       // 'by_collapse' => t('By line (collapsible view)'),
     ),
     '#default_value' => $list_previous_values['result_type'],
-    '#states' => array(
-      'invisible' => array(
-        ':input[name=result_level]' => array('value' => 'first'),
-      ),
-    ),
+    '#prefix'        => '<div id="result_type">',
+    '#suffix'        => '</div>',
   );
 
   $form['tab']['advanced_options']['info'] = array(
@@ -707,10 +644,6 @@ function taxonomy_csv_form_import_validate($form, &$form_state) {
   // When source is path, need to preload here.
   if ($options['source_choice'] == 'path') {
     $options['file'] = file_save_upload('path');
-    // fopen and fseek need a real path.
-    if ($options['file']) {
-      $options['file']->filepath = drupal_realpath($options['file']->uri);
-    }
   }
   $messages = _taxonomy_csv_import_input_preload($options);
 

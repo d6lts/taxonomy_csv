@@ -75,12 +75,12 @@ function taxonomy_csv_form_export($form_state) {
   // Build form.
   $form = array();
 
-  $list_vocabularies = taxonomy_vocabulary_get_names();
+  $list_vocabularies = taxonomy_get_vocabularies();
 
   if (count($list_vocabularies) == 0) {
     $form['info'] = array(
       '#type'  => 'item',
-      '#markup' => t("As there isn't any vocabulary, nothing can be exported..."),
+      '#value' => t("As there isn't any vocabulary, nothing can be exported..."),
     );
 
     return $form;
@@ -103,9 +103,10 @@ function taxonomy_csv_form_export($form_state) {
     );
   }
 
+  // Useless, but allows to keep closer Drupal 6 and Drupal 7 releases.
   $form['tab'] = array(
-    '#type'        => 'vertical_tabs',
-    '#default_tab' => 'content',
+  //  '#type'        => 'vertical_tabs',
+  //  '#default_tab' => 'content',
   );
 
   $form['tab']['content'] = array(
@@ -145,7 +146,8 @@ function taxonomy_csv_form_export($form_state) {
     '#type'        => 'fieldset',
     '#title'       => t('2. How do you want to format your CSV file?'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
+    '#attributes'  => array('id' => 'csv_format'),
   );
 
   $form['tab']['csv_format']['export_delimiter'] = array(
@@ -154,6 +156,7 @@ function taxonomy_csv_form_export($form_state) {
     '#options'       => $list_export_delimiter,
     '#default_value' => $list_previous_values['export_delimiter'],
     '#description'   => t('Choose the delimiter to use in the CSV file.'),
+    '#attributes'    => array('id' => 'delimiter'),
   );
 
   $form['tab']['csv_format']['export_delimiter_custom'] = array(
@@ -162,11 +165,6 @@ function taxonomy_csv_form_export($form_state) {
     '#default_value' => $list_previous_values['export_delimiter_custom'],
     '#size'          => 2,
     '#maxlength'     => 1,
-    '#states' => array(
-      'visible' => array(
-        ':input[name=export_delimiter]' => array('value' => 'custom_delimiter'),
-      ),
-    ),
   );
 
   $form['tab']['csv_format']['export_enclosure'] = array(
@@ -175,6 +173,7 @@ function taxonomy_csv_form_export($form_state) {
     '#options'       => $list_export_enclosure,
     '#default_value' => $list_previous_values['export_enclosure'],
     '#description'   => t('Choose the enclosure used in the CSV file you want to export. Warning: enclosure should not be used in term definitions, specially in descriptions. Furthermore, an enclosure is needed if a field contains a line ending character. Export process will stop in case of problem.'),
+    '#attributes'  => array('id' => 'enclosure'),
   );
 
   $form['tab']['csv_format']['export_enclosure_custom'] = array(
@@ -183,11 +182,6 @@ function taxonomy_csv_form_export($form_state) {
     '#default_value' => $list_previous_values['export_enclosure_custom'],
     '#size'          => 2,
     '#maxlength'     => 1,
-    '#states' => array(
-      'visible' => array(
-        ':input[name=export_enclosure]' => array('value' => 'custom_enclosure'),
-      ),
-    ),
   );
 
   $form['tab']['csv_format']['export_line_ending'] = array(
@@ -202,7 +196,8 @@ function taxonomy_csv_form_export($form_state) {
     '#type'        => 'fieldset',
     '#title'       => t('3. Advanced and specific options'),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
+    '#attributes'  => array('id' => 'advanced_options'),
   );
 
   $form['tab']['advanced_options']['export_order'] = array(
@@ -213,14 +208,11 @@ function taxonomy_csv_form_export($form_state) {
     '#description'   => t('Choose order of exported terms.'),
   );
 
-  $form['tab']['advanced_options']['info'] = array(
+  $form['tab']['advanced_options']['specific_info'] = array(
     '#type'          => 'item',
     '#description'   => t('Specific options are shown only if suitable.'),
-    '#states' => array(
-      'invisible' => array(
-        ':input[name=export_format]' => array('value' => 'def_links'),
-      ),
-    ),
+    '#prefix' => '<div id="specific_info">',
+    '#suffix' => '</div>',
   );
 
   // Specific options to export def_links.
@@ -230,11 +222,7 @@ function taxonomy_csv_form_export($form_state) {
     '#collapsible' => TRUE,
     '#collapsed'   => FALSE,
     '#description' => t('Set these options only if you export:') . ' ' . t('Full term fields and links') . '.',
-    '#states' => array(
-      'visible' => array(
-        ':input[name=export_format]' => array('value' => 'def_links'),
-      ),
-    ),
+    '#attributes'  => array('id' => 'edit-def-links'),
   );
   $form['tab']['advanced_options']['def_links']['def_links_terms_ids'] = array(
     '#type'          => 'select',

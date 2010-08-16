@@ -1,7 +1,7 @@
 ; $Id$
 name = "Taxonomy CSV import/export"
 description = "Export and import complete taxonomies, hierarchical structure or simple lists of terms and properties to or from a CSV file, url or text."
-core = 7.x
+core = 6.x
 dependencies[] = taxonomy
 package = 'Taxonomy'
 files[] = taxonomy_csv.install
