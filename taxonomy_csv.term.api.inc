@@ -26,7 +26,7 @@ function taxonomy_csv_term_load($tid) {
 /**
  * Complete a base term object.
  *
- * @param $term_tid
+ * @param $term
  *   The base term object to complete.
  *
  * @return
@@ -37,6 +37,14 @@ function taxonomy_csv_term_get_full($term) {
     $term->parents   = taxonomy_csv_term_get_parents_tids($term->tid);
     $term->relations = taxonomy_csv_term_get_relations_tids($term->tid);
     $term->synonyms  = taxonomy_get_synonyms($term->tid);
+
+    // Check vocabulary because if there are specific fields, term needs to be
+    // completed with them.
+    $vocabulary_formats = taxonomy_csv_format_check_vocabulary($term->vid);
+    foreach ($vocabulary_formats as $format) {
+      $funcname = "taxonomy_csv_term_get_full_$format";
+      $term = $funcname($term);
+    }
 
     return $term;
   }
@@ -258,7 +266,7 @@ function taxonomy_csv_term_get_relations_names($tid) {
  * @return
  *   Status value (SAVED_NEW or SAVED_UPDATED). Term is updated with its tid.
  */
-function _taxonomy_csv_term_save(&$term) {
+function taxonomy_csv_term_save(&$term) {
   $term_to_save = (array) $term;
 
   if (isset($term->synonyms)) {

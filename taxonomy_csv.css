@@ -21,6 +21,7 @@
 #description_descriptions.filtered,
 #description_weights.filtered,
 #description_taxonomy_manager.filtered,
+#description_geotaxonomy.filtered,
 
 #existing_items_alone_terms.filtered,
 #existing_items_def_links.filtered,
@@ -35,6 +36,7 @@
 #existing_items_descriptions.filtered,
 #existing_items_weights.filtered,
 #existing_items_taxonomy_manager.filtered,
+#existing_items_geotaxonomy.filtered,
 
 #help_alone_terms.filtered,
 #help_def_links.filtered,
@@ -49,6 +51,7 @@
 #help_descriptions.filtered,
 #help_weights.filtered,
 #help_taxonomy_manager.filtered,
+#help_geotaxonomy.filtered,
 
 #import.filtered #edit-text-wrapper,
 #import.filtered #edit-path-wrapper,
@@ -90,6 +93,7 @@
 #description_weights.weights,
 #description_synonyms.synonyms,
 #description_taxonomy_manager.taxonomy_manager,
+#description_geotaxonomy.geotaxonomy,
 
 #existing_items_alone_terms.alone_terms,
 #existing_items_def_links.def_links,
@@ -104,6 +108,7 @@
 #existing_items_descriptions.descriptions,
 #existing_items_weights.weights,
 #existing_items_taxonomy_manager.taxonomy_manager,
+#existing_items_geotaxonomy.geotaxonomy,
 
 #help_alone_terms.alone_terms,
 #help_def_links.def_links,
@@ -118,6 +123,7 @@
 #help_weights.weights,
 #help_synonyms.synonyms,
 #help_taxonomy_manager.taxonomy_manager,
+#help_geotaxonomy.geotaxonomy,
 
 #import.text #edit-text-wrapper,
 #import.path #edit-path-wrapper,

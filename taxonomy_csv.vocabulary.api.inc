@@ -89,7 +89,7 @@ function taxonomy_csv_vocabulary_duplicate($vocabulary_id) {
         'synonyms'    => taxonomy_get_synonyms($original_term->tid),
       );
       // Term id is automatically memorized.
-      $result = _taxonomy_csv_term_save($duplicated_terms[$original_term->tid]);
+      $result = taxonomy_csv_term_save($duplicated_terms[$original_term->tid]);
     }
 
     // Second step: update duplicated terms with parents and relations.
@@ -106,7 +106,7 @@ function taxonomy_csv_vocabulary_duplicate($vocabulary_id) {
         $duplicated_terms[$original_term->tid]->relations[] = $duplicated_terms[$original_related_term->tid]->tid;
       }
 
-      $result = _taxonomy_csv_term_save($duplicated_terms[$original_term->tid]);
+      $result = taxonomy_csv_term_save($duplicated_terms[$original_term->tid]);
     }
 
     return $duplicated_vocabulary;

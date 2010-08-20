@@ -11,14 +11,14 @@ if (Drupal.jsEnabled) {
     $(document).ready(function() {
       // Import options
       // Hide all items defined with the css class filtered.
-      var methods_import = new Array('#description_alone_terms', '#description_def_links', '#description_flat', '#description_tree_structure', '#description_polyhierarchy', '#description_parents', '#description_children', '#description_relations', '#description_synonyms', '#description_definitions', '#description_descriptions', '#description_weights', '#description_taxonomy_manager', '#existing_items_alone_terms','#existing_items_def_links', '#existing_items_flat', '#existing_items_tree_structure', '#existing_items_polyhierarchy', '#existing_items_parents', '#existing_items_children', '#existing_items_relations', '#existing_items_synonyms', '#existing_items_definitions', '#existing_items_descriptions', '#existing_items_weights', '#existing_items_taxonomy_manager', '#help_alone_terms', '#help_def_links', '#help_flat', '#help_tree_structure', '#help_polyhierarchy', '#help_parents', '#help_children', '#help_relations', '#help_synonyms', '#help_definitions', '#help_descriptions', '#help_weights', '#help_taxonomy_manager', '#edit-relations', '#edit-def-links');
+      var methods_import = new Array('#description_alone_terms', '#description_def_links', '#description_flat', '#description_tree_structure', '#description_polyhierarchy', '#description_parents', '#description_children', '#description_relations', '#description_synonyms', '#description_definitions', '#description_descriptions', '#description_weights', '#description_taxonomy_manager', '#description_geotaxonomy',  '#existing_items_alone_terms','#existing_items_def_links', '#existing_items_flat', '#existing_items_tree_structure', '#existing_items_polyhierarchy', '#existing_items_parents', '#existing_items_children', '#existing_items_relations', '#existing_items_synonyms', '#existing_items_definitions', '#existing_items_descriptions', '#existing_items_weights', '#existing_items_taxonomy_manager', '#existing_items_geotaxonomy', '#help_alone_terms', '#help_def_links', '#help_flat', '#help_tree_structure', '#help_polyhierarchy', '#help_parents', '#help_children', '#help_relations', '#help_synonyms', '#help_definitions', '#help_descriptions', '#help_weights', '#help_taxonomy_manager', '#help_geotaxonomy', '#edit-relations', '#edit-def-links');
       for(var m in methods_import) {
         $(methods_import[m]).addClass('filtered');
       }
       // Import format description and existing terms.
       // Add/remove class to show/hide it.
       $('#edit-import-format').change(function(){
-        var methods_import_format = new Array('alone_terms', 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights', 'taxonomy_manager');
+        var methods_import_format = new Array('alone_terms', 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights', 'taxonomy_manager', 'geotaxonomy');
         // Remove all added classes in order to return to base.
         for(var m in methods_import) {
           for(var n in methods_import_format) {
@@ -131,7 +131,7 @@ if (Drupal.jsEnabled) {
       }
       // Add/remove class to show/hide it.
       $('#edit-export-format').change(function(){
-        var methods_export_format = new Array('alone_terms', 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights', 'taxonomy_manager');
+        var methods_export_format = new Array('alone_terms', 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights', 'taxonomy_manager', 'geotaxonomy');
         // Remove all added classes in order to return to base.
         for(var m in methods_export) {
           for(var n in methods_export_format) {
