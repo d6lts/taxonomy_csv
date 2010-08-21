@@ -525,6 +525,7 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array()) {
  */
 function taxonomy_csv_term_import($term, $existing_items = TAXONOMY_CSV_EXISTING_IGNORE_CREATE, $all_vocabularies = FALSE, $parent_tid = NULL, $import_format = '') {
   $messages = array();
+
   if ($term) {
     switch ($existing_items) {
       case TAXONOMY_CSV_EXISTING_UPDATE:

@@ -282,9 +282,10 @@
         <li><code>Baobab, 3</code></li>
       </ul></div>
   <h4 id="taxonomy_manager"><a href="#contents">13. Taxonomy manager</a></h4>
-    <p>This format is used by <a href="http://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a> to export vocabularies. Columns are: vocabulary id, term id, term name, term description, first level parent 1, ..., first level parent n. Example:</p>
+    <p>This format is used by <a href="http://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a> to export vocabularies. Columns are: vocabulary id, term id, term name, term description, first level parent id 1, ..., first level parent id n. Example:</p>
       <div class="codeblock"><ul>
-        <li><code>"1"; "25"; "Louis XVII"; "King of France"; "Louis XVI"; "Marie-Antoinette"</code></li>
+        <li><code>, 1, "Île-de-France", "Main region"</code></li>
+        <li><code>, 2, "Paris", "Capital of France", 1</code></li>
       </ul></div>
     <p>In this format, order of all lines is important: it's impossible to attach a parent to an item if this parent hasn't been imported in a previous line.</p><br />
     <p>When a vocabulary is imported in an existing one, only option "ignore existing terms" can be used.</p>

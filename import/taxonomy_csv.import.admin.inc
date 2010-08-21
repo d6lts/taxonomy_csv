@@ -170,7 +170,7 @@ function taxonomy_csv_form_import($form_state) {
         . '<strong><em>' . t('Format:') . '</em></strong><br />'
         . '<code>' . $list_external_format[$key]['description_format'] . '</code><br />'
         . '<strong><em>' . t('Example:') . '</em></strong><br />'
-        . '<code>' . $list_external_format[$key]['description_example'] . '</code><br />' .  '<br />'
+        . '<code>' . $list_external_format[$key]['description_example'] . '</code><br />' . '<br />'
         . $list_external_format[$key]['description_long'];
       }
     }
@@ -416,11 +416,11 @@ function taxonomy_csv_form_import($form_state) {
   );
 
   if (isset($_COOKIE['has_js'])) {
-    $list_import_format_allowed_import_option = _taxonomy_csv_values('import_allowed');
+    $list_import_allowed = _taxonomy_csv_values('import_allowed');
     foreach ($list_import_format as $key => $value) {
       $form['tab']['import_options']["existing_items_$key"] = array(
         '#type'          => 'radios',
-        '#options'       => array_intersect_key($list_import_option, array_flip($list_import_format_allowed_import_option[$key])),
+        '#options'       => array_intersect_key($list_import_option, array_flip($list_import_allowed[$key])),
         '#default_value' => $list_previous_values['existing_items'],
         '#description'   => '',
         '#prefix'      => '<div id="existing_items_'. $key .'">',
@@ -785,13 +785,13 @@ function _taxonomy_csv_import_check_options(&$options) {
 
   $list_import_format = _taxonomy_csv_values('import_format');
   $list_import_option = _taxonomy_csv_values('import_option');
-  $list_import_format_allowed_import_option = _taxonomy_csv_values('import_allowed');
+  $list_import_allowed = _taxonomy_csv_values('import_allowed');
   if (!array_key_exists($options['import_format'], $list_import_format)) {
     $messages['import_format'] = t('Source content "!import_format" is not managed.', array(
       '!import_format' => $list_import_format[$options['import_format']]
     ));
   }
-  elseif (!in_array($options['existing_items'], $list_import_format_allowed_import_option[$options['import_format']])) {
+  elseif (!in_array($options['existing_items'], $list_import_allowed[$options['import_format']])) {
     $messages['existing_items'] = t('Import option "%existing_items" cannot be used with source content "!import_format".', array(
       '%existing_items' => $list_import_option[$options['existing_items']],
       '!import_format'  => $list_import_format[$options['import_format']],

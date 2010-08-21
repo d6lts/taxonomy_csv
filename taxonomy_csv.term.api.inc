@@ -24,36 +24,6 @@ function taxonomy_csv_term_load($tid) {
 }
 
 /**
- * Complete a base term object.
- *
- * @param $term
- *   The base term object to complete.
- *
- * @return
- *   Found full term object.
- */
-function taxonomy_csv_term_get_full($term) {
-  if (isset($term->tid)) {
-    $term->parents   = taxonomy_csv_term_get_parents_tids($term->tid);
-    $term->relations = taxonomy_csv_term_get_relations_tids($term->tid);
-    $term->synonyms  = taxonomy_get_synonyms($term->tid);
-
-    // Check vocabulary because if there are specific fields, term needs to be
-    // completed with them.
-    $vocabulary_formats = taxonomy_csv_format_check_vocabulary($term->vid);
-    foreach ($vocabulary_formats as $format) {
-      $funcname = "taxonomy_csv_term_get_full_$format";
-      $term = $funcname($term);
-    }
-
-    return $term;
-  }
-  // Else.
-
-  return FALSE;
-}
-
-/**
  * Load multiple full terms.
  *
  * This function can be used whenever to get more than one term from the
@@ -106,6 +76,36 @@ function taxonomy_csv_term_load_multiple($tids = array(), $conditions = array())
   }
 
   return $terms;
+}
+
+/**
+ * Complete a base term object.
+ *
+ * @param $term
+ *   The base term object to complete.
+ *
+ * @return
+ *   Found full term object.
+ */
+function taxonomy_csv_term_get_full($term) {
+  if (isset($term->tid)) {
+    $term->parents   = taxonomy_csv_term_get_parents_tids($term->tid);
+    $term->relations = taxonomy_csv_term_get_relations_tids($term->tid);
+    $term->synonyms  = taxonomy_get_synonyms($term->tid);
+
+    // Check vocabulary because if there are specific fields, term needs to be
+    // completed with them.
+    $vocabulary_formats = taxonomy_csv_format_check_vocabulary($term->vid);
+    foreach ($vocabulary_formats as $format) {
+      $funcname = "taxonomy_csv_term_get_full_$format";
+      $term = $funcname($term);
+    }
+
+    return $term;
+  }
+  // Else.
+
+  return FALSE;
 }
 
 /**
