@@ -313,7 +313,8 @@ function taxonomy_csv_form_import($form_state) {
   $form['tab']['csv_format']['check_utf8'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Check UTF-8 format'),
-    '#description'   => t('File needs to be UTF-8 formatted. You can disable this check if you are sure that your file is encoded correctly. Desactivation is needed with some server configurations too. This option is not used with a textarea import.'),
+    '#description'   => t('File needs to be UTF-8 formatted. You can disable this check if you are sure that your file is encoded correctly. Desactivation is needed with some server configurations too. This option is not used with a textarea import.') . ' '
+      . t('ISO-8859-1 and ISO-8859-15 files are automatically converted.'),
   );
   if (function_exists('mb_detect_encoding')) {
     $form['tab']['csv_format']['check_utf8']['#default_value'] = $list_previous_values['check_utf8'];
