@@ -29,8 +29,8 @@ function taxonomy_csv_format_geotaxonomy() {
       '!link' => url('http://drupal.org/project/geotaxonomy'),
     )),
     'description_format'  => t('name, latitude, longitude, parent, top, right, bottom, left boundaries'),
-    'description_example' => t('"Paris", 5, 48, "Île-de-France"') . '<br />'
-      . t('"Île-de-France", 3, 50, "France"'),
+    'description_example' => t('"Paris", 48.833, 2.333, "Île-de-France"') . '<br />'
+      . t('"Île-de-France", 47, 2, "France"'),
     'description_long'    => t('Only name, latitude and longitude are needed. To set a parent is recommended to get a hierarchical structure.'),
     'import_options_help' => t('"Merge" and "Replace" are very similar, because geotaxonomy items are unique: there are only one latitude, longitude, etc. Difference is for parents. With "Merge", existing parents will be kept. With "Replace", they will be removed.'),
   );
@@ -88,6 +88,8 @@ function _taxonomy_csv_line_import_check_geotaxonomy($line, $options, $previous_
         $messages[] = 450; // Warning some items lacks.
         break;
       }
+			$line[1] = preg_replace('#,#', '.', $line[1]);
+			$line[2] = preg_replace('#,#', '.', $line[2]);
       if (!is_numeric($line[1]) || !is_numeric($line[2])) {
         $messages[] = 451; // Warning item are not numbers.
         break;
@@ -97,6 +99,10 @@ function _taxonomy_csv_line_import_check_geotaxonomy($line, $options, $previous_
       }
       // Complete line with NULL if needed and check numeric values.
       $line = array_pad($line, 8, NULL);
+			$line[4] = is_null($line[4]) ? NULL : preg_replace('#,#', '.', $line[4]);
+			$line[5] = is_null($line[5]) ? NULL : preg_replace('#,#', '.', $line[5]);
+			$line[6] = is_null($line[6]) ? NULL : preg_replace('#,#', '.', $line[6]);
+			$line[7] = is_null($line[7]) ? NULL : preg_replace('#,#', '.', $line[7]);
       $checked_items = $line = array_slice($line, 0, 8);
       foreach (array_slice($line, 4) as $value) {
         if (!is_numeric($value) && !is_null($value)) {
