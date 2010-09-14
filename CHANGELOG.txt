@@ -9,6 +9,11 @@
   ===========
 
 
+Taxonomy csv import/export 6.x-5.4, 2010-09-14
+----------------------------------------------
+#910788 by Brad Bulger: Fixed error when vocabulary isn't checked after import.
+
+
 Taxonomy csv import/export 7.x-5.4-dev, 2010-09-13
 --------------------------------------------------
 #896132 by Matthias Hutterer: Fixed parents & children names broken by D7 HEAD.

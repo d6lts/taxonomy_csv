@@ -138,14 +138,14 @@ function _taxonomy_csv_info_vocabulary($options) {
   foreach ($vocabularies as $vocabulary_id) {
     $message = '';
     // Check or update hierarchy of vocabularies.
-    $vocabulary = taxonomy_vocabulary_load($vocabulary_id);
+    $vocabulary = (array) taxonomy_vocabulary_load($vocabulary_id);
     if ($options['check_hierarchy']) {
-      $result = _taxonomy_csv_check_vocabulary_hierarchy((array) $vocabulary, array('tid' => 0));
+      $result = _taxonomy_csv_check_vocabulary_hierarchy($vocabulary, array('tid' => 0));
     }
     // Set vocabulary hierarchy only if needed.
     else {
-      if ($options['set_hierarchy'] != $vocabulary->hierarchy) {
-        $vocabulary->hierarchy = $options['set_hierarchy'];
+      if ($options['set_hierarchy'] != $vocabulary['hierarchy']) {
+        $vocabulary['hierarchy'] = $options['set_hierarchy'];
         $result = taxonomy_save_vocabulary($vocabulary);
       }
       $result = $options['set_hierarchy'];
@@ -156,7 +156,7 @@ function _taxonomy_csv_info_vocabulary($options) {
     $message .= (in_array($options['import_format'], array(
           TAXONOMY_CSV_FORMAT_DEFINITION_LINKS,
         ))) ?
-        t('Vocabulary "%vocabulary_name" has been used or created.', array('%vocabulary_name' => $vocabulary->name)) :
+        t('Vocabulary "%vocabulary_name" has been used or created.', array('%vocabulary_name' => $vocabulary['name'])) :
         _taxonomy_csv_info_vocabulary_destination($vocabulary, $options['vocabulary_target']);
     $message .=  '<br />';
 
@@ -178,13 +178,13 @@ function _taxonomy_csv_info_vocabulary_destination($vocabulary, $vocabulary_targ
   // Destination vocabulary.
   $list_messages = array(
     'autocreate' => t('New vocabulary "%vocabulary_name" has been created.', array(
-      '%vocabulary_name' => $vocabulary->name,
+      '%vocabulary_name' => $vocabulary['name'],
     )),
     'duplicate'  => t('Duplicate vocabulary "%vocabulary_name" has been created.', array(
-      '%vocabulary_name' => $vocabulary->name,
+      '%vocabulary_name' => $vocabulary['name'],
     )),
     'existing'   => t('Terms are imported into existing vocabulary "%vocabulary_name".', array(
-      '%vocabulary_name' => $vocabulary->name,
+      '%vocabulary_name' => $vocabulary['name'],
     )),
   );
 
@@ -205,8 +205,8 @@ function _taxonomy_csv_info_vocabulary_result($vocabulary, $vocabulary_target, $
   );
   if ($vocabulary_target != 'autocreate') {
     $message .= t('Old hierarchy level was !level (!level_text).', array(
-      '!level'      => $vocabulary->hierarchy,
-      '!level_text' => $hierarchy_text[$vocabulary->hierarchy],
+      '!level'      => $vocabulary['hierarchy'],
+      '!level_text' => $hierarchy_text[$vocabulary['hierarchy']],
     )) . '<br />';
   }
   $message .= t('Hierarchy level is !level (!level_text).', array(
@@ -216,14 +216,14 @@ function _taxonomy_csv_info_vocabulary_result($vocabulary, $vocabulary_target, $
 
   // Direct links to edit vocabulary and view terms.
   $message .= t('Properties can be edited at <a href="!vocabulary_edit_link">Administer > Content management > Taxonomy > edit vocabulary</a>.', array(
-    '!vocabulary_edit_link' => url("admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"),
+    '!vocabulary_edit_link' => url('admin/content/taxonomy/edit/vocabulary/' . $vocabulary['vid']),
   )) .'<br />';
   $message .= t('You can view terms at <a href="!vocabulary_list">Administer > Content management > Taxonomy > list terms</a>.', array(
-    '!vocabulary_list' => url("admin/content/taxonomy/$vocabulary->vid"),
+    '!vocabulary_list' => url('admin/content/taxonomy/' . $vocabulary['vid']),
   )) .'<br />';
   if (module_exists('taxonomy_manager')) {
     $message .= t('It is recommended to use <a href="!link" title="Taxonomy manager module">Administer > Taxonomy manager > Vocabularies</a> with big taxonomies because a memory error can occur with default Drupal "List terms" menu.', array(
-      '!link' => url("admin/content/taxonomy_manager/voc/$vocabulary->vid"),
+      '!link' => url('admin/content/taxonomy_manager/voc/' . $vocabulary['vid']),
     ));
   }
   else {
