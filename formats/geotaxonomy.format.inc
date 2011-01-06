@@ -88,8 +88,8 @@ function _taxonomy_csv_line_import_check_geotaxonomy($line, $options, $previous_
         $messages[] = 450; // Warning some items lacks.
         break;
       }
-			$line[1] = preg_replace('#,#', '.', $line[1]);
-			$line[2] = preg_replace('#,#', '.', $line[2]);
+      $line[1] = preg_replace('#,#', '.', $line[1]);
+      $line[2] = preg_replace('#,#', '.', $line[2]);
       if (!is_numeric($line[1]) || !is_numeric($line[2])) {
         $messages[] = 451; // Warning item are not numbers.
         break;
@@ -99,10 +99,10 @@ function _taxonomy_csv_line_import_check_geotaxonomy($line, $options, $previous_
       }
       // Complete line with NULL if needed and check numeric values.
       $line = array_pad($line, 8, NULL);
-			$line[4] = is_null($line[4]) ? NULL : preg_replace('#,#', '.', $line[4]);
-			$line[5] = is_null($line[5]) ? NULL : preg_replace('#,#', '.', $line[5]);
-			$line[6] = is_null($line[6]) ? NULL : preg_replace('#,#', '.', $line[6]);
-			$line[7] = is_null($line[7]) ? NULL : preg_replace('#,#', '.', $line[7]);
+      $line[4] = is_null($line[4]) ? NULL : preg_replace('#,#', '.', $line[4]);
+      $line[5] = is_null($line[5]) ? NULL : preg_replace('#,#', '.', $line[5]);
+      $line[6] = is_null($line[6]) ? NULL : preg_replace('#,#', '.', $line[6]);
+      $line[7] = is_null($line[7]) ? NULL : preg_replace('#,#', '.', $line[7]);
       $checked_items = $line = array_slice($line, 0, 8);
       foreach (array_slice($line, 4) as $value) {
         if (!is_numeric($value) && !is_null($value)) {
@@ -128,12 +128,13 @@ function _taxonomy_csv_line_import_check_geotaxonomy($line, $options, $previous_
  *   Specificity: tid and name arrays are indexed with unique ids, and with name
  *   when unique id is not defined.
  */
-function taxonomy_csv_line_import_geotaxonomy($line, $options, $previous_items = array()) {
+function taxonomy_csv_line_import_geotaxonomy($line, $options, $previous_items = array(), $terms_count = 0) {
   // Define default values.
   $result = array(
     'name' => array(),
     'tid'  => array(),
     'msg'  => array(),
+    'terms_count' => $terms_count,
   );
 
   switch ($result) { // Simulate a goto with break.
@@ -152,10 +153,17 @@ function taxonomy_csv_line_import_geotaxonomy($line, $options, $previous_items =
             'name' => $line[3],
             'vid'  => $options['vocabulary_id'],
           );
+          // Weight is not set with the name and vid above in order to keep
+          // existing one if it exists.
+          ++$terms_count;
+          if ($options['keep_order']) {
+            $term->weight = $terms_count;
+          }
           $current_result = taxonomy_csv_term_import($term, $options['existing_items']);
           $result['name'][$parent_unique_id] = $current_result['name'];
           $result['tid'][$parent_unique_id]  = $current_result['tid'];
           $result['msg'] = $current_result['msg'];
+          $result['terms_count'] = $terms_count;
           if (_taxonomy_csv_worst_message($result['msg']) < TAXONOMY_CSV_PROCESS_NOTICE) {
             break;
           }
@@ -190,12 +198,19 @@ function taxonomy_csv_line_import_geotaxonomy($line, $options, $previous_items =
       if (isset($line[3])) {
         $term->parent_name = $line[3];
       }
+      // Weight is not set with the name and vid above in order to keep
+      // existing one if it exists.
+      ++$terms_count;
+      if ($options['keep_order']) {
+        $term->weight = $terms_count;
+      }
 
       // Import term then store result. No check because only one term.
       $current_result = taxonomy_csv_term_import($term, $options['existing_items'], FALSE, '', $options['import_format']);
       $result['name'][$unique_id] = $current_result['name'];
       $result['tid'][$unique_id]  = $current_result['tid'];
       $result['msg'] = array_merge($result['msg'], $current_result['msg']);
+      $result['terms_count'] = $terms_count;
   }
 
   return $result;

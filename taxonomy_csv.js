@@ -11,7 +11,7 @@ if (Drupal.jsEnabled) {
     $(document).ready(function() {
       // Import options
       // Hide all items defined with the css class filtered.
-      var methods_import = new Array('#description_alone_terms', '#description_def_links', '#description_flat', '#description_tree_structure', '#description_polyhierarchy', '#description_parents', '#description_children', '#description_relations', '#description_synonyms', '#description_definitions', '#description_descriptions', '#description_weights', '#description_taxonomy_manager', '#description_geotaxonomy',  '#existing_items_alone_terms','#existing_items_def_links', '#existing_items_flat', '#existing_items_tree_structure', '#existing_items_polyhierarchy', '#existing_items_parents', '#existing_items_children', '#existing_items_relations', '#existing_items_synonyms', '#existing_items_definitions', '#existing_items_descriptions', '#existing_items_weights', '#existing_items_taxonomy_manager', '#existing_items_geotaxonomy', '#help_alone_terms', '#help_def_links', '#help_flat', '#help_tree_structure', '#help_polyhierarchy', '#help_parents', '#help_children', '#help_relations', '#help_synonyms', '#help_definitions', '#help_descriptions', '#help_weights', '#help_taxonomy_manager', '#help_geotaxonomy', '#edit-relations', '#edit-def-links');
+      var methods_import = new Array('#description_alone_terms', '#description_def_links', '#description_flat', '#description_tree_structure', '#description_polyhierarchy', '#description_parents', '#description_children', '#description_relations', '#description_synonyms', '#description_definitions', '#description_descriptions', '#description_weights', '#description_taxonomy_manager', '#description_geotaxonomy',  '#existing_items_alone_terms','#existing_items_def_links', '#existing_items_flat', '#existing_items_tree_structure', '#existing_items_polyhierarchy', '#existing_items_parents', '#existing_items_children', '#existing_items_relations', '#existing_items_synonyms', '#existing_items_definitions', '#existing_items_descriptions', '#existing_items_weights', '#existing_items_taxonomy_manager', '#existing_items_geotaxonomy', '#help_alone_terms', '#help_def_links', '#help_flat', '#help_tree_structure', '#help_polyhierarchy', '#help_parents', '#help_children', '#help_relations', '#help_synonyms', '#help_definitions', '#help_descriptions', '#help_weights', '#help_taxonomy_manager', '#help_geotaxonomy', '#edit-relations', '#edit-def-links', '#edit-keep-order-wrapper');
       for(var m in methods_import) {
         $(methods_import[m]).addClass('filtered');
       }
@@ -71,7 +71,7 @@ if (Drupal.jsEnabled) {
       // Export delimiter.
       // Add/remove class to show/hide it.
       $('#delimiter').change(function(){
-        var methods = new Array('comma', 'semicolon', 'tabulation', 'space', 'currency_sign', 'custom_delimiter');
+        var methods = new Array('comma', 'semicolon', 'tabulation', 'space', 'currency_sign', 'soft_tab', 'custom_delimiter');
         for(var m in methods) {
           $('#csv_format').removeClass(methods[m]);
         }

@@ -261,7 +261,7 @@ function _taxonomy_csv_info_terms($options) {
       foreach ($terms as $term) {
         $message .= $term->name . '", "';
       }
-      $message = substr($message, 0, strlen($message) - 3) . '.';
+      $message = drupal_substr($message, 0, drupal_strlen($message) - 3) . '.';
     }
   }
   else {
