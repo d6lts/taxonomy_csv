@@ -42,8 +42,8 @@
  *   - set_hierarchy  : if hierarchy isn't checked, set it (0, 1 or 2 (default))
  *   - existing_items : see _taxonomy_csv_values (default: 'update')
  *   // Specific to relations import:
- *   - relations_create_subrelations: boolean.
- *   - relations_all_vocabularies   : boolean.
+ *   - relations_create_subrelations: boolean. (default: FALSE)
+ *   - relations_all_vocabularies   : boolean. (default: FALSE)
  *   // Level of result process infos.
  *   - check_options  : boolean. check or not (default) this array of options
  *   - result_display : boolean. display or not (default). Only used with UI.
@@ -52,7 +52,7 @@
  *   - result_level   : log: 'first' (default), 'warnings', 'notices' or 'infos'
  *   - result_type    : display log 'by_message' (default) or 'by_line'
  *   Only one option is required: file or text or url or path. Other options
- *   have default values. Warning: default values are different with UI.
+ *   have default values. Warning: default values are little different with UI.
  *
  * @return
  *   Array of errors or nothing (need to execute batch process; result is logged
@@ -91,9 +91,9 @@ function taxonomy_csv_import($options) {
 function _taxonomy_csv_import_input_preload(&$options) {
   $messages = array();
 
-  // File import. Use to with UI import in a second time.
+  // File import. Used with UI.
   if (isset($options['file']) && is_object($options['file'])) {
-    // Ready.
+    // File ready. No more check here.
   }
   // Text import.
   elseif (isset($options['text']) && $options['text'] != '') {
@@ -122,11 +122,11 @@ function _taxonomy_csv_import_input_preload(&$options) {
   }
   // Path import. With UI, path is already uploaded as a file.
   elseif (isset($options['path']) && $options['path'] != '') {
-    // Load source local file.
+    // Load source local file. No check for extension with API.
     $options['file'] = file_save_upload($options['path']);
   }
   else {
-    $messages['source_choice'] = t('Source choice should be a text, an url or a file path and should not be empty.');
+    $messages['source_choice'] = t('Source choice should be a text, an url or a file path and source content should not be empty.');
     return $messages;
   }
 

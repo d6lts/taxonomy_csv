@@ -34,6 +34,7 @@ function _taxonomy_csv_line_import_check($line, $options, $previous_items = arra
 
   // No input check because line and previous line are already checked.
   // @todo A php callback function may be used to simplify checking.
+  // @todo To be factorized and simplified.
   switch ($options['import_format']) {
     case TAXONOMY_CSV_FORMAT_ALONE_TERMS:
       // Checks empty first column.

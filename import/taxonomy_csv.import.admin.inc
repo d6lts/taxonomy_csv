@@ -237,7 +237,7 @@ function taxonomy_csv_form_import($form_state) {
     '#title'         => '',
     '#options'       => array(
       'text' => t('In the below text area'),
-      'path' => t('In a local file'),
+      'file' => t('In a local file'),
       'url'  => t('In a distant file'),
     ),
     '#default_value' => $list_previous_values['source_choice'],
@@ -254,7 +254,7 @@ function taxonomy_csv_form_import($form_state) {
     '#description'   => t('Write your csv formatted terms directly in this text area.'),
   );
 
-  $form['tab']['import']['path'] = array(
+  $form['tab']['import']['file'] = array(
     '#type'          => 'file',
     '#title'         => t('CSV file'),
     '#description'   => t('Browse to the file') . '<br >'
@@ -273,7 +273,8 @@ function taxonomy_csv_form_import($form_state) {
   $form['tab']['csv_format'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('3. How is your source formatted?'),
-    '#description' => t('Notice: either you import terms by a file or by a text area, the csv format is the same. Default delimiter is a comma ("<strong><code> , </code></strong>"). Default enclosure is none, but quotation mark ("<strong><code> " </code></strong>") is automatically managed.'),
+    '#description' => t('Notice: either you import terms by a file or by a text area, the csv format is the same. Default delimiter is a comma ("<strong><code> , </code></strong>"). Default enclosure is none, but quotation mark ("<strong><code> " </code></strong>") is automatically managed.') . '<br />'
+      . t("<strong>Important</strong>: You should enclose any item beginning with a non-ascii letter, such as 'É', 'ç', 'œ' or non-latin letter."),
     '#collapsible' => TRUE,
     '#collapsed'   => TRUE,
     '#attributes'  => array('id' => 'csv_format'),
@@ -682,9 +683,22 @@ function taxonomy_csv_form_import_validate($form, &$form_state) {
   $options = &$form_state['values'];
 
   // 1. Preload text or file in order to check it.
-  // When source is path, need to preload here.
-  if ($options['source_choice'] == 'path') {
-    $options['file'] = file_save_upload('path');
+  switch ($options['source_choice']) {
+    case 'text':
+      $options['url'] = '';
+      $options['file'] = '';
+      break;
+    case 'url':
+      $options['text'] = '';
+      $options['file'] = '';
+      break;
+    case 'file':
+      $options['text'] = '';
+      $options['url'] = '';
+
+      // When source is path, need to preload here.
+      $options['file'] = file_save_upload('file');
+      break;
   }
   $messages = _taxonomy_csv_import_input_preload($options);
 
@@ -728,9 +742,9 @@ function taxonomy_csv_form_import_validate($form, &$form_state) {
       'delimiter'   => 'import_delimiter',
       'enclosure'   => 'import_enclosure',
     ) as $key => $value) {
-    if (isset($message[$key])) {
-      $message[$value] = $message[$key];
-      unset($message[$key]);
+    if (isset($messages[$key])) {
+      $messages[$value] = $messages[$key];
+      unset($messages[$key]);
     }
   }
 
@@ -798,7 +812,7 @@ function _taxonomy_csv_import_check_options(&$options) {
   if (!isset($options['file'])
       || !is_object($options['file'])
       || count(file($options['file']->filepath)) == 0) {
-    $messages['total_lines'] = t('No term to import. Import finished.');
+    $messages['total_lines'] = t('No term to import.');
   }
 
   if (!in_array($options['vocabulary_target'], array(
@@ -898,7 +912,6 @@ function taxonomy_csv_form_import_submit($form, &$form_state) {
   $options['delimiter'] = $form_state['values']['delimiter'];
   $options['enclosure'] = $form_state['values']['enclosure'];
   $options['file'] = $form_state['values']['file'];
-  $options['path'] = $form_state['values']['path'];
   $options['url']  = $form_state['values']['url'];
   $options['check_options'] = FALSE; // Already done.
   $options['result_display'] = TRUE;

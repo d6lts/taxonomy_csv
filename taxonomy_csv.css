@@ -55,7 +55,7 @@
 #edit-keep-order-wrapper.filtered,
 
 #import.filtered #edit-text-wrapper,
-#import.filtered #edit-path-wrapper,
+#import.filtered #edit-file-wrapper,
 #import.filtered #edit-url-wrapper,
 
 #csv_format.filtered #edit-import-delimiter-soft-tab-width-wrapper,
@@ -140,7 +140,7 @@
 #edit-keep-order-wrapper.geotaxonomy,
 
 #import.text #edit-text-wrapper,
-#import.path #edit-path-wrapper,
+#import.file #edit-file-wrapper,
 #import.url #edit-url-wrapper,
 
 #csv_format.soft_tab #edit-import-delimiter-soft-tab-width-wrapper,
@@ -149,7 +149,7 @@
 #csv_format.custom_delimiter #edit-export-delimiter-custom-wrapper,
 #csv_format.custom_enclosure #edit-export-enclosure-custom-wrapper,
 
-#edit-check-utf8-wrapper.path,
+#edit-check-utf8-wrapper.file,
 #edit-check-utf8-wrapper.url,
 
 #destination.duplicate #edit-vocabulary-id-wrapper,

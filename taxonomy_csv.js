@@ -39,7 +39,7 @@ if (Drupal.jsEnabled) {
       // Source choice.
       // Add/remove class to show/hide it.
       $('#edit-source-choice').change(function(){
-        var methods = new Array('text', 'path', 'url');
+        var methods = new Array('text', 'file', 'url');
         for(var m in methods) {
           $('#import').removeClass(methods[m]);
           $('#edit-check-utf8-wrapper').removeClass(methods[m]);
