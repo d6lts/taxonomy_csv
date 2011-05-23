@@ -1,4 +1,3 @@
-
 if (Drupal.jsEnabled) {
   (function ($) {
 
@@ -33,6 +32,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#edit-import-format').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-import-format').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-import-format').trigger('change');
+        }
+      });
 
       // Import options.
       $('#import').addClass('filtered');
@@ -51,6 +56,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#edit-source-choice').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-source-choice').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-source-choice').trigger('change');
+        }
+      });
 
       // Vocabulary hierarchy.
       // Add/remove class to show/hide it.
@@ -80,6 +91,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#delimiter').trigger('change');
+      // Add event when key up and key down are used.
+      $('#delimiter').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#delimiter').trigger('change');
+        }
+      });
 
       // Import/Export CSV enclosure.
       // Add/remove class to show/hide it.
@@ -94,6 +111,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#enclosure').trigger('change');
+      // Add event when key up and key down are used.
+      $('#enclosure').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#enclosure').trigger('change');
+        }
+      });
 
       // Destination choice.
       $('#destination').addClass('filtered');
@@ -109,6 +132,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#edit-vocabulary-target').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-vocabulary-target').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-vocabulary-target').trigger('change');
+        }
+      });
 
       // Result level.
       // Add/remove class to show/hide it.
@@ -121,6 +150,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#edit-result-level').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-result-level').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-result-level').trigger('change');
+        }
+      });
 
       // Export options (specific)
       // Hide all items defined with the css class filtered.
@@ -146,6 +181,12 @@ if (Drupal.jsEnabled) {
       });
       // Update current display.
       $('#edit-export-format').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-export-format').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-export-format').trigger('change');
+        }
+      });
     });
 
   })(jQuery);

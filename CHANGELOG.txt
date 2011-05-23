@@ -7,8 +7,9 @@
 == CHANGELOG ==
   ===========
 
-Taxonomy csv import/export 6.x-5.7-dev, 2011-05-22
+Taxonomy csv import/export 6.x-5.7-dev, 2011-05-23
 ----------------------------------------------
+#1123914 By Andrey parashutiki: Fixed use of UI with key up and down.
 By Daniel Berthereau: Fixed some UI bugs and updated help.
 
 Taxonomy csv import/export 7.x-5.7-dev, 2011-05-22
