@@ -76,18 +76,9 @@ function _taxonomy_csv_export_output_presave(&$options) {
   $messages = array();
 
   // Check if there is write access and prepare file.
-  // Set filename.
-  if ($options['vocabulary_id']) {
-    $vocabulary = taxonomy_vocabulary_load($options['vocabulary_id']);
-    $vocabulary_name = $vocabulary->name;
-  }
-  else {
-    $vocabulary_name = t('Taxonomy');
-  }
-  // Create file.
   $filename = file_save_data(
     '',
-    "$vocabulary_name.csv",
+    'taxonomy.csv',
     'FILE_EXISTS_RENAME');
   if (!$filename) {
     $messages['file'] = t('Check access rights to temp directory : export needs permission to write and to read in it. Export failed.');

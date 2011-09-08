@@ -45,7 +45,8 @@ function _taxonomy_csv_export_result($options, $worst_level, $summary, $results)
     $message = t('!term_count / !total_terms terms of chosen vocabularies have been exported to file !file (!filesize KB) with the format "!format". Click on link to view it or right click to download it.', array(
       '!term_count'  => $options['current_term'],
       '!total_terms' => $options['total_terms'],
-      '!file'        => l($options['file']->filename, file_create_url($options['file']->filename)),
+      // A issue can occur when file_create_url() is used with Private download.
+      '!file'        => l($options['file']->filename, $GLOBALS['base_url'] . '/' . file_directory_path() . '/' . $options['file']->filename),
       '!filesize'    => number_format(filesize($options['file']->filepath) / 1000, 1),
       '!format'      => $list_format[$options['export_format']],
     ));
