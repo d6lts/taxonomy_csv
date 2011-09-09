@@ -202,7 +202,7 @@ function _taxonomy_csv_message_text($message_code) {
 
       500 => t('Notice'),
       501 => t('Too many items. Second and next columns will be ignored, as import choice is to ignore them.'),
-      510 => t('Line contains empty items. First item is imported, but next ones are ignored.'),
+      510 => t('Line contains empty items. They are ignored.'),
       511 => t('To change vocabulary of a term is not recommended.'),
       512 => t("Line contains items matching first column term. A term can't be related to itself and a synonym may be different to it.") . ' ' . t('Duplicates will be ignored.'),
       530 => t('Line contains empty items. They will be ignored.'),
@@ -228,6 +228,7 @@ function _taxonomy_csv_message_text($message_code) {
       563 => t('No object.') . $notice,
       564 => t('Too many items. Surabondant items will be ignored.') . $notice,
       565 => t('Some items are empty. Previous items will be used.') . $notice,
+      566 => t('A weight cannot be higher than 50, unless you apply a <a href="http://drupal.org/node/612870">patch to Drupal</a>.') . $notice,
       580 => t('Be careful. This line has only one term and import choice is to replace existing items. So they will be removed.'),
 
       600 => t('Info'),

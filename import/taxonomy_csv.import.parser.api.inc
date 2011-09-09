@@ -133,6 +133,10 @@ function _taxonomy_csv_line_import_check($line, $options, $previous_items = arra
         $messages[] = 433; // Warning name and some items are same.
         break;
       }
+      // Check if weight is not bigger than 50.
+      if ($line[4] > 50) {
+        $messages[] = 566; // Notice weight bigger than 50.
+      }
       $checked_items = $line;
       foreach (array_merge(array_slice($checked_items, 0, 3), array_slice($checked_items, 9)) as $name) {
         if (drupal_strlen($name) > 255) {
@@ -277,6 +281,10 @@ function _taxonomy_csv_line_import_check($line, $options, $previous_items = arra
           break;
         }
       }
+      // Check if weight is not bigger than 50.
+      if (count($line) > 1 && $line[1] > 50) {
+        $messages[] = 566; // Notice weight bigger than 50.
+      }
       break;
 
     case TAXONOMY_CSV_FORMAT_DESCRIPTIONS:
@@ -310,15 +318,25 @@ function _taxonomy_csv_line_import_check($line, $options, $previous_items = arra
         $messages[] = 450; // Warning weight is not a number.
         break;
       }
-      if ((count($line) == 1) && ($existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE)) {
-        $messages[] = 580; // Notice remove items.
-        $checked_items = array($line[0], 0);
+      if (count($line) == 1) {
+        if ($existing_items == TAXONOMY_CSV_EXISTING_UPDATE_REPLACE) {
+          $messages[] = 580; // Notice remove items.
+          $checked_items = array($line[0], 0);
+        }
+        else {
+          $messages[] = 530; // Notice line contains empty items.
+          $checked_items = array($line[0], 0);
+        }
       }
       else {
         if (count($line) > 2) {
           $messages[] = 541; // Notice too many items.
         }
         $checked_items = array($line[0], intval($line[1]));
+        // Check if weight is not bigger than 50.
+        if ($line[1] > 50) {
+          $messages[] = 566; // Notice weight bigger than 50.
+        }
       }
       if (drupal_strlen($checked_items[0]) > 255) {
         $messages[] = 454; // Warning too long.

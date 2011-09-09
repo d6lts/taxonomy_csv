@@ -50,6 +50,11 @@ function _taxonomy_csv_import_result($options, $worst_level, $summary, $results)
       $messages[] = array(WATCHDOG_NOTICE => t('Line checks have been disabled. Some warnings and notices may have not been reported.'));
     }
 
+    // Display warning when user keeps order and import more than 50 terms.
+    if ($options['keep_order'] && $options['total_lines'] > 50) {
+      $messages[] = array(WATCHDOG_WARNING => t('Note: You imported more than 50 terms and you wanted to keep order of them. Because weight cannot be higher than 50, a <a href="http://drupal.org/node/1248926">issue</a> can occur if you have not <a href="http://drupal.org/node/612870">patched Drupal</a>.'));
+    }
+
     // Display stats and eventually lists about imported terms.
     if ($options['result_stats']
         || $options['result_terms']) {
@@ -259,6 +264,7 @@ function _taxonomy_csv_info_terms($options) {
         $message .= $term->name . '", "';
       }
       $message = drupal_substr($message, 0, drupal_strlen($message) - 3) . '.';
+
     }
   }
   else {

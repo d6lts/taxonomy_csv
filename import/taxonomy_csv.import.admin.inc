@@ -208,7 +208,8 @@ function taxonomy_csv_form_import($form_state) {
 
     $form['tab']['format']['descriptions']['#description'] = t('Allow to import descriptions of terms. The term is in the first column and the matching description is in the second column.');
 
-    $form['tab']['format']['weights']['#description'] = t('Allow to import a weight of a term. The term is in the first column and the matching weight is in the second column.');
+    $form['tab']['format']['weights']['#description'] = t('Allow to import a weight of a term. The term is in the first column and the matching weight is in the second column.') . '<br />' .
+    t('Reminder: A weight cannot be higher than 50, unless you apply a <a href="http://drupal.org/node/612870">patch to Drupal</a>.');
   }
   $form['tab']['format']['info'] = array(
     '#type'        => 'item',
@@ -221,7 +222,7 @@ function taxonomy_csv_form_import($form_state) {
     '#default_value' => $list_previous_values['keep_order'],
     '#description'   => t('If checked, a weight will be added to each term, so order of lines will be preserved. In unchecked, order will be alphabetic.') . '<br />' .
     t('Note: With polyhierarchical vocabulary (multiple parents for a term) and duplicate terms, unpredictable results may occur, because weight of a term is incremented each time it appears and a term can only have one weight, without context.') . '<br />' .
-    t('This option is not available with some formats as Weight and Definitions.'),
+    t('Note: If you want to keep order of more than 50 terms, you need to apply a <a href="http://drupal.org/node/612870">patch to Drupal</a> to avoid a <a href="http://drupal.org/node/1248926">limitation</a>.'),
   );
 
   $form['tab']['import'] = array(
