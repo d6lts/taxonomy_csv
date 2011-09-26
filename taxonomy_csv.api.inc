@@ -128,6 +128,7 @@ function _taxonomy_csv_values($list) {
         'locale_custom'                 => '',
         'vocabulary_target'             => 'autocreate',
         'vocabulary_id'                 => 'choose_vocabulary',
+        'delete_terms'                  => FALSE,
         'check_hierarchy'               => TRUE,
         'set_hierarchy'                 => 2, // Polyhierarchy.
         'existing_items'                => TAXONOMY_CSV_EXISTING_UPDATE,
@@ -152,6 +153,7 @@ function _taxonomy_csv_values($list) {
         'locale_custom'                 => '',
         'vocabulary_target'             => 'autocreate',
         'vocabulary_id'                 => 'choose_vocabulary',
+        'delete_terms'                  => FALSE,
         'check_hierarchy'               => TRUE,
         'set_hierarchy'                 => 2, // Polyhierarchy.
         'existing_items'                => TAXONOMY_CSV_EXISTING_UPDATE,

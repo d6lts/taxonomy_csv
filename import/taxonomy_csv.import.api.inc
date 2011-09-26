@@ -38,6 +38,7 @@
  *   - locale_custom  : string. specific locale of imported file
  *   - vocabulary_target: 'autocreate' (default), 'duplicate' or 'existing'
  *   - vocabulary_id  : vocabulary id to duplicate or to import into
+ *   - delete_terms   : delete all terms before import (default: FALSE)
  *   - check_hierarchy: boolean. check (default) or not vocabulary hierarchy
  *   - set_hierarchy  : if hierarchy isn't checked, set it (0, 1 or 2 (default))
  *   - existing_items : see _taxonomy_csv_values (default: 'update')
@@ -565,6 +566,11 @@ function _taxonomy_csv_import_vocabulary_prepare(&$options) {
 
     case 'existing':
       $vocabulary = taxonomy_vocabulary_load($options['vocabulary_id']);
+      // Optional deletion of terms.
+      if ($options['delete_terms']) {
+        $tids = taxonomy_csv_vocabulary_get_tids($vocabulary->vid);
+        $result = taxonomy_csv_term_delete_multiple($tids);
+      }
       break;
   }
 

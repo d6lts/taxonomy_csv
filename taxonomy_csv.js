@@ -63,19 +63,6 @@ if (Drupal.jsEnabled) {
         }
       });
 
-      // Vocabulary hierarchy.
-      // Add/remove class to show/hide it.
-      $('#edit-check-hierarchy').change(function(){
-        if (this.checked) {
-          $('#set_hierarchy').addClass('filtered');
-        }
-        else {
-          $('#set_hierarchy').removeClass('filtered');
-        }
-      });
-      // Update current display.
-      $('#edit-check-hierarchy').trigger('change');
-
       // Import/Export CSV format options.
       $('#csv_format').addClass('filtered');
       // Export delimiter.
@@ -118,7 +105,7 @@ if (Drupal.jsEnabled) {
         }
       });
 
-      // Destination choice.
+      // Destination choice and deletion of terms.
       $('#destination').addClass('filtered');
       // Add/remove class to show/hide it.
       $('#edit-vocabulary-target').change(function(){
@@ -138,6 +125,39 @@ if (Drupal.jsEnabled) {
           $('#edit-vocabulary-target').trigger('change');
         }
       });
+
+      $('#destination').addClass('filtered');
+      // Add/remove class to show/hide it.
+      $('#edit-vocabulary-target').change(function(){
+        var methods = new Array('autocreate', 'duplicate', 'existing');
+        for(var m in methods) {
+          $('#destination').removeClass(methods[m]);
+        }
+        $('#destination').addClass(this.value)
+          .animate({opacity:.5}, 1)
+          .animate({opacity:1}, 1)
+      });
+      // Update current display.
+      $('#edit-vocabulary-target').trigger('change');
+      // Add event when key up and key down are used.
+      $('#edit-vocabulary-target').keyup(function(e) {
+        if(e.keyCode == 38 || e.keyCode == 40) {
+          $('#edit-vocabulary-target').trigger('change');
+        }
+      });
+
+      // Vocabulary hierarchy.
+      // Add/remove class to show/hide it.
+      $('#edit-check-hierarchy').change(function(){
+        if (this.checked) {
+          $('#set_hierarchy').addClass('filtered');
+        }
+        else {
+          $('#set_hierarchy').removeClass('filtered');
+        }
+      });
+      // Update current display.
+      $('#edit-check-hierarchy').trigger('change');
 
       // Result level.
       // Add/remove class to show/hide it.

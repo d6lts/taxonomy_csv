@@ -39,6 +39,7 @@ function taxonomy_csv_uninstall() {
       'locale_custom',
       'vocabulary_target',
       'vocabulary_id',
+      'delete_terms',
       'check_hierarchy',
       'set_hierarchy',
       'existing_items',

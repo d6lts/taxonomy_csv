@@ -44,10 +44,10 @@ function taxonomy_csv_term_load_multiple($tids = array(), $conditions = array())
   $flag = FALSE;
 
   // Prepare query for terms to be loaded.
-  $sql = "
+  $sql = '
     SELECT t.*
     FROM {term_data} t
-  ";
+  ';
 
   $args = array();
 
@@ -289,6 +289,22 @@ function taxonomy_csv_term_save(&$term) {
   $term->tid = $term_to_save['tid'];
 
   return $result;
+}
+
+/**
+ * Delete multiple terms.
+ *
+ * @param $tids
+ *   (Optional) An array of taxonomy term IDs.
+ *
+ * @return
+ *   TRUE.
+ */
+function taxonomy_csv_term_delete_multiple($tids = array()) {
+  foreach ($tids as $tid) {
+    taxonomy_del_term($tid);
+  }
+  return TRUE;
 }
 
 /**

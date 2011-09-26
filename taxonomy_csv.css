@@ -66,6 +66,7 @@
 #edit-check-utf8-wrapper.text,
 
 #destination.filtered #edit-vocabulary-id-wrapper,
+#destination.filtered #edit-delete-terms-wrapper,
 
 #set_hierarchy.filtered,
 
@@ -153,6 +154,7 @@
 
 #destination.duplicate #edit-vocabulary-id-wrapper,
 #destination.existing #edit-vocabulary-id-wrapper,
+#destination.existing #edit-delete-terms-wrapper,
 
 #edit-relations.relations,
 #edit-def-links.def_links,
