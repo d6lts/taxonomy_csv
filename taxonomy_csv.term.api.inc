@@ -245,6 +245,49 @@ function taxonomy_csv_term_get_relations_names($tid) {
 }
 
 /**
+ * Return the first path to the root of a term.
+ *
+ * @param $term
+ *   A term object with parents attribute, as obtained with taxonomy_get_tree().
+ * @param $tree
+ *   A tree array as obtained with taxonomy_get_tree().
+ *
+ * @return
+ *   Array of term objects matching to the path of a term to its root term.
+ *   If a term is a root term, return an empty array.
+ */
+function taxonomy_csv_term_get_first_path($term, &$tree) {
+  $path = array();
+
+  // To use a counter prevents infinite loop when the hierarchy is inconsistent.
+  $i = 0;
+  while ($i < 100
+      // A term root has no parent.
+      && isset($term->parents)
+      && !empty($term->parents)
+      && $term->parents[0] <> 0
+    ) {
+    $tid = $term->parents[0];
+    if ($tid > 0) {
+      // Get the full term from the tree.
+      foreach ($tree as $parent) {
+        if ($parent->tid == $tid) {
+          break;
+        }
+      }
+      $path[] = $term = $parent;
+    }
+    else {
+      break;
+    }
+    $i++;
+  }
+
+  // The path is reversed in order to begin with root term.
+  return array_reverse($path);
+}
+
+/**
  * Save by reference an internally formatted term object.
  *
  * Drupal taxonomy_save_term uses a text area format to save synonyms.

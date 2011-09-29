@@ -179,7 +179,7 @@ if (Drupal.jsEnabled) {
 
       // Export options (specific)
       // Hide all items defined with the css class filtered.
-      var methods_export = new Array('#specific_info', '#edit-def-links');
+      var methods_export = new Array('#edit-export-order-wrapper', '#specific_info', '#edit-def-links');
       for(var m in methods_export) {
         $(methods_export[m]).addClass('filtered');
       }

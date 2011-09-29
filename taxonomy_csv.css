@@ -70,6 +70,7 @@
 
 #set_hierarchy.filtered,
 
+#edit-export-order-wrapper.filtered,
 #edit-relations.filtered,
 #edit-def-links.filtered,
 
@@ -156,6 +157,18 @@
 #destination.existing #edit-vocabulary-id-wrapper,
 #destination.existing #edit-delete-terms-wrapper,
 
+#edit-export-order-wrapper.alone_terms,
+#edit-export-order-wrapper.def_links,
+#edit-export-order-wrapper.flat,
+#edit-export-order-wrapper.parents,
+#edit-export-order-wrapper.children,
+#edit-export-order-wrapper.relations,
+#edit-export-order-wrapper.synonyms,
+#edit-export-order-wrapper.definitions,
+#edit-export-order-wrapper.descriptions,
+#edit-export-order-wrapper.weights,
+#edit-export-order-wrapper.taxonomy_manager,
+#edit-export-order-wrapper.geotaxonomy,
 #edit-relations.relations,
 #edit-def-links.def_links,
 
