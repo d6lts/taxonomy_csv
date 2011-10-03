@@ -15,7 +15,13 @@
  *   Found full term object.
  */
 function taxonomy_csv_term_load($tid) {
-  $term = db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
+  $term = db_fetch_object(db_query('
+    SELECT t.*
+    FROM {term_data} t
+    WHERE t.tid = %d
+    ',
+    $tid
+  ));
 
   return $term ?
       taxonomy_csv_term_get_full($term) :
@@ -75,6 +81,35 @@ function taxonomy_csv_term_load_multiple($tids = array(), $conditions = array())
   }
 
   return $terms;
+}
+
+/**
+ * Return an array of all term ids of a given vocabulary.
+ *
+ * @param $vid
+ *   The vocabulary id from where to fetch term ids.
+ *
+ * @return
+ *   Array of term ids.
+ */
+function taxonomy_csv_term_get_tids_from_vocabulary($vid) {
+  $tids = array();
+
+  $sql = '
+    SELECT t.tid
+    FROM {term_data} t
+    WHERE t.vid = %d
+  ';
+  $args = array(
+    $vid,
+  );
+
+  $result = db_query($sql, $args);
+  while ($term = db_fetch_object($result)) {
+    $tids[] = $term->tid;
+  }
+
+  return $tids;
 }
 
 /**
@@ -305,6 +340,7 @@ function taxonomy_csv_term_get_first_path($term, &$tree) {
  *   - 'parents'     : array of first level parent tids,
  *   - 'relations'   : array of related tids,
  *   - 'synonyms'    : array of synonyms terms names strings,
+ *
  * @return
  *   Status value (SAVED_NEW or SAVED_UPDATED). Term is updated with its tid.
  */
@@ -348,31 +384,4 @@ function taxonomy_csv_term_delete_multiple($tids = array()) {
     taxonomy_del_term($tid);
   }
   return TRUE;
-}
-
-/**
- * Calculate number of terms in a vocabulary or in all vocabularies.
- *
- * @todo Regular query.
- *
- * @param $vocabulary_id
- *   (Optional) Id of the chosen vocabulary. If not specified, count terms in
- *   all vocabularies.
- *
- * @return
- *   Number of terms in specified vocabulary or in all vocabularies.
- */
-function taxonomy_csv_term_count_in_vocabulary($vocabulary_id = 0) {
-  $sql = "
-    SELECT COUNT(*)
-    FROM {term_data}
-  ";
-
-  $args = array();
-  if ($vocabulary_id) {
-    $sql .= ' WHERE vid = %d ';
-    $args[] = $vocabulary_id;
-  }
-
-  return array_shift(db_fetch_array(db_query($sql, $args)));
 }

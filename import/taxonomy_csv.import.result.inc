@@ -268,7 +268,6 @@ function _taxonomy_csv_info_terms($options) {
         $message .= $term->name . '", "';
       }
       $message = drupal_substr($message, 0, drupal_strlen($message) - 3) . '.';
-
     }
   }
   else {

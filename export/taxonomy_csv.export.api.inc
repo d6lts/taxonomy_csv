@@ -14,6 +14,7 @@
   $module_dir = drupal_get_path('module', 'taxonomy_csv');
   require_once("$module_dir/taxonomy_csv.api.inc");
   require_once("$module_dir/taxonomy_csv.term.api.inc");
+  require_once("$module_dir/taxonomy_csv.vocabulary.api.inc");
 
 /**
  * Process the export of a vocabulary.
@@ -126,7 +127,7 @@ function taxonomy_csv_vocabulary_export($options) {
   $options['end_of_line'] = $line_ending[$options['line_ending']];
 
   // Calculates number of terms to be exported.
-  $options['total_terms'] = taxonomy_csv_term_count_in_vocabulary($options['vocabulary_id']);
+  $options['total_terms'] = taxonomy_csv_vocabulary_count_terms($options['vocabulary_id']);
 
   // Prepare export batch.
   $batch = array(
@@ -177,15 +178,15 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     $context['results'][0]['worst_message'] = 799;
     // No pointer because new line is appended to file.
     $context['results'][0]['handle'] = fopen($options['file']->filepath, 'a+');
-    $context['sandbox']['max'] = $options['total_terms'];
+    $context['sandbox']['count'] = $options['total_terms'];
 
     // Fetch terms to be exported and order them (by tree or by specific order).
-    $context['sandbox']['terms'] = array();
     // Prepare a hierarchical tree of terms.
     if (in_array($options['export_format'], array(
         TAXONOMY_CSV_FORMAT_TREE_STRUCTURE,
         TAXONOMY_CSV_FORMAT_POLYHIERARCHY,
       ))) {
+      $context['sandbox']['terms'] = array();
       $vocabularies = ($options['vocabulary_id']) ?
           // Export only the selected vocabulary.
           array(taxonomy_vocabulary_load($options['vocabulary_id'])) :
@@ -202,6 +203,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
       $context['sandbox']['terms'] = taxonomy_csv_term_load_multiple(
         array(),
         array(
+          // Automatically manages one or all vocabularies.
           'vid'   => $options['vocabulary_id'],
           'order' => $options['order'],
         )
@@ -233,7 +235,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
   $terms_list      = &$context['sandbox']['terms'];
 
   // Process one term until end of vocabulary.
-  if ($term_number < $context['sandbox']['max']) {
+  if ($term_number < $context['sandbox']['count']) {
     $term = $terms_list[$term_number];
 
     $term_number++;
@@ -271,7 +273,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     // Check worst message of exported terms and update progress.
     if ($worst_message >= TAXONOMY_CSV_PROCESS_WARNING) {
       // Count should be <= 0.99 to avoid to display "100%" before end.
-      $context['finished'] = floor($term_number / $context['sandbox']['max'] * 100) / 100;
+      $context['finished'] = floor($term_number / $context['sandbox']['count'] * 100) / 100;
     }
     else {
       $context['finished'] = 1;

@@ -66,8 +66,8 @@ function taxonomy_csv_form_export($form_state) {
 
   $list_export_order = array(
     'name'             => t('Alphabetic order'),
-    'tid'              => t('Internal order'),
     'weight'           => t('Weight'),
+    'tid'              => t('Internal order'),
   );
 
   // Build form.
@@ -244,7 +244,8 @@ function taxonomy_csv_form_export($form_state) {
       'vid'  => t('Serial number (internal vocabulary id)'),
     ),
     '#default_value' => $list_previous_values['def_links_vocabularies_ids'],
-    '#description'   => t('Choose how vocabularies will be identified. First choice can be used only when a single vocabulary is exported and when there is no relation to terms of another vocabulary.'),
+    '#description'   => t('Choose how vocabularies will be identified.'). '<br />'
+      . t('"Nothing" can be used only when a single vocabulary is exported (not all vocabularies in one time) and when there is no relation to terms of another vocabulary. In such a case, vocabulary name will be used instead.'),
   );
 
   $form['tab']['advanced_options']['result_duplicates'] = array(
@@ -438,7 +439,7 @@ function _taxonomy_csv_export_check_options(&$options) {
   }
 
   // Calculates number of terms to be exported.
-  $options['total_terms'] = taxonomy_csv_term_count_in_vocabulary($options['vocabulary_id']);
+  $options['total_terms'] = taxonomy_csv_vocabulary_count_terms($options['vocabulary_id']);
   if (!$options['total_terms']) {
     $message['vocabulary_id'] = t('No term to export. Export finished.');
   }
@@ -505,4 +506,6 @@ function _taxonomy_csv_form_export_default_values_submit($form, &$form_state) {
   }
   unset($form_state['values']);
   unset($form_state['storage']);
+
+  drupal_set_message(t('Export options have been reset to default.'));
 }

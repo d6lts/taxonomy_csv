@@ -51,7 +51,7 @@
 #help_taxonomy_manager.filtered,
 #help_geotaxonomy.filtered,
 
-#edit-keep-order-wrapper.filtered,
+/* #edit-keep-order-wrapper.format_name, */
 
 #import.filtered #edit-text-wrapper,
 #import.filtered #edit-file-wrapper,
@@ -127,18 +127,6 @@
 #help_synonyms.synonyms,
 #help_taxonomy_manager.taxonomy_manager,
 #help_geotaxonomy.geotaxonomy,
-
-#edit-keep-order-wrapper.alone_terms,
-#edit-keep-order-wrapper.flat,
-#edit-keep-order-wrapper.tree_structure,
-#edit-keep-order-wrapper.polyhierarchy,
-#edit-keep-order-wrapper.parents,
-#edit-keep-order-wrapper.children,
-#edit-keep-order-wrapper.relations,
-#edit-keep-order-wrapper.descriptions,
-#edit-keep-order-wrapper.synonyms,
-#edit-keep-order-wrapper.taxonomy_manager,
-#edit-keep-order-wrapper.geotaxonomy,
 
 #import.text #edit-text-wrapper,
 #import.file #edit-file-wrapper,

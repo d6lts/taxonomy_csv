@@ -155,29 +155,6 @@ function taxonomy_csv_vocabulary_load_name($name) {
 }
 
 /**
- * Return an array of all term ids of a given vocabulary.
- */
-function taxonomy_csv_vocabulary_get_tids($vid) {
-  $tids = array();
-
-  $sql = '
-    SELECT t.tid
-    FROM {term_data} t
-    WHERE t.vid = %d
-  ';
-  $args = array(
-    $vid,
-  );
-
-  $result = db_query($sql, $args);
-  while ($term = db_fetch_object($result)) {
-    $tids[] = $term->tid;
-  }
-
-  return $tids;
-}
-
-/**
  * Check and update hierarchy flag of a given vocabulary.
  *
  * Drupal hierarchy check function bugs with vocabularies without hierarchy.
@@ -209,4 +186,31 @@ function _taxonomy_csv_check_vocabulary_hierarchy($vocabulary, $changed_term = a
   }
 
   return $hierarchy;
+}
+
+/**
+ * Calculate number of terms in a vocabulary or in all vocabularies.
+ *
+ * @todo Regular query.
+ *
+ * @param $vocabulary_id
+ *   (Optional) Id of the chosen vocabulary. If not specified, count terms in
+ *   all vocabularies.
+ *
+ * @return
+ *   Number of terms in specified vocabulary or in all vocabularies.
+ */
+function taxonomy_csv_vocabulary_count_terms($vocabulary_id = 0) {
+  $sql = "
+    SELECT COUNT(*)
+    FROM {term_data}
+  ";
+
+  $args = array();
+  if ($vocabulary_id) {
+    $sql .= ' WHERE vid = %d ';
+    $args[] = $vocabulary_id;
+  }
+
+  return array_shift(db_fetch_array(db_query($sql, $args)));
 }
