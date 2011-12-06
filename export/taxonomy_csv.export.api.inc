@@ -178,7 +178,6 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     $context['results'][0]['worst_message'] = 799;
     // No pointer because new line is appended to file.
     $context['results'][0]['handle'] = fopen($options['file']->filepath, 'a+');
-    $context['sandbox']['count'] = $options['total_terms'];
 
     // Fetch terms to be exported and order them (by tree or by specific order).
     // Prepare a hierarchical tree of terms.
@@ -235,7 +234,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
   $terms_list      = &$context['sandbox']['terms'];
 
   // Process one term until end of vocabulary.
-  if ($term_number < $context['sandbox']['count']) {
+  if ($term_number < count($context['sandbox']['terms'])) {
     $term = $terms_list[$term_number];
 
     $term_number++;
@@ -260,7 +259,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     // Remember messages. Currently useless because there isn't any warning or
     // notice message (only error). A result level can be added here if needed.
     if (count($result['msg'])) {
-      $context['results'][$line_number] = $result['msg'];
+      $context['results'][$term_number] = $result['msg'];
     }
 
     // Inform about progress.
@@ -273,7 +272,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     // Check worst message of exported terms and update progress.
     if ($worst_message >= TAXONOMY_CSV_PROCESS_WARNING) {
       // Count should be <= 0.99 to avoid to display "100%" before end.
-      $context['finished'] = floor($term_number / $context['sandbox']['count'] * 100) / 100;
+      $context['finished'] = floor($term_number / count($context['sandbox']['terms']) * 100) / 100;
     }
     else {
       $context['finished'] = 1;
@@ -372,6 +371,9 @@ function taxonomy_csv_line_export($line, $options, &$handle, $result = array()) 
         && (strpos($check_line, $options['end_of_line']) !== FALSE))) {
     $result[] = 313; // Error delimiter or enclosure.
   }
+  // Skip a term with warning.
+  elseif (_taxonomy_csv_worst_message($result) < TAXONOMY_CSV_PROCESS_NOTICE) {
+  }
   else {
     // Save line to file.
     $line = $options['enclosure'] . implode($options['separator'], $line) . $options['enclosure'] . $options['end_of_line'];
@@ -459,6 +461,14 @@ function taxonomy_csv_term_export($term, $options, &$terms_list = array(), $dupl
         // Prepare main term vocabulary identifiant.
         // Vocabulary identifiant depends on def_links_vocabularies_ids.
         $vocabulary = taxonomy_vocabulary_load($term->vid);
+
+        // Display a warning if a term has no vocabulary.
+        // See http://drupal.org/node/1359260.
+        if (!$vocabulary) {
+          $result['msg'][] = 409; // Warning not a good term.
+          break;
+        }
+
         $vid = ($options['def_links_vocabularies_ids'] == 'none') ?
             // Don't set vocabulary.
             '' :

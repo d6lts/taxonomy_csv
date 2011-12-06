@@ -170,7 +170,8 @@ function _taxonomy_csv_message_text($message_code) {
       392 => t('Problem when caching imported term. Please first check your file and file uploading, else reinstall module from a fresh release or submit an issue.') . $error,
 
       400 => t('WARNING'),
-      405 => t('Unmanaged option') . $warning,
+      405 => t('Unmanaged option.') . $warning,
+      409 => t('Term has no vocabulary.') . $warning,
       410 => t("Impossible to get parent of first item, because previous line has less parent(s). You may add one or more parents to current line or change lines order.") . $warning,
       430 => t('Line contains empty items.') . $warning,
       431 => t('Line contains duplicate items.') . $warning,
