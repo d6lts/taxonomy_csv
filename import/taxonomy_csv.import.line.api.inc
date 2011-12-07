@@ -70,12 +70,12 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
             if ($line[1]) {
               $term->weight    = $line[1];
             }
-            $term->description = $line[2];
+            $term->description = _taxonomy_csv_set_line_break($line[2]);
             $term->synonyms    = array_slice($line, 3);
             break;
 
           case TAXONOMY_CSV_FORMAT_DESCRIPTIONS:
-            $term->description = $line[1];
+            $term->description = _taxonomy_csv_set_line_break($line[1]);
             break;
 
           case TAXONOMY_CSV_FORMAT_WEIGHTS:
@@ -104,7 +104,7 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
         // 2. Define main term to be imported.
         $term = (object) array(
           'name'        => $line[0],
-          'description' => $line[3],
+          'description' => _taxonomy_csv_set_line_break($line[3]),
           'weight'      => $line[4],
           'parents'     => array(),
           'synonyms'    => array_slice($line, 9, $line[5]),
@@ -621,7 +621,7 @@ function taxonomy_csv_term_import($term, $existing_items = TAXONOMY_CSV_EXISTING
             if (is_array($value)) {
               $term->$key = array_unique(array_merge($existing_term->$key, $term->$key));
             }
-            // Else simply use new key: no merge is possible and useful for has been
+            // Else simply use new key: no merge is possible and useful for
             // string, numeric or boolean fields.
             // Description was an exception in previous version, but this
             // exception is removed for simplicity and real use of this module.

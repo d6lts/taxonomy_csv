@@ -47,6 +47,7 @@ function taxonomy_csv_form_export($form_state) {
     'comma'            => t('« , » (Comma)'),
     'semicolon'        => t('« ; » (Semicolon)'),
     'tabulation'       => t('«   » (Tabulation)'),
+    'pipe'             => t('« | » (Pipe)'),
     'space'            => t('«   » (Space)'),
     'currency_sign'    => t('« ¤ » (Currency sign)'),
     'custom_delimiter' => t('Custom delimiter'),
@@ -55,6 +56,7 @@ function taxonomy_csv_form_export($form_state) {
   $list_export_enclosure = array(
     'none'             => t('None'),
     'quotation'        => t('« " » (Quotation mark)'),
+    'quote'            => t("« ' » (Quote)"),
     'custom_enclosure' => t('Custom enclosure'),
   );
 
@@ -293,6 +295,7 @@ function taxonomy_csv_form_export_validate($form, &$form_state) {
     'comma'            => ',',
     'semicolon'        => ';',
     'tabulation'       => "\t",
+    'pipe'             => '|',
     'space'            => ' ',
     'currency_sign'    => '¤',
     'custom_delimiter' => $options['export_delimiter_custom'],
@@ -303,6 +306,7 @@ function taxonomy_csv_form_export_validate($form, &$form_state) {
   $enclosure = array(
     'none'             => '',
     'quotation'        => '"',
+    'quote'            => "'",
     'custom_enclosure' => $options['export_enclosure_custom'],
   );
   $options['enclosure'] = $enclosure[$options['export_enclosure']];
