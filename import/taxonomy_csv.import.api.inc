@@ -47,7 +47,7 @@
  *   - relations_all_vocabularies   : boolean. (default: FALSE)
  *   // Level of result process infos.
  *   - check_options  : boolean. check or not (default) this array of options
- *   - result_display : boolean. display or not (default). Only used with UI.
+ *   - result_display : boolean. display or not (default).
  *   - result_stats   : boolean. display or not (default) stats
  *   - result_terms   : boolean. display or not (default) list of imported terms
  *   - result_level   : log: 'first' (default), 'warnings', 'notices' or 'infos'
@@ -71,7 +71,7 @@ function taxonomy_csv_import($options) {
   }
 
   // Process import.
-  taxonomy_csv_vocabulary_import($options);
+  return taxonomy_csv_vocabulary_import($options);
 }
 
 /**
