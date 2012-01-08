@@ -31,15 +31,15 @@ function taxonomy_csv_drush_command() {
       'check_line'    => 'Check format of lines',
       'check_utf8'    => 'Check utf8 format',
       'locale_custom' => 'Specific locale of imported file',
-      'vocabulary_target'=> "'autocreate' (default), 'duplicate' or 'existing'",
-      'vocabulary_id' => 'Vocabulary id to duplicate or to import into',
+      'vocabulary_target' => "'autocreate' (default), 'duplicate' or 'existing'",
+      'vocabulary_id' => 'vid or machine_name (>=D7 only) of the vocabulary to duplicate or to import into',
       'custom_fields' => 'Custom comma separated fields to add or create [>=D7 only]',
       'delete_terms'  => 'Delete all terms before import',
-      'check_hierarchy'=> 'Check vocabulary hierarchy',
+      'check_hierarchy' => 'Check vocabulary hierarchy',
       'set_hierarchy' => "If hierarchy isn't checked, set it (0, 1 or 2 (default))",
-      'existing_items'=> "What to do with existing items, which depends on import format:\n'update' (default), 'replace' or 'ignore'",
+      'existing_items' => "What to do with existing items, which depends on import format:\n'update' (default), 'replace' or 'ignore'",
       // Specific to relations import:
-      'relations_create_subrelations'=> 'Create subrelations when importing relations',
+      'relations_create_subrelations' => 'Create subrelations when importing relations',
       'relations_all_vocabularies'   => 'Allows relations with terms in other vocabularies',
       // Level of result process infos.
       'result_stats' => 'Display import stats',
@@ -58,7 +58,7 @@ function taxonomy_csv_drush_command() {
       'drush taxocsv-export 2 tree_structure --delimiter=";" --order=name' => 'Export vocabulary with vid 2 as a CSV tree_structure ordered by name, with a semicolon for delimiter, and default settings for other options.',
     ),
     'arguments' => array(
-      'vocabulary_id' => 'Required. Vocabulary id to export (0 means all)',
+      'vocabulary_id' => 'Required. vid or machine_name (>=D7 only) of the vocabulary to export (0 means all)',
       'export_format' => "Optional. CSV format: 'alone_terms' (default), 'def_links', 'tree_structure', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
       'file_path'     => "Optional. Full path or filename of exported csv file (default: [current directory]/taxocsv.csv)",
     ),
@@ -171,8 +171,12 @@ function drush_taxonomy_csv_import($file_path, $import_format = 'alone_terms') {
   // Prepare import.
   $messages = taxonomy_csv_import($options);
 
-  // Last check: unknow options.
+  // Last check: unknown options.
   $other_options = array_diff(array_keys(drush_get_merged_options()), array_keys($options));
+  // Compatibility with drush 4.5. See https://drupal.org/node/1395090.
+  if (($i = array_search('drush-make-update-default-url', $other_options)) !== FALSE) {
+    unset($other_options[$i]);
+  }
   if ($other_options) {
     $messages[] = 'Unknown options:' . ' ' . implode(', ', $other_options) . '.';
   }
@@ -271,8 +275,12 @@ function drush_taxonomy_csv_export($vocabulary_id, $export_format = 'alone_terms
     $messages = array();
   }
 
-  // Last check: unknow options.
+  // Last check: unknown options.
   $other_options = array_diff(array_keys(drush_get_merged_options()), array_keys($options));
+  // Compatibility with drush 4.5. See https://drupal.org/node/1395090.
+  if (($i = array_search('drush-make-update-default-url', $other_options)) !== FALSE) {
+    unset($other_options[$i]);
+  }
   if ($other_options) {
     $messages[] = 'Unknown options:' . ' ' . implode(', ', $other_options) . '.';
   }
