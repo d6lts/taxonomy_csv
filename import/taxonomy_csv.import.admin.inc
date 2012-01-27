@@ -81,6 +81,8 @@ function taxonomy_csv_form_import($form_state) {
     'custom_enclosure' => t('Custom enclosure'),
   );
 
+  $list_vocabularies = taxonomy_get_vocabularies();
+
   $list_vocabulary_target = array(
     'autocreate' => t('Autocreate a new vocabulary'),
     'duplicate'  => t('Duplicate an existing vocabulary'),
@@ -162,13 +164,13 @@ function taxonomy_csv_form_import($form_state) {
   if (isset($_COOKIE['has_js'])) {
     // Prepare descriptions.
     $line_format = '<br /><br />'
-      . '<strong><em>' . t('Line format:') . '</em></strong><br />'
+      . '<strong><em>' . t('Line format') . '</em></strong><br />'
       . '<code>';
     $example = '</code><br /><br />'
-      . '<strong><em>' . t('Examples:') . '</em></strong><br />'
-      . '<code><ul><li>';
-    $li = '</li><li>';
-    $description_long = '</li></ul></code>';
+      . '<strong><em>' . t('Examples') . '</em></strong>'
+      . '<ul><li><code>';
+    $li = '</code></li><li><code>';
+    $description_long = '</code></li></ul>';
 
     // Generic form for import format help.
     foreach ($list_import_format as $key => $value) {
@@ -204,7 +206,7 @@ function taxonomy_csv_form_import($form_state) {
         . t('term name, term id, vocabulary id, term description, weight, number of synonyms, number of first level parents, number of first level children, number of related terms, list of synonyms, list of first level parents ids, list of first level children ids, list of related terms ids, list of vocabulary ids of related terms')
       . $example
         . t('foo, , , "Description of foo", 10, 1, 1, 2, 2, Synonym of foo, bar parent 1, bar child 1, bar child 2, bar related 1, bar related 2, , vocabulary of related 2') . $li
-        . t('France, , Places, "A great country", 1, 1, 1, 3, 3, French Republic, Europe, Paris, Lyon, Vichy, USA, Japan, China') . $li
+        . t('France, , Places, "A free country", 1, 1, 1, 3, 3, French Republic, Europe, Paris, Lyon, Vichy, USA, Japan, China') . $li
         . t('Japan, , Places, "An old country", 1, 1, 1, 2, 2, Land of the Rising Sun, Asia, Tokyo, Kyoto, China, France') . $li
         . t('China, , Places, "A big country", 2, 1, 1, 1, 2, Middle Kingdom, Asia, Beijing, Japan, France') . $li
         . t('Asia, , Places, "A large continent", 1, 0, 0, 2, 0, Japan, China')
@@ -430,8 +432,9 @@ function taxonomy_csv_form_import($form_state) {
   $form['tab']['csv_format'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('3. How is your source formatted?'),
-    '#description' => t('Notice: either you import terms by a file or by a text area, the csv format is the same. Default delimiter is a comma ("<strong><code> , </code></strong>"). Default enclosure is none, but quotation mark ("<strong><code> " </code></strong>") is automatically managed.') . '<br />'
-      . t("<strong>Important</strong>: You should enclose any item beginning with a non-ascii letter, such as 'É', 'ç', 'œ' or any non-latin letter."),
+    '#description' => t('Default delimiter is a comma ("<strong><code>,</code></strong>"). Default enclosure is none, but quotation mark ("<strong><code>"</code></strong>") is automatically managed.') . '<br />'
+      . t('Notice') . ': ' . t('Either you import terms by a file or by a text area, the csv format is the same.') . '<br />'
+      . '<strong>' . t('Warning') . '</strong>: ' . t('You should enclose any item beginning with a non-ascii letter, such as "É", "ç", "œ" or any non-latin letter.'),
     '#collapsible' => TRUE,
     '#collapsed'   => TRUE,
     '#attributes'  => array('id' => 'csv_format'),
@@ -512,6 +515,15 @@ function taxonomy_csv_form_import($form_state) {
     $form['tab']['csv_format']['check_utf8']['#description'] .= t('This checkbox is currently disabled, because iconv, GNU recode or mbstring for PHP are not installed on your server.');
   }
 
+  $form['tab']['csv_format']['locale_custom'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Manually set locale of the file'),
+    '#default_value' => $list_previous_values['locale_custom'],
+    '#size'          => 60,
+    '#maxlength'     => 255,
+    '#description'   => t('To set locale can resolve some import issues related to file or database. Choose the locale you use, for example "<code>en_DK.utf8</code>", and it will be automatically set before import and reset after. Let empty when no problem occurs: import will use your default locale.'),
+  );
+
   $form['tab']['destination'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('4. Which vocabulary do you want to import into?'),
@@ -523,17 +535,6 @@ function taxonomy_csv_form_import($form_state) {
       . t('With some import formats as "Fields and links", vocabulary destination is defined by source content and this option is not used.'),
     '#attributes'  => array('id' => 'destination'),
   );
-
-  $form['tab']['csv_format']['locale_custom'] = array(
-    '#type'          => 'textfield',
-    '#title'         => t('Manually set locale'),
-    '#default_value' => $list_previous_values['locale_custom'],
-    '#size'          => 60,
-    '#maxlength'     => 255,
-    '#description'   => t("To set locale can resolve some import issues. Choose the locale you use, for example 'en_DK.utf8', and it will be automatically set before import and reset after. Let empty when no problem occurs: import will use your default locale."),
-  );
-
-  $list_vocabularies = taxonomy_get_vocabularies();
 
   if (count($list_vocabularies) == 0) {
     $form['tab']['destination']['#description'] .= '<br /><br />'

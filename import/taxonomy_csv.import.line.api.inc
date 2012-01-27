@@ -24,9 +24,9 @@
  *   Needed with some contents as one term array structure or Taxonomy manager.
  *   Specificities:
  *   - def_links:
- *     'name' and 'tid' arrays contain sub-arrays 'vocabulary' and 'term' with
- *     imported identifiant as key and name or tid/vid as value in order to
- *     allow duplicate names import and use of number identifiants.
+ *       'name' and 'tid' arrays contain sub-arrays 'vocabulary' and 'term' with
+ *       imported identifiant as key and name or tid/vid as value in order to
+ *       allow duplicate names import and use of number identifiants.
  * @param $terms_count
  *   (Optional integer) Total of imported terms (duplicate included) is needed
  *   to set weight of terms and to keep order of items, if wished.
@@ -50,10 +50,10 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
   if (count($line)) {
     switch ($options['import_format']) {
       case TAXONOMY_CSV_FORMAT_ALONE_TERMS:
+      case TAXONOMY_CSV_FORMAT_SYNONYMS:
       case TAXONOMY_CSV_FORMAT_DEFINITIONS:
       case TAXONOMY_CSV_FORMAT_DESCRIPTIONS:
       case TAXONOMY_CSV_FORMAT_WEIGHTS:
-      case TAXONOMY_CSV_FORMAT_SYNONYMS:
         $term = (object) array(
           'name' => $line[0],
           'vid'  => $options['vocabulary_id'],
@@ -66,6 +66,10 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
         }
 
         switch ($options['import_format']) {
+          case TAXONOMY_CSV_FORMAT_SYNONYMS:
+            $term->synonyms = array_slice($line, 1);
+            break;
+
           case TAXONOMY_CSV_FORMAT_DEFINITIONS:
             if ($line[1]) {
               $term->weight    = $line[1];
@@ -82,10 +86,6 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
             if ($line[1]) {
               $term->weight    = $line[1];
             }
-            break;
-
-          case TAXONOMY_CSV_FORMAT_SYNONYMS:
-            $term->synonyms = array_slice($line, 1);
             break;
         }
         // Import term then store result. No check because only one term.
@@ -197,12 +197,11 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
         foreach ($parents_names as $key => $id) {
           // Check if term is already imported.
           if (!isset($result['name']['term'][$id])) {
-            $current_result = taxonomy_csv_term_import(
-              (object) array(
-                'name' => $id,
-                'vid'  => $vid,
-              ),
-              $options['existing_items']);
+            $unsaved_term = (object) array(
+              'name' => $id,
+              'vid'  => $vid,
+            );
+            $current_result = taxonomy_csv_term_import($unsaved_term, $options['existing_items']);
             $result['name']['term'][$id] = $current_result['name'];
             $result['tid']['term'][$id]  = $current_result['tid'];
             $result['msg'] = array_merge($result['msg'], $current_result['msg']);
@@ -229,12 +228,11 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
                 $result['tid']['vocabulary'][$related_vocs[$key]];
             // Vocabulary change is unadvised if term has links, but possible.
             if ($temp_term->vid != $temp_vocabulary) {
-              $current_result = taxonomy_csv_term_import(
-                (object) array(
-                  'name' => $result['name']['term'][$id],
-                  'vid'  => $temp_vocabulary,
-                ),
-                $options['existing_items']);
+              $unsaved_term = (object) array(
+                'name' => $result['name']['term'][$id],
+                'vid'  => $temp_vocabulary,
+              );
+              $current_result = taxonomy_csv_term_import($unsaved_term, $options['existing_items']);
               $result['name']['term'][$id] = $current_result['name'];
               $result['tid']['term'][$id]  = $current_result['tid'];
               $result['msg'] = array_merge($result['msg'], $current_result['msg']);
@@ -245,16 +243,15 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
             }
           }
           else {
-            $current_result = taxonomy_csv_term_import(
-              (object) array(
-                'name' => $id,
-                'vid'  => (!$related_vocs[$key]) ?
-                    // There is no vocabulary identifiant, so use main term vid.
-                    $vid :
-                    // There is a vocabulary identifiant, so use it.
-                    $result['tid']['vocabulary'][$related_vocs[$key]],
-              ),
-              $options['existing_items']);
+            $unsaved_term = (object) array(
+              'name' => $id,
+              'vid'  => (!$related_vocs[$key]) ?
+                // There is no vocabulary identifiant, so use main term vid.
+                $vid :
+                // There is a vocabulary identifiant, so use it.
+                $result['tid']['vocabulary'][$related_vocs[$key]],
+            );
+            $current_result = taxonomy_csv_term_import($unsaved_term, $options['existing_items']);
             $result['name']['term'][$id] = $current_result['name'];
             $result['tid']['term'][$id]  = $current_result['tid'];
             $result['msg'] = array_merge($result['msg'], $current_result['msg']);
@@ -268,20 +265,20 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
         $term->relations = $tids;
 
         // 7. Import main term and check result.
-        // If main term has an identifiant, pre-import it.
+        // If main term has an identifiant, pre-import it with this identifiant
+        // in order to get a specific tid in case of duplicate.
         if ($line[1] != '') {
-          // If term is already imported, simply update main term with tid.
-          if (isset($result['name']['term'][$line[1]])) {
+          // If term is already imported, simply update it with tid.
+          if (isset($result['tid']['term'][$line[1]])) {
             $term->tid = $result['tid']['term'][$line[1]];
           }
           // Pre-import is needed only when name and identifiant are different.
           elseif (drupal_strtolower($line[0]) != drupal_strtolower($line[1])) {
-            $current_result = taxonomy_csv_term_import(
-              (object) array(
-                'name' => $term->name,
-                'vid'  => $term->vid,
-              ),
-              $options['existing_items']);
+            $unsaved_term = (object) array(
+              'name' => $line[1],
+              'vid'  => $term->vid,
+            );
+            $current_result = taxonomy_csv_term_import($unsaved_term, $options['existing_items']);
             $result['name']['term'][$line[1]] = $current_result['name'];
             $result['tid']['term'][$line[1]]  = $current_result['tid'];
             $result['msg'] = array_merge($result['msg'], $current_result['msg']);
@@ -294,10 +291,16 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
 
         // Import main term.
         $current_result = taxonomy_csv_term_import($term, $options['existing_items']);
+        // Complete the term with the term id in case it's not been fulled.
+        $term->tid = $current_result['tid'];
         // Save with name if identifiant was not set (else, it's already saved).
         if ($line[1] == '') {
           $result['name']['term'][$line[0]] = $current_result['name'];
           $result['tid']['term'][$line[0]]  = $current_result['tid'];
+        }
+        else {
+          $result['name']['term'][$line[1]] = $current_result['name'];
+          $result['tid']['term'][$line[1]]  = $current_result['tid'];
         }
         $result['msg'] = array_merge($result['msg'], $current_result['msg']);
         if (_taxonomy_csv_worst_message($current_result['msg']) < TAXONOMY_CSV_PROCESS_NOTICE) {
@@ -309,21 +312,19 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
         $tids = array();
         foreach ($children_names as $key => $id) {
           // No check because parent is added even if term is already imported.
-          $temp_term = (object) array(
+          $unsaved_term = (object) array(
             'name'    => $id,
             'vid'     => $vid,
             'parents' => array($parent_tid),
           );
           // Update term with tid and true name if known.
           if (isset($result['name']['term'][$id])) {
-            $temp_term->name = $result['name']['term'][$id];
-            $temp_term->tid  = $result['tid']['term'][$id];
+            $unsaved_term->name = $result['name']['term'][$id];
+            $unsaved_term->tid  = $result['tid']['term'][$id];
           }
           // Import term then store and check result.
           // Don't check tid == parent_tid because duplicates have been removed.
-          $current_result = taxonomy_csv_term_import(
-            $temp_term,
-            $options['existing_items']);
+          $current_result = taxonomy_csv_term_import($unsaved_term, $options['existing_items']);
           $result['name']['term'][$id] = $current_result['name'];
           $result['tid']['term'][$id]  = $current_result['tid'];
           $result['msg'] = array_merge($result['msg'], $current_result['msg']);
