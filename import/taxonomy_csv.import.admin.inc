@@ -124,8 +124,8 @@ function taxonomy_csv_form_import($form_state) {
     }
   }
 
-  // Advertise that javascript is not enabled.
-  if (!isset($_COOKIE['has_js'])) {
+  // Advertise that javascript is not enabled. Presume it is set by default.
+  if (isset($_COOKIE['has_js']) && !$_COOKIE['has_js']) {
     $form['javascript'] = array(
       '#type'        => 'fieldset',
       '#title'       => t('WARNING'),
@@ -161,7 +161,7 @@ function taxonomy_csv_form_import($form_state) {
     '#default_value' => $list_previous_values['import_format'],
   );
 
-  if (isset($_COOKIE['has_js'])) {
+  if (!isset($_COOKIE['has_js']) || $_COOKIE['has_js']) {
     // Prepare descriptions.
     $line_format = '<br /><br />'
       . '<strong><em>' . t('Line format') . '</em></strong><br />'
@@ -611,7 +611,7 @@ function taxonomy_csv_form_import($form_state) {
     '#attributes'  => array('id' => 'import_options'),
   );
 
-  if (isset($_COOKIE['has_js'])) {
+  if (!isset($_COOKIE['has_js']) || $_COOKIE['has_js']) {
     $list_import_allowed = _taxonomy_csv_values('import_allowed');
     foreach ($list_import_format as $key => $value) {
       $form['tab']['import_options']["existing_items_$key"] = array(
@@ -858,7 +858,7 @@ function taxonomy_csv_form_import_validate($form, &$form_state) {
   $options['enclosure'] = $enclosure[$options['import_enclosure']];
 
   // Define existing items choice.
-  if (isset($_COOKIE['has_js'])) {
+  if (!isset($_COOKIE['has_js']) || $_COOKIE['has_js']) {
     $import_format = $options['import_format'];
     $options['existing_items'] = $options["existing_items_$import_format"];
   }
