@@ -34,8 +34,8 @@
  *   - def_links_vocabularies_ids : 'none' (default), 'name' or 'vid'
  *   // Level of result process infos:
  *   - check_options : boolean. check or not (default) this array of options
- *   - result_display: boolean. display or not (default). Only used with UI.
- *   - result_duplicates: boolean. display or not (default) duplicate terms.
+ *   - result_display: boolean. display or not (default). Only used with UI
+ *   - result_duplicates: boolean. display or not (default) duplicate terms
  *   All options have default values.
  *   Warning: default values are different with UI.
  *
@@ -137,7 +137,8 @@ function taxonomy_csv_vocabulary_export($options) {
   // Prepare export batch.
   $batch = array(
     'title'            => t('Exporting !total_terms terms to CSV file...', array('!total_terms' => $options['total_terms'])),
-    'init_message'     => t('Starting downloading of datas...'),
+    'init_message'     => t('Starting downloading of datas...') . '<br />'
+      . t('Wait some seconds for pre-processing...'),
     'progress_message' => '',
     'error_message'    => t('An error occurred during the export.'),
     'finished'         => '_taxonomy_csv_vocabulary_export_finished',
@@ -191,11 +192,17 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
         TAXONOMY_CSV_FORMAT_POLYHIERARCHY,
       ))) {
       $context['sandbox']['terms'] = array();
-      $vocabularies = ($options['vocabulary_id']) ?
-          // Export only the selected vocabulary.
-          array(taxonomy_vocabulary_load($options['vocabulary_id'])) :
-          // Export all vocabularies.
-          taxonomy_get_vocabularies();
+      // Export only selected vocabularies.
+      if ($options['vocabulary_id'] && ($options['vocabulary_id'] != array(0))) {
+        $vocabularies = array();
+        foreach ($options['vocabulary_id'] as $vocabulary) {
+          $vocabularies[] = taxonomy_vocabulary_load($vocabulary);
+        }
+      }
+      // Export all vocabularies.
+      else {
+        $vocabularies = taxonomy_get_vocabularies();
+      }
       foreach ($vocabularies as $vocabulary) {
         $context['sandbox']['terms'] = array_merge($context['sandbox']['terms'], taxonomy_get_tree($vocabulary->vid));
       }
@@ -207,7 +214,7 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
       $context['sandbox']['terms'] = taxonomy_csv_term_load_multiple(
         array(),
         array(
-          // Automatically manages one or all vocabularies.
+          // Automatically manages one, some or all vocabularies.
           'vid'   => $options['vocabulary_id'],
           'order' => $options['order'],
         )
@@ -219,7 +226,10 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     if (in_array($options['export_format'], array(
         TAXONOMY_CSV_FORMAT_DEFINITION_LINKS,
       ))) {
-      $context['results'][0]['duplicate_terms'] = taxonomy_csv_term_find_duplicate($options['vocabulary_id']);
+      $context['results'][0]['duplicate_terms'] = array();
+      foreach ($options['vocabulary_id'] as $item) {
+        $context['results'][0]['duplicate_terms'] += taxonomy_csv_term_find_duplicate($item);
+      }
     }
   }
   elseif (!is_resource($context['results'][0]['handle'])) {
@@ -428,6 +438,13 @@ function taxonomy_csv_term_export($term, $options, &$terms_list = array(), $dupl
         );
         break;
 
+      case TAXONOMY_CSV_FORMAT_TID_NAME:
+        $result['line'] = array(
+          $term->tid,
+          $term->name,
+        );
+        break;
+
       case TAXONOMY_CSV_FORMAT_DEFINITION_LINKS:
         // Prepare identifiants of main term and links.
         // Check if each term is a duplicate, because identifiants are names,
@@ -478,7 +495,7 @@ function taxonomy_csv_term_export($term, $options, &$terms_list = array(), $dupl
             // Don't set vocabulary.
             '' :
             // Use name or vid.
-            $vocabulary->$options['def_links_vocabularies_ids'];
+            $vocabulary->{$options['def_links_vocabularies_ids']};
         // Prepare vocabularies identifiants of related terms.
         $relations_vocs = array();
         // Option 'none' is impossible with multiple vocabularies, so use name.
@@ -492,7 +509,7 @@ function taxonomy_csv_term_export($term, $options, &$terms_list = array(), $dupl
               // Same vocabularies, so use same identifiant.
               $vid :
               // Different vocabularies, so use name or vid.
-              $vocabulary->$vocabulary_option;
+              $vocabulary->{$vocabulary_option};
         }
 
         $result['line'] = array_merge(

@@ -109,7 +109,7 @@ function taxonomy_csv_uninstall() {
 
 
 /**
- * Implementation of hook_requirements().
+ * Implements hook_requirements().
  */
 function taxonomy_csv_requirements($phase) {
   $requirements = array();

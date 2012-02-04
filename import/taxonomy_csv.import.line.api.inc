@@ -71,7 +71,7 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
             break;
 
           case TAXONOMY_CSV_FORMAT_DEFINITIONS:
-            if ($line[1]) {
+            if (isset($line[1]) && $line[1]) {
               $term->weight    = $line[1];
             }
             $term->description = _taxonomy_csv_set_line_break($line[2]);
@@ -605,65 +605,73 @@ function taxonomy_csv_term_import($term, $existing_items = TAXONOMY_CSV_EXISTING
   $messages = array();
 
   // Basic check to avoid notices when "Check lines" option is disabled.
-  if ($term->name == '') {
+  if ((!isset($term->name) && !isset($term->tid))
+      || (isset($term->name) && !$term->name)
+      || (isset($term->tid) && !$term->tid)
+    ) {
     $term->tid = 0;
     $messages[] = 432; // Warning line contains an empty term.
+    return array(
+      'name' => '',
+      'tid'  => 0,
+      'msg'  => $messages,
+    );
   }
-  else {
-    switch ($existing_items) {
-      case TAXONOMY_CSV_EXISTING_UPDATE:
-        $existing_term = taxonomy_csv_term_find($term, $all_vocabularies, $parent_tid);
-        if ($existing_term) {
-          // Unpdate only fields that are set. Other fields are not changed.
-          foreach ((array) $term as $key => $value) {
-            // Array fields : merge existing and new items.
-            if (is_array($value)) {
-              $term->$key = array_unique(array_merge($existing_term->$key, $term->$key));
-            }
-            // Else simply use new key: no merge is possible and useful for
-            // string, numeric or boolean fields.
-            // Description was an exception in previous version, but this
-            // exception is removed for simplicity and real use of this module.
-            // An option may be had if needed.
+
+  switch ($existing_items) {
+    case TAXONOMY_CSV_EXISTING_UPDATE:
+      $existing_term = taxonomy_csv_term_find($term, $all_vocabularies, $parent_tid);
+      if ($existing_term) {
+        // Update only fields that are set. Other fields are not changed.
+        foreach ((array) $term as $key => $value) {
+          // Array fields : merge existing and new items.
+          if (is_array($value)) {
+            $term->$key = array_unique(array_merge($existing_term->$key, $term->$key));
           }
-          // Existing fields of existing term should be kept even if they have
-          // not been set in new term.
-          $term = (object) array_merge((array) $existing_term, (array) $term);
+          // Else simply use new key: no merge is possible and useful for
+          // string, numeric or boolean fields.
+          // Description was an exception in previous version, but this
+          // exception is removed for simplicity and real use of this module.
+          // An option may be added if needed.
         }
-        break;
+        // Existing fields of existing term should be kept even if they have
+        // not been set in new term.
+        $term = (object) array_merge((array) $existing_term, (array) $term);
+      }
+      break;
 
-      case TAXONOMY_CSV_EXISTING_IGNORE_PREVIOUS:
-        // Doesn't ignore, but use previous parents.
-      case TAXONOMY_CSV_EXISTING_REPLACE:
-        $existing_term = taxonomy_csv_term_find($term, $all_vocabularies, $parent_tid);
-        if ($existing_term) {
-          // All fields are replaced by new ones. Other existing fields of
-          // existing term should be kept even if they are not set in new term.
-          $term = (object) array_merge((array) $existing_term, (array) $term);
-        }
-        break;
+    case TAXONOMY_CSV_EXISTING_IGNORE_PREVIOUS:
+      // Doesn't ignore, but use previous parents.
+    case TAXONOMY_CSV_EXISTING_UPDATE_REPLACE:
+      $existing_term = taxonomy_csv_term_find($term, $all_vocabularies, $parent_tid);
+      if ($existing_term) {
+        // All fields are replaced by new ones. Other existing fields of
+        // existing term should be kept even if they are not set in new term.
+        $term = (object) array_merge((array) $existing_term, (array) $term);
+      }
+      break;
 
-      case TAXONOMY_CSV_EXISTING_IGNORE:
-        break;
+    case TAXONOMY_CSV_EXISTING_IGNORE:
+      // Nothing to do: keep the term.
+      break;
 
-      case TAXONOMY_CSV_EXISTING_IGNORE_ALL:
-        // Ignore even existing terms in additional columns.
-        // @todo IGNORE_ALL
-        break;
-    }
-
-    // Save regularly formatted term.
-    // Return either SAVED_NEW, SAVED_UPDATED or FALSE (no change).
-    $result = taxonomy_csv_term_save($term);
-
-    // If there are specific fields, save them.
-    $funcname = "taxonomy_csv_term_import_$import_format";
-    if (taxonomy_csv_format_check($import_format, $funcname)) {
-      $result_temp = $funcname($term);
-    }
-
-    $messages[] = ($result == SAVED_NEW) ? 691 : 692; // Saved or updated.
+    case TAXONOMY_CSV_EXISTING_IGNORE_ALL:
+      // Ignore even existing terms in additional columns.
+      // @todo IGNORE_ALL
+      break;
   }
+
+  // Save regularly formatted term.
+  // Return either SAVED_NEW, SAVED_UPDATED or FALSE (no change).
+  $result = taxonomy_csv_term_save($term);
+
+  // If there are specific fields, save them.
+  $funcname = "taxonomy_csv_term_import_$import_format";
+  if (taxonomy_csv_format_check($import_format, $funcname)) {
+    $result_temp = $funcname($term);
+  }
+
+  $messages[] = ($result == SAVED_NEW) ? 691 : 692; // Saved or updated.
 
   return array(
     'name' => $term->name,

@@ -15,7 +15,7 @@
 /**
  * Generates the taxonomy CSV import form.
  *
- * Form contain five fieldsets:
+ * Form contain six fieldsets:
  * - 1. What to import ?
  *   - 1. Content of the source
  *   - 2. Keep order of terms by adding a weight
@@ -56,7 +56,7 @@ function taxonomy_csv_form_import($form_state) {
   foreach ($list_recommended_values as $key => $value) {
     $list_previous_values[$key] = isset($form_state['values'][$key]) ?
       $form_state['values'][$key] :
-      variable_get("taxonomy_csv_{$key}", $value);
+      variable_get('taxonomy_csv_' . $key, $value);
   }
 
   $list_import_format = _taxonomy_csv_values('import_format');
@@ -238,7 +238,7 @@ function taxonomy_csv_form_import($form_state) {
 
     $form['tab']['format'][TAXONOMY_CSV_FORMAT_TREE_STRUCTURE]['#description'] = t('Allow to create a tree structure (geography, classification...).')
       . $line_format
-        . t('term name, children term name, sub-children term name...')
+        . t('term name, child term name, sub-child term name...')
       . $example
         . t('foo, bar, small bar') . $li
         . t('Europe, France, Paris') . $li
@@ -723,7 +723,7 @@ function taxonomy_csv_form_import($form_state) {
       '#type'          => 'radios',
       '#options'       => array_intersect_key($list_import_option, array_flip(array(
         TAXONOMY_CSV_EXISTING_UPDATE,
-        TAXONOMY_CSV_EXISTING_REPLACE,
+        TAXONOMY_CSV_EXISTING_UPDATE_REPLACE,
         TAXONOMY_CSV_EXISTING_IGNORE,
         TAXONOMY_CSV_EXISTING_IGNORE_ALL,
       ))),
@@ -1031,7 +1031,7 @@ function taxonomy_csv_form_import_submit($form, &$form_state) {
       'result_level',
       'result_type',
     ) as $option) {
-    variable_set("taxonomy_csv_$option", $form_state['values'][$option]);
+    variable_set('taxonomy_csv_' . $option, $form_state['values'][$option]);
     $options[$option] = $form_state['values'][$option];
   }
   // Finish to prepare $options. Unset useless options for api.

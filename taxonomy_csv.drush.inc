@@ -59,7 +59,7 @@ function taxonomy_csv_drush_command() {
     ),
     'arguments' => array(
       'vocabulary_id' => 'Required. vid or machine_name (>=D7 only) of the vocabulary to export (0 means all)',
-      'export_format' => "Optional. CSV format: 'alone_terms' (default), 'def_links', 'tree_structure', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
+      'export_format' => "Optional. CSV format: 'alone_terms' (default), 'tid_name', 'def_links', 'tree_structure', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
       'file_path'     => "Optional. Full path or filename of exported csv file (default: [current directory]/taxocsv.csv)",
     ),
     'options' => array(

@@ -194,11 +194,11 @@ function _taxonomy_csv_check_vocabulary_hierarchy($vocabulary, $changed_term = a
  * @todo Regular query.
  *
  * @param $vocabulary_id
- *   (Optional) Id of the chosen vocabulary. If not specified, count terms in
- *   all vocabularies.
+ *   (Optional) Id or array of ids of the chosen vocabularies. If not specified,
+ *   count terms in all vocabularies.
  *
  * @return
- *   Number of terms in specified vocabulary or in all vocabularies.
+ *   Number of terms in specified vocabularies or in all vocabularies.
  */
 function taxonomy_csv_vocabulary_count_terms($vocabulary_id = 0) {
   $sql = "
@@ -208,8 +208,15 @@ function taxonomy_csv_vocabulary_count_terms($vocabulary_id = 0) {
 
   $args = array();
   if ($vocabulary_id) {
-    $sql .= ' WHERE vid = %d ';
-    $args[] = $vocabulary_id;
+    if (is_array($vocabulary_id)) {
+      if (($vocabulary_id != array(0)) && ($vocabulary_id != array('0'))) {
+        $sql .= ' WHERE vid IN (' . implode(',', $vocabulary_id). ') ';
+      }
+    }
+    else {
+      $sql .= ' WHERE vid = %d ';
+      $args[] = $vocabulary_id;
+    }
   }
 
   return array_shift(db_fetch_array(db_query($sql, $args)));

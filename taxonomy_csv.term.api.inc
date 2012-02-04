@@ -58,16 +58,29 @@ function taxonomy_csv_term_load_multiple($tids = array(), $conditions = array())
   $args = array();
 
   if ($tids) {
-    $sql .= ' WHERE (t.tid = %d' . str_repeat(' OR t.tid = %d', count($tids) - 1) . ')';
-    $args += array_values($tids);
-    $flag = TRUE;
+    if (!is_array($tids)) {
+      $tids = array($tids);
+    }
+    if ($tids != array(0) && $tids != array('0')) {
+      $sql .= ' WHERE t.tid IN (' . implode(',', $tids) . ')';
+      $flag = TRUE;
+    }
   }
 
   if (isset($conditions['vid']) && $conditions['vid']) {
-    $sql .= $flag ? ' AND ' : ' WHERE ';
-    $sql .= '(t.vid = %d)';
-    $args[] = $conditions['vid'];
-    $flag = TRUE;
+    if (is_array($conditions['vid'])) {
+      if ($conditions['vid'] != array(0)) {
+        $sql .= $flag ? ' AND ' : ' WHERE ';
+        $sql .= 'vid IN (' . implode(',', $conditions['vid']) . ') ';
+        $flag = TRUE;
+      }
+    }
+    else {
+      $sql .= $flag ? ' AND ' : ' WHERE ';
+      $sql .= '(t.vid = %d)';
+      $args[] = $conditions['vid'];
+      $flag = TRUE;
+    }
   }
 
   if (isset($conditions['order']) && $conditions['order']) {
@@ -224,6 +237,7 @@ function taxonomy_csv_term_find_duplicate($vid = 0) {
 
   if ($vid) {
     $sql .= ' AND t1.vid = %d AND t2.vid = %d ';
+    $args[] = $vid;
     $args[] = $vid;
   }
 

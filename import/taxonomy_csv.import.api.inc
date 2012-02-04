@@ -244,7 +244,7 @@ function _taxonomy_csv_import_soft_tab(&$file, $delimiter) {
 }
 
 /**
- * Prepare the import of a vocabulary.
+ * Prepare the batch to import the vocabulary.
  * If not used in a form, don't forget to use batch_process().
  *
  * @param $options
@@ -287,11 +287,11 @@ function taxonomy_csv_vocabulary_import($options) {
   // Prepare import batch.
   // Use a one step batch in order to avoid memory crash in case of big import.
   $batch = array(
-    'title'            => ($name != '') ?
+    'title'            => ($options['source_choice'] == 'text') ?
+        t('Importing !total_lines lines from text...', array(
+          '!total_lines' => $options['total_lines'])) :
         t('Importing !total_lines lines from CSV file "%filename"...', array(
           '%filename'    => $name,
-          '!total_lines' => $options['total_lines'])) :
-        t('Importing !total_lines lines from text...', array(
           '!total_lines' => $options['total_lines'])),
     'init_message'     => t('Starting uploading of datas...'),
     'progress_message' => '',
@@ -332,14 +332,13 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
     $context['results'][0]['current_line'] = 0;
     $context['results'][0]['worst_line'] = 0;
     $context['results'][0]['worst_message'] = 799;
+    $context['results'][0]['terms_count'] = 0;
     $context['results'][0]['handle'] = fopen($options['file']->filepath, 'r');
     $context['sandbox']['handle_pointer'] = 0;
-    $context['sandbox']['count'] = $options['total_lines'];
     $context['sandbox']['previous_items'] = array(
       'name' => array(),
       'tid'  => array(),
     );
-    $context['sandbox']['terms_count'] = 0;
   }
   elseif (!is_resource($context['results'][0]['handle'])) {
     // Recall file and set pointer in case of memory or time out.
@@ -350,10 +349,10 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
   // Load and process one line.
   $worst_line     = &$context['results'][0]['worst_line'];
   $worst_message  = &$context['results'][0]['worst_message'];
-  $handle         = &$context['results'][0]['handle'];
   $line_number    = &$context['results'][0]['current_line'];
+  $terms_count    = &$context['results'][0]['terms_count'];
+  $handle         = &$context['results'][0]['handle'];
   $previous_items = &$context['sandbox']['previous_items'];
-  $terms_count    = &$context['sandbox']['terms_count'];
 
   // To set locale is needed with fgetcsv and it's needed each time this
   // function is called. See http:/php.net/manual/en/function.fgetcsv.php.
@@ -378,7 +377,7 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
     $previous_items['tid']  = $result['tid'];
     $terms_count            = $result['terms_count'];
 
-    // Remember worst message of imported lines.
+    // Remember first worst message of imported lines.
     $worst_message_new = _taxonomy_csv_worst_message($result['msg']);
     if ($worst_message > $worst_message_new) {
       $worst_message = $worst_message_new;
@@ -436,13 +435,13 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
     $context['message'] = t('Line !line_number of !total_lines processed: !line', array(
       '!line_number' => $line_number,
       '!total_lines' => $options['total_lines'],
-      '!line'        => implode(', ', $line),
+      '!line'        => '"' . implode('", "', $line) . '"',
     ));
 
     // Check worst message of imported lines and update progress.
     if ($worst_message >= TAXONOMY_CSV_PROCESS_WARNING) {
       // Count should be <= 0.99 to avoid to display "100%" before end.
-      $context['finished'] = floor($line_number / $context['sandbox']['count'] * 100) / 100;
+      $context['finished'] = floor($line_number / $options['total_lines'] * 100) / 100;
     }
     else {
       $context['finished'] = 1;
@@ -530,7 +529,7 @@ function _taxonomy_csv_vocabulary_import_finished($success, $results, $operation
  *   (Optional) Boolean used to determine if some options are checked or not.
  *
  * @return
- *   Name of the prepared vocabulary.
+ *   Name of the prepared vocabulary. $options can be updated.
  */
 function _taxonomy_csv_import_vocabulary_prepare(&$options, $check = TRUE) {
   $name = '';
@@ -623,7 +622,7 @@ function _taxonomy_csv_import_vocabulary_prepare(&$options, $check = TRUE) {
  *   'msg'  => messages arrays:
  *     term position => array of status messages of term,
  *     'line'        => array of status messages of line,
- *   'terms_count' => Total of imported terms.
+ *   'terms_count' => total of imported terms.
  */
 function taxonomy_csv_line_import_process($line, $options, $previous_items = array(), $terms_count = 0) {
   // Define default values.

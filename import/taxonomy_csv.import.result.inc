@@ -263,11 +263,11 @@ function _taxonomy_csv_info_terms($options) {
     if ($options['result_terms']) {
       $terms = taxonomy_csv_term_load_multiple($tids);
 
-      $message .= '"';
+      $term_list = array();
       foreach ($terms as $term) {
-        $message .= $term->name . '", "';
+        $term_list[] = $term->name;
       }
-      $message = drupal_substr($message, 0, drupal_strlen($message) - 3) . '.';
+      $message .= '"' . implode('", "',  $term_list) . '".';
     }
   }
   else {
