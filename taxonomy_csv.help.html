@@ -11,10 +11,12 @@
     h4 {
       font: bold 100% sans-serif;
       margin-top: 24px;
+      margin-left: 18px;
     }
     h5 {
       font: italic 100% sans-serif;
       margin-top: 8px;
+      margin-left: 36px;
     }
     table {
       width: 80%;
@@ -37,7 +39,8 @@
 <p>Specific import or export formats can be added simply by a plug-in mecanism (or ask author!).</p>
 <p>After enabling the module, permissions "import taxonomy by csv" and "export taxonomy by csv" need to be set. Main "administer taxonomy" permission is not needed to use module, but this is recommended.</p>
 <p>Internationalization is supported, except for attached Fields [Taxonomy CSV pour Drupal 7 only]. So you can import a list or a structure of terms, then translate them.</p>
-<p>This module supports <a href="http://drupal.org/project/drush">drush</a> and allows to import or to export taxonomies by csv with command line interface.</p>
+<p>This module supports <a href="https://drupal.org/project/drush">drush</a> and allows to import or to export taxonomies by csv with command line interface.</p>
+<p>Taxonomy CSV for Drupal 7 has got a simpler UI compared to the version for Drupal 6, because taxonomy has been reworked with fields in Drupal 7. Help for Drupal 7 version is available <a href="https://drupalcode.org/project/taxonomy_csv.git/blob_plain/refs/heads/7.x-5.x:/taxonomy_csv.help.html">here</a>.</p>
   <div class="toc">
     <h2 class="nonum"><a id="contents" name="contents">Table of Contents</a></h2>
     <ol class="toc">
@@ -121,7 +124,7 @@
         <a href="#export">Export</a>
       </li>
       <li>
-        <a href="#import_api">Taxonomy csv import API</a>
+        <a href="#import_api">Drush and Taxonomy csv import API</a>
       </li>
       <li>
         <a href="#advanced_options">Advanced settings and hints</a>
@@ -149,7 +152,7 @@
   <h4 id="custom_fields"><a href="#contents">2. Custom fields (Drupal 7 Fields)</a></h4>
     <p>Terms are imported with a csv scheme provided by the user.</p>
     <p>The csv scheme should contain each column header of the csv input. The column header is the name (not the label) of the field where to import items into. It can be a default header (name, description, weight) or a custom field.</p>
-    <p>For example, you want to import a list of car makers, and you would like each car maker to have custom fields indicating nationality and date of origine(<a href="http://drupal.org/node/1027068#comment-4152194">origine of example, fictional</a>):</p>
+    <p>For example, you want to import a list of car makers, and you would like each car maker to have custom fields indicating nationality and date of origine(<a href="https://drupal.org/node/1027068#comment-4152194">origine of example, fictional</a>):</p>
     <div class="codeblock"><ul>
       <li><code>[Taxonomy Term] - [Custom Field] - [Custom Field]</code></li>
       <li><code>Car Maker       - Country        - Year Started</code></li>
@@ -168,23 +171,37 @@
     <div class="codeblock">
       <code>name, field_mycustomfield_1_machinename, field_mycustomfield_2_machinename...</code>
     </div>
-    <p>Custom fields are automatically created if they don't exist and then attached to the vocabulary.</p>
-    <p>Currently, custom fields can be 'text', reference to another term ('taxonomy_term_reference') and even 'file'.</p>
-    <p>The default type of field is 'text'. If you want to use another one, you have to set it with '|' symbol in the vocabulary section of the form, except if the field exists already.</p>
-    <p>For exemple, you want to import these items (<a href="http://drupal.org/node/1027068#comment-4194716">origine of example</a>):</p>
+    <p>Items can be repeated for multivalued fields (Taxonomy CSV 7.x-10.x-dev).</p>
+    <div class="codeblock">
+      <code>name, description, weight, parent, synonym, synonym, synonym, related_term, related_term, related_term, related_term</code>
+    </div>
+    <p>The module supports all field types as long as they have a 'value' in their definition. These fields has been checked:
+    <ul>
+      <li><code>text</code></li>
+      <li><code>text_long</code></li>
+      <li><code>text_with_summary</code></li>
+      <li><code>number_decimal</code></li>
+      <li><code>number_integer</code></li>
+      <li><code>number_float</code></li>
+      <li><code>list_boolean</code></li>
+      <li><code>taxonomy_term_reference</code></li>
+      <li><code>file</code></li>
+    </ul></p>
+    <p>Custom fields are automatically created if they don't exist and then attached to the vocabulary. By default, a 'text' field is created when the field doesn't exist. If you want to create another type of field, you have to set it with '|' symbol in the vocabulary section of the form. The field is not created or modified if it exists.</p>
+    <p>For exemple, you want to import these items (<a href="https://drupal.org/node/1027068#comment-4194716">origine of example</a>):</p>
     <div class="codeblock"><ul>
-      <li><code>default name 1, tax gtin name 1, description 1, /home/robertom/file1.pdf, status 1</code></li>
-      <li><code>default name 2, tax gtin name 2, description 2, /home/robertom/file2.pdf, status 2</code></li>
-      <li><code>default name 3, tax gtin name 3, description 3, /home/robertom/file3.pdf, status 3</code></li>
+      <li><code>name 1, tax gtin name 1, description 1, /home/robertom/file1.pdf, status 1, related term 1, related term 2, related term 3</code></li>
+      <li><code>name 2, tax gtin name 2, description 2, /home/robertom/file2.pdf, status 2, related term 1, related term 4</code></li>
+      <li><code>name 3, tax gtin name 3, description 3, /home/robertom/file3.pdf, status 3</code></li>
     </ul></div>
     <p>Your custom format will be:</p>
-    <div class="codeblock"><ul>
-      <li><code>name, field_internal_name, description, field_file, field_status</code></li>
-    </ul></div>
+    <div class="codeblock">
+      <code>name, field_internal_name, description, field_file, field_status, related_term, related_term, related_term</code>
+    </div>
     <p>Your custom fields will be:</p>
-    <div class="codeblock"><ul>
-      <li><code>field_file|file</code></li>
-    </ul></div>
+    <div class="codeblock">
+      <code>field_file|file, related_term|taxonomy_term_reference</code>
+    </div>
   <h4 id="def_links"><a href="#contents">3. Full term fields and links</a></h4>
     <p>This option allows to import full term definitions and direct links to other terms.</p>
     <p>Format is: term name, term id, vocabulary id, term description, weight, number of synonyms, number of first level parents, number of first level children, number of related terms, list of synonyms, list of first level parents ids, list of first level children ids, list of related terms ids, list of vocabulary ids of related terms.</p>
@@ -218,7 +235,7 @@
         <div class="codeblock"><ul>
           <li><code>Animal, Mammal, Human</code></li>
         </ul></div>
-      but <strong>not</strong>:
+      <strong>but not</strong>:
         <div class="codeblock"><ul>
           <li><code>Mammal, Human</code></li>
         </ul></div>
@@ -342,9 +359,9 @@
         <li><code>"Germany", "Allemagne", "A European country", "Un pays européen"</code></li>
       </ul></div>
     <p>The language of first term will be "Language neutral" and the language of the second item can be set in the third tab.</p>
-    <p>This format is available only if the sub-module "i18n Taxonomy" of the module <a href="http://drupal.org/project/i18n">Internationalization</a> is enabled.</p>
+    <p>This format is available only if the sub-module "i18n Taxonomy" of the module <a href="https://drupal.org/project/i18n">Internationalization</a> is enabled.</p>
   <h4 id="taxonomy_manager"><a href="#contents">15. Taxonomy manager</a></h4>
-    <p>This format is used by <a href="http://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a> to export vocabularies. Columns are: vocabulary id, term id, term name, term description, first level parent id 1, ..., first level parent id n. Example:</p>
+    <p>This format is used by <a href="https://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a> to export vocabularies. Columns are: vocabulary id, term id, term name, term description, first level parent id 1, ..., first level parent id n. Example:</p>
       <div class="codeblock"><ul>
         <li><code>, 1, "Île-de-France", "Main region"</code></li>
         <li><code>, 2, "Paris", "Capital of France", 1</code></li>
@@ -352,7 +369,7 @@
     <p>In this format, order of all lines is important: it's impossible to attach a parent to an item if this parent hasn't been imported in a previous line.</p><br />
     <p>When a vocabulary is imported in an existing one, only option "ignore existing terms" can be used.</p>
   <h4 id="geotaxonomy"><a href="#contents">16. Geotaxonomy</a></h4>
-    <p>Import and export <a href="http://drupal.org/project/geotaxonomy" title="Module Geotaxonomy">geotaxonomy</a> terms.</p>
+    <p>Import and export <a href="https://drupal.org/project/geotaxonomy" title="Module Geotaxonomy">geotaxonomy</a> terms.</p>
     <p>Format</p>
     <div class="codeblock"><ul>
 	  <code>name, latitude, longitude, parent, top, right, bottom, left boundaries</code>
@@ -457,14 +474,16 @@
         <p>If you are sure that vocabulary to import is well formatted (utf8, order of items...), you can disable checks. This option increases import speed by 5%.</p>
       </li>
     </ul>
-    Warning: with default Drupal "List terms" function, a memory error can occurs with big taxonomies. So use another manager as <a href="http://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a>.
+    Warning: with default Drupal "List terms" function, a memory error can occurs with big taxonomies. So use another manager as <a href="https://drupal.org/project/taxonomy_manager" title="Taxonomy manager module">Taxonomy manager</a>.
 
 <h3 id="export"><a href="#contents">3. Export</a></h3>
   <p>Taxonomy CSV allows to export structures and properties of terms of one or all vocabularies.</p>
   <p>Simply choose what you want to export (see <a href='#formats'>formats</a>) and how to export. Some formats may be unavailable.</p>
 
-<h3 id="import_api"><a href="#contents">4. Taxonomy csv import API</a></h3>
-  <p>This module can be used as an API. You can use the full module as a dependance or directly in your module. Import is run as this:</p>
+<h3 id="import_api"><a href="#contents">4. Drush and Taxonomy csv import API</a></h3>
+  <p>This module supports <a href="https://drupal.org/project/drush">drush</a>: you can import/export taxonomies from the command line interface with <code>drush taxocsv-import</code> and <code>drush taxocsv-export</code>. See command line help for more information.</p>
+
+  <p>More generally, this module can be used as an API. You can use the full module as a dependance or directly in your module. Import is run as this:</p>
   <div class="codeblock"><code>
     $csv_lines = '"Europe", "France", "Paris"';<br />
     $csv_lines .=  "\n". ',, "Lyon"';<br />
@@ -507,10 +526,10 @@
         Be careful: if 1) source choice is <strong>not</strong> <em>"Ignore"</em> additional columns, 2) file or a line in the file has only one column and 3) you choose <em>"Update and replace"</em>, the import process will be a remove process of matching items (first column terms are always kept or imported).
       </li>
       <li>
-        Some memory or compatibility issues have been reported with some modules as <em>Pathauto</em>, <em>taxonomy_vtn</em> and <em>taxonomynode</em> (see <a href="http://drupal.org/node/495548">#495548</a>, <a href="http://drupal.org/node/447852">#447852</a> and <a href="http://drupal.org/node/540916">#540916</a>). It's advised to increase server and php memory temporary (no problem reported with 256 MB) or to disable these modules manually (settings aren't lost when you disable a module - and not uninstall it -). After import process, you can decrease memory and reactivate modules.
+        Some memory or compatibility issues have been reported with some modules as <em>Pathauto</em>, <em>taxonomy_vtn</em> and <em>taxonomynode</em> (see <a href="https://drupal.org/node/495548">#495548</a>, <a href="https://drupal.org/node/447852">#447852</a> and <a href="https://drupal.org/node/540916">#540916</a>). It's advised to increase server and php memory temporary (no problem reported with 256 MB) or to disable these modules manually (settings aren't lost when you disable a module - and not uninstall it -). After import process, you can decrease memory and reactivate modules.
       </li>
     </ul>
-<p>Another Drupal module allows CSV import too, despite its name: <a href="http://drupal.org/project/taxonomy_xml" title="Taxonomy XML module">taxonomy XML</a>. Its approach is different: it uses one file compliant to thesauri standard ISO 2788, i.e. a three columns csv file: <code>term, type of link (relation, description, synonym...), item</code>, or, for specialists, <code>subject, predicate, object</code>. Additional fields are managed as the third one. For Drupal 4.7 and Drupal 5, <a href="http://drupal.org/project/taxonomy_batch_operations" title="Taxonomy batch operations module">taxonomy batch operations</a> is available too. So choose the module best matching your needs.</p>
+<p>Another Drupal module allows CSV import too, despite its name: <a href="https://drupal.org/project/taxonomy_xml" title="Taxonomy XML module">taxonomy XML</a>. Its approach is different: it uses one file compliant to thesauri standard ISO 2788, i.e. a three columns csv file: <code>term, type of link (relation, description, synonym...), item</code>, or, for specialists, <code>subject, predicate, object</code>. Additional fields are managed as the third one. For Drupal 4.7 and Drupal 5, <a href="https://drupal.org/project/taxonomy_batch_operations" title="Taxonomy batch operations module">taxonomy batch operations</a> is available too. So choose the module best matching your needs.</p>
 <p>For export, you can use Taxonomy XML too or one of backup modules. Taxonomy CSV is a more specialised tool which allows more precise tuning.</p>
 <br />
 </body>

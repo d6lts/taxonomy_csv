@@ -126,7 +126,7 @@ function taxonomy_csv_form_export($form_state) {
   $form['tab']['content']['info'] = array(
     '#type'        => 'item',
     '#description' => t('See <a href="!more_help_link">advanced help</a> for informations about formats.', array('!more_help_link' => url('admin/help/taxonomy_csv'))) . '<br />'
-    . t('Only "fields and links" format manages duplicate term names. In all case, you will be notified if a duplicate is found.'),
+    . t('Only "fields and links" format manages duplicate term names. In all cases, you will be notified if a duplicate is found.'),
   );
 
   $form['tab']['content']['export_vocabulary_id'] = array(

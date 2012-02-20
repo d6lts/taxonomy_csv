@@ -21,7 +21,7 @@ function taxonomy_csv_drush_command() {
     ),
     'arguments' => array(
       'file_path'     => 'Required. The full path or url to CSV file to import',
-      'import_format' => "Optional. CSV format: 'alone_terms' (default), 'custom_fields' [>=D7 only], 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
+      'import_format' => "Optional. CSV format: 'alone_terms' (default), 'def_links', 'flat', 'tree_structure', 'polyhierarchy', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
     ),
     'options' => array(
       'custom_format' => "List of comma separated fields (default: 'name') [>=D7 only]",
@@ -59,7 +59,7 @@ function taxonomy_csv_drush_command() {
     ),
     'arguments' => array(
       'vocabulary_id' => 'Required. vid or machine_name (>=D7 only) of the vocabulary to export (0 means all)',
-      'export_format' => "Optional. CSV format: 'alone_terms' (default), 'tid_name', 'def_links', 'tree_structure', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions', 'weights' or 'fields'",
+      'export_format' => "Optional. CSV format: 'alone_terms' (default), 'tid_name', 'tree_structure', 'def_links', 'fields', 'parents', 'children', 'relations', 'synonyms', 'definitions', 'descriptions' or 'weights'",
       'file_path'     => "Optional. Full path or filename of exported csv file (default: [current directory]/taxocsv.csv)",
     ),
     'options' => array(

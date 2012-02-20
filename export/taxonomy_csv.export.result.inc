@@ -84,9 +84,54 @@ function _taxonomy_csv_export_result($options, $worst_level, $summary, $results)
     }
     $messages[] = array($watchdog_level => $message);
 
-    // @todo Add line level messages.
-    // Currently, it's useless, because there isn't any export message in
-    // line export process. It can be added as in import.
+    // Info on field format.
+    switch ($options['export_format']) {
+      case TAXONOMY_CSV_FORMAT_FIELDS:
+        foreach ($options['vocabulary'] as $vocabulary) {
+          $format = array(
+            'name',
+            'vid',
+            'description',
+            'format',
+            'weight',
+          );
+
+          if ($vocabulary->fields_unlimited['parents'] > 0) {
+            $format = array_merge($format, array_fill(0, $vocabulary->fields_unlimited['parents'], 'parent'));
+          }
+
+          if (module_exists('i18n_taxonomy')) {
+            switch ($option['vocabulary'][$term->vid]->i18n_mode) {
+              case I18N_MODE_LANGUAGE:
+              case I18N_MODE_LOCALIZE:
+                $format[] = 'language';
+                break;
+
+              case I18N_MODE_TRANSLATE:
+              case I18N_MODE_MULTIPLE:
+                $format[] = 'language';
+                // $format[] = 'i18n_tsid';
+                break;
+            }
+          }
+
+          if ($vocabulary->fields_unlimited['synonyms'] > 0) {
+            $format = array_merge($format, array_fill(0, $vocabulary->fields_unlimited['synonyms'], 'synonym'));
+          }
+
+          if ($vocabulary->fields_unlimited['relations'] > 0) {
+            $format = array_merge($format, array_fill(0, $vocabulary->fields_unlimited['relations'], 'related_term'));
+          }
+
+          $message = t('CSV format of vocabulary "@vocabulary" (vid: @vid) is:', array(
+            '@vocabulary' => $vocabulary->name,
+            '@vid' => $vocabulary->vid,
+          ));
+          $message .= '<br /><pre>' . implode(', ', $format) . '</pre>';
+          $messages[] = array($watchdog_level => $message);
+        }
+        break;
+    }
   }
 
   _taxonomy_csv_message_result($messages);

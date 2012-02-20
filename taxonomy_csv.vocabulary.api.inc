@@ -210,7 +210,7 @@ function taxonomy_csv_vocabulary_count_terms($vocabulary_id = 0) {
   if ($vocabulary_id) {
     if (is_array($vocabulary_id)) {
       if (($vocabulary_id != array(0)) && ($vocabulary_id != array('0'))) {
-        $sql .= ' WHERE vid IN (' . implode(',', $vocabulary_id). ') ';
+        $sql .= ' WHERE vid IN (' . implode(',', $vocabulary_id) . ') ';
       }
     }
     else {

@@ -228,7 +228,7 @@ function _taxonomy_csv_message_text($message_code) {
       561 => t('No subject.') . $notice,
       562 => t('No predicate.') . $notice,
       563 => t('No object.') . $notice,
-      564 => t('Too many items. Surabondant items will be ignored.') . $notice,
+      564 => t('Too many items on the line for the selected format. These items will be ignored.') . $notice,
       565 => t('Some items are empty. Previous items will be used.') . $notice,
       566 => t('A weight cannot be higher than 50, unless you apply a <a href="http://drupal.org/node/612870">patch to Drupal</a>.') . $notice,
       580 => t('Be careful. This line has only one term and import choice is to replace existing items. So these items will be removed.'),

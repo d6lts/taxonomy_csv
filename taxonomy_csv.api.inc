@@ -11,10 +11,10 @@
  * Available internal import/export schemas.
  */
 define('TAXONOMY_CSV_FORMAT_ALONE_TERMS',       'alone_terms');
-define('TAXONOMY_CSV_FORMAT_DEFINITION_LINKS',  'def_links');
 define('TAXONOMY_CSV_FORMAT_FLAT',              'flat');
 define('TAXONOMY_CSV_FORMAT_TREE_STRUCTURE',    'tree_structure');
 define('TAXONOMY_CSV_FORMAT_POLYHIERARCHY',     'polyhierarchy');
+define('TAXONOMY_CSV_FORMAT_DEFINITION_LINKS',  'def_links');
 define('TAXONOMY_CSV_FORMAT_PARENTS',           'parents');
 define('TAXONOMY_CSV_FORMAT_CHILDREN',          'children');
 define('TAXONOMY_CSV_FORMAT_RELATIONS',         'relations');
@@ -81,10 +81,10 @@ function _taxonomy_csv_values($list) {
     case 'import_format':
       $items = array(
         TAXONOMY_CSV_FORMAT_ALONE_TERMS      => t('Term names (ignore additional columns)'),
-        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => t('Full term definition and links'),
         TAXONOMY_CSV_FORMAT_FLAT             => t('Terms (flat vocabulary)'),
         TAXONOMY_CSV_FORMAT_TREE_STRUCTURE   => t('Hierarchical tree structure or one term by line structure'),
         TAXONOMY_CSV_FORMAT_POLYHIERARCHY    => t('Polyhierarchical structure'),
+        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => t('Full term definition and links'),
         TAXONOMY_CSV_FORMAT_PARENTS          => t('First level parents'),
         TAXONOMY_CSV_FORMAT_CHILDREN         => t('First level children'),
         TAXONOMY_CSV_FORMAT_RELATIONS        => t('Related terms'),
@@ -99,11 +99,10 @@ function _taxonomy_csv_values($list) {
       $items = array(
         TAXONOMY_CSV_FORMAT_ALONE_TERMS      => t('Term names'),
         TAXONOMY_CSV_FORMAT_TID_NAME         => t('Tid and name of terms'),
-        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => t('Full term definition and links'),
-        // @todo, but useless: use alone_terms.
-        // TAXONOMY_CSV_FORMAT_FLAT             => t('Terms (flat vocabulary)'),
         TAXONOMY_CSV_FORMAT_TREE_STRUCTURE   => t('Hierarchical tree structure or one term by line structure'),
         // TAXONOMY_CSV_FORMAT_POLYHIERARCHY    => t('Polyhierarchical structure'),
+        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => t('Full term definition and links (compatible with Taxonomy CSV 6.x-5.x)'),
+        TAXONOMY_CSV_FORMAT_FIELDS           => t('Full term definition and links (compatible with Taxonomy CSV 7.x-5.x)'),
         TAXONOMY_CSV_FORMAT_PARENTS          => t('First level parents'),
         TAXONOMY_CSV_FORMAT_CHILDREN         => t('First level children'),
         TAXONOMY_CSV_FORMAT_RELATIONS        => t('Related terms'),
@@ -218,9 +217,6 @@ function _taxonomy_csv_values($list) {
           TAXONOMY_CSV_EXISTING_UPDATE,
           TAXONOMY_CSV_EXISTING_IGNORE,
         ),
-        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => array(
-          TAXONOMY_CSV_EXISTING_UPDATE,
-        ),
         TAXONOMY_CSV_FORMAT_FLAT             => array(
           TAXONOMY_CSV_EXISTING_UPDATE,
           TAXONOMY_CSV_EXISTING_IGNORE,
@@ -230,6 +226,9 @@ function _taxonomy_csv_values($list) {
           TAXONOMY_CSV_EXISTING_IGNORE,
         ),
         TAXONOMY_CSV_FORMAT_POLYHIERARCHY    => array(
+          TAXONOMY_CSV_EXISTING_UPDATE,
+        ),
+        TAXONOMY_CSV_FORMAT_DEFINITION_LINKS => array(
           TAXONOMY_CSV_EXISTING_UPDATE,
         ),
         TAXONOMY_CSV_FORMAT_PARENTS          => array(

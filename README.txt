@@ -54,8 +54,7 @@ to check your csv file before import in a true vocabulary.
 -- TROUBLESHOOTING --
   -----------------
 
-See online issues:
-  http://drupal.org/project/issues/taxonomy_csv
+See online issue at http://drupal.org/project/issues/taxonomy_csv.
 
 
 -- FAQ --
@@ -64,6 +63,24 @@ See online issues:
 See Advanced help in Help > Taxonomy CSV import/export.
 
 See technical infos in TECHINFO.txt.
+
+
+-- LICENCE --
+  ---------
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 -- CONTACT --

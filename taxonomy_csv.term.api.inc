@@ -90,7 +90,8 @@ function taxonomy_csv_term_load_multiple($tids = array(), $conditions = array())
 
   $result = db_query($sql, $args);
   while ($term = db_fetch_object($result)) {
-    $terms[] = taxonomy_csv_term_get_full($term);
+    $term = taxonomy_csv_term_get_full($term);
+    $terms[$term->tid] = $term;
   }
 
   return $terms;
