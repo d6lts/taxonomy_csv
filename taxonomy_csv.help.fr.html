@@ -350,14 +350,42 @@
         <li><code>Baobab, 3</code></li>
       </ul></div>
   <h4 id="translation_name"><a href="#contents">14. Traduction du nom et de la description [Drupal 7 seulement]</a></h4>
-    <p>La première colonne correspond au nom, la seconde à sa traduction et les deux suivantes à leur description éventuelle. Exemple :</p>
+  <h4 id="translate"><a href="#contents">3. Term translation</a></h4>
+    <p>Ce format est disponible seulement si le sous-module "i18n Taxonomy" du module <a href="https://drupal.org/project/i18n">Internationalization</a> est activé. De plus le mode de traduction du vocabulaire doit être "Translate" ou "Localize".</p>
+    <p><strong>Attention</strong> : Si vous avez une structure hiérarchique, vous devez importer celle-ci avant d'importer les traductions, pour chaque traduction si le mode de traduction est Translate.</p>
+    <p>Format: Le terme est dans la première colonne, suivi par ses traductions. Si le mode est Localize, alors la description du terme et ses traductions peuvent être ajoutée.</p>
+    <p>Pour un vocabulaire avec le mode Translate :</p>
+    <div class="codeblock">
+      <code>nom du terme/id, première traduction, deuxième traduction...</code>
+    </div>
+    <p>Pour un vocabulaire avec le mode Localize :</p>
+    <div class="codeblock">
+      <code>nom du terme/id, première traduction... , description, première traduction de la description...</code>
+    </div>
+    <p>Exemples :</p>
       <div class="codeblock"><ul>
-        <li><code>foo, bar, description de foo, description de bar</code></li>
-        <li><code>"Royaume-Uni", "United Kingdom"</code></li>
-        <li><code>"Allemagne", "Germany", "Un pays européen", "A European country"</code></li>
+        <li><code>foo, bar</code></li>
+        <li><code>"United Kingdom", "Royaume-Uni", "Vereinigte Königreich"</code></li>
+        <li><code>"Germany", "Allemagne", "A European country", "Un pays européen"</code> <em>[vocabulaire avec le mode Localize seulement]</em></li>
       </ul></div>
-    <p>La langue du premier terme est "Neutre" et celle du second élement peut être sélectionné dans le troisième onglet.</p>
-    <p>Ce format est disponible seulement si le sous-module "i18n Taxonomy" du module <a href="https://drupal.org/project/i18n">Internationalization</a> est activé.</p>
+    <p><strong>Notes</strong></p>
+    <ul>
+      <li>Avec un vocabulaire dans le mode Translate, un terme avec un language indéfinie ne peut être traduit. En conséquence, il ne faut pas oublier de choisir une langue lorsque vous importez les termes.</li>
+      <li>Avec un vocabulaire dans le mode Localize, seuls les termes avec un language indéfini peuvent être traduits. De ce fait, il convient de ne pas définir de language lors de l'import.</li>
+      <li>Toutes les langues doivent avoir été activées dans les paramètres régionaux avant l'import.</li>
+      <li><strong>Important</strong>: Si votre taxinomie est structurée, vous devez importer la structure <em>avant</em>. De plus, si le mode du vocabulaire est Translate, vous devez importer la structure pour chaque traduction avant. La procédure crée seulement des groupes de traduction, mais ne recrée pas la structure.</li>
+      <li>Avec le mode Translate, les termes avec une langue indéfinie (<code>"und"</code>) ne peuvent pas être traduits.</li>
+      <li>Avec le mode Localize, seuls les termes avec une langue indéfinie peuvent être traduits. La première langue doivent donc être "und" et la langue par défaut du site ne peut être utilisée.</li>
+    </ul>
+
+<p>La première colonne correspond au nom, la seconde à sa traduction et les deux suivantes à leur description éventuelle. Exemple :</p>
+  <div class="codeblock"><ul>
+    <li><code>foo, bar, description de foo, description de bar</code></li>
+    <li><code>"Royaume-Uni", "United Kingdom"</code></li>
+    <li><code>"Allemagne", "Germany", "Un pays européen", "A European country"</code></li>
+  </ul></div>
+<p>La langue du premier terme est "Neutre" et celle du second élement peut être sélectionné dans le troisième onglet.</p>
+<p>Ce format est disponible seulement si le sous-module "i18n Taxonomy" du module <a href="https://drupal.org/project/i18n">Internationalization</a> est activé.</p>
   <h4 id="taxonomy_manager"><a href="#contents">15. Taxonomy manager</a></h4>
     <p>Ce format est utilisé par <a href="https://drupal.org/project/taxonomy_manager" title="Module Taxonomy manager">Taxonomy manager</a> pour exporter des vocabulaires. Les colonnes sont : identifiant du vocabulaire, identifiant du terme, nom du terme, description du terme, id du parent 1 de premier niveau, ..., id du parent n de premier niveau. Example:</p>
       <div class="codeblock"><ul>

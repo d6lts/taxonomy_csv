@@ -145,7 +145,7 @@ function taxonomy_csv_vocabulary_export($options) {
     'file'             => drupal_get_path('module', 'taxonomy_csv') . '/export/taxonomy_csv.export.api.inc',
     'progressive'      => TRUE,
     'operations'       => array(
-        0 => array('_taxonomy_csv_vocabulary_export_process', array($options)),
+      0 => array('_taxonomy_csv_vocabulary_export_process', array($options)),
     ),
   );
 
@@ -268,6 +268,12 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
     $context['results'][0]['handle'] = fopen($options['file']->filepath, 'a+');
   }
 
+  // Get list of unlimited multivalued fields.
+  // @todo Currently, these fields are not saved in batch.
+  if ($options['export_format'] == TAXONOMY_CSV_FORMAT_FIELDS) {
+    $options['vocabulary'] = $context['sandbox']['vocabulary'];
+  }
+
   // To simplify use of variables.
   $worst_tid       = &$context['results'][0]['worst_tid'];
   $worst_term      = &$context['results'][0]['worst_term'];
@@ -278,10 +284,12 @@ function _taxonomy_csv_vocabulary_export_process($options, &$context) {
   $term_number     = &$context['results'][0]['current_term'];
   $current_name    = &$context['results'][0]['current_name'];
   $terms_list      = &$context['sandbox']['terms'];
+  $terms_list_ids  = array_keys($terms_list);
 
   // Process one term until end of vocabulary.
-  foreach ($terms_list as $term) {
-    $term_number++;
+  if ($term_number < count($context['sandbox']['terms'])) {
+    $term = $terms_list[$terms_list_ids[$term_number]];
+    ++$term_number;
 
     // Remember current name/tid in case of error.
     $current_name = $term->name;
