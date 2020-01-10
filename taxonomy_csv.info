@@ -17,9 +17,3 @@ files[] = import/taxonomy_csv.import.result.inc
 files[] = export/taxonomy_csv.export.admin.inc
 files[] = export/taxonomy_csv.export.api.inc
 files[] = export/taxonomy_csv.export.result.inc
-
-; Information added by Drupal 6 LTS vendors on 2020-01-10
-version = "6.x-5.11"
-core = "6.x"
-project = "taxonomy_csv"
-datestamp = "1578679294"
