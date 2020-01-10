@@ -423,10 +423,12 @@ function taxonomy_csv_form_import($form_state) {
           ''),
   );
 
+  $allowed_protocols = variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'tel', 'telnet', 'webcal'));
+  $url_description = t('An absolute path to the file or any of the supported protocols (%supported).', array('%supported' => implode(', ', $allowed_protocols)));
   $form['tab']['import']['url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('CSV file'),
-    '#description'   => t('Enter the url (http, ftp, file, path...)'),
+    '#description'   => $url_description,
   );
 
   $form['tab']['csv_format'] = array(

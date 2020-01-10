@@ -110,7 +110,12 @@ function _taxonomy_csv_import_input_preload(&$options) {
     );
   }
   // Url import.
-  elseif (isset($options['url']) && $options['url'] != '') {
+  elseif (!empty($options['url'])) {
+    if (decode_entities(filter_xss_bad_protocol($options['url'], FALSE)) != $options['url']) {
+      $allowed_protocols = variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'tel', 'telnet', 'webcal'));
+      $messages['url'] = t('Please enter any of the supported protocols (%supported) or an absolute path to the file.', array('%supported' => implode(', ', $allowed_protocols)));
+      return $messages;
+    }
     $filename = file_save_data(
       file_get_contents($options['url']),
       'taxocsv.csv',
